@@ -55,6 +55,7 @@ typedef enum
 	DSI_PANEL_OTA7290B_1920,
 	DSI_PANEL_OTA7290B,
 	DSI_PANEL_ST7701,
+	DSI_PANEL_ST7701_HD228001C31,
 	DSI_PANEL_ST7789V,
 	DSI_PANEL_ST7785M,
 	DSI_PANEL_MAX
@@ -117,6 +118,7 @@ static const char* s_panel_model_type_arr[] = {
 	"OTA7290B_1920",
 	"OTA7290B",
 	"ST7701",
+	"ST7701_HD228001C31",
 	"ST7789V",
 	"ST7785M",
 };
@@ -391,6 +393,13 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_480x800;
 			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_480x800);
 			break;
+                case DSI_PANEL_ST7701_HD228001C31:
+                        g_panel_desc.panel_name = "ST7701-368x552";
+                        g_panel_desc.dev_cfg = &dev_cfg_st7701_368x552;
+                        g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_368x552;
+                        g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_368x552;
+                        g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_368x552);
+                        break;
 		case DSI_PANEL_ST7785M:
 			g_panel_desc.panel_name = "ST77825M-240x320";
 			g_panel_desc.dev_cfg = &dev_cfg_st7785m_240x320;
