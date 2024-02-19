@@ -56,6 +56,9 @@ install:
 ifneq ($(FLASH_SIZE_SHRINK),y)
 	# copy sample_xxx
 	@cp -f sample/mipi_tx/sample_dsi $(DESTDIR)/usr/bin
+	@cp -f sample/vio/sample_vio $(DESTDIR)/usr/bin
+	@cp -f sample/sensor_test/sensor_test $(DESTDIR)/usr/bin
+	@cp -f sample/audio/sample_audio $(DESTDIR)/usr/bin
 	@cp -f sample/cipher/sample_cipher $(DESTDIR)/usr/bin
 	@cp -f sample/cvg/sample_cvg $(DESTDIR)/usr/bin
 	@cp -f sample/venc/sample_venc $(DESTDIR)/usr/bin
