@@ -1034,7 +1034,9 @@ CVI_S32 SAMPLE_COMM_SNS_GetIspAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, ISP_PUB_ATT
 	case GCORE_GC4653_SLAVE_MIPI_4M_30FPS_10BIT:
 	case TECHPOINT_TP2850_MIPI_2M_30FPS_8BIT:
 	case TECHPOINT_TP2850_MIPI_4M_30FPS_8BIT:
-		pstPubAttr->enBayer = BAYER_GRBG;
+		// on licheervnano
+		pstPubAttr->enBayer = BAYER_RGGB;
+		//pstPubAttr->enBayer = BAYER_GRBG;
 		break;
 	default:
 		pstPubAttr->enBayer = BAYER_BGGR;
