@@ -37,6 +37,7 @@ typedef struct _optionExt_ {
 
 typedef enum
 {
+	DSI_PANEL_ZCT2133V1,
 	DSI_PANEL_3AML069LP01G,
 	DSI_PANEL_GM8775C,
 	DSI_PANEL_HX8394_EVB,
@@ -100,6 +101,7 @@ static optionExt long_option_ext[] = {
 };
 
 static const char* s_panel_model_type_arr[] = {
+	"ZCT2133V1",
 	"3AML069LP01G",
 	"GM8775C",
 	"HX8394_EVB",
@@ -407,6 +409,13 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7785m_240x320;
 			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7785m_240x320);
 			break;
+		case DSI_PANEL_ZCT2133V1:
+                        g_panel_desc.panel_name = "ZCT2133V1-800x1280";
+                        g_panel_desc.dev_cfg = &dev_cfg_zct2133v1_800x1280;
+                        g_panel_desc.hs_timing_cfg = &hs_timing_cfg_zct2133v1_800x1280;
+                        g_panel_desc.dsi_init_cmds = dsi_init_cmds_zct2133v1_800x1280;
+                        g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_zct2133v1_800x1280);
+                        break;
 		case DSI_PANEL_HX8399_1080P:
 			g_panel_desc.panel_name = "HX8399_1080x1920";
 			g_panel_desc.dev_cfg = &dev_cfg_hx8399_1080x1920;

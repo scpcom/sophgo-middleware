@@ -29,6 +29,7 @@ extern "C" {
 #include "dsi_gm8775c.h"
 #include "dsi_lt9611.h"
 #include "dsi_st7785m.h"
+#include "dsi_zct2133v1.h"
 
 struct panel_desc_s {
 	char *panel_name;
