@@ -25,6 +25,7 @@ extern "C" {
 #include "dsi_3aml069lp01g.h"
 #include "dsi_st7701.h"
 #include "dsi_st7701_hd228001c31.h"
+#include "dsi_st7701_hd228001c31_alt0.h"
 #include "dsi_hx8399_1080p.h"
 #include "dsi_gm8775c.h"
 #include "dsi_lt9611.h"
