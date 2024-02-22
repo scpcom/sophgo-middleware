@@ -45,7 +45,9 @@ struct combo_dev_cfg_s dev_cfg_zct2133v1_800x1280 = {
 
 const struct hs_settle_s hs_timing_cfg_zct2133v1_800x1280 = { .prepare = 6, .zero = 32, .trail = 1 };
 
-#define CVI_U8 uint8_t
+#ifndef CVI_U8
+#define CVI_U8 unsigned char
+#endif
 
 static CVI_U8 data_zct2133v1_0[] = { 0xE1, 0x93 };
 static CVI_U8 data_zct2133v1_1[] = { 0xE2, 0x65 };
