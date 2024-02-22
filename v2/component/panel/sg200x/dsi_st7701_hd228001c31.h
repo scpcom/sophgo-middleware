@@ -60,10 +60,9 @@ struct combo_dev_cfg_s dev_cfg_st7701_368x552 = {
 
 const struct hs_settle_s hs_timing_cfg_st7701_368x552 = { .prepare = 6, .zero = 32, .trail = 1 };
 
-#ifndef uint8_t
-#define uint8_t unsigned char
+#ifndef CVI_U8
+#define CVI_U8 unsigned char
 #endif
-#define CVI_U8 uint8_t
 
 static CVI_U8 data_st7701_hd228001c31_1[] = { 0xff, 0x77,0x01,0x00,0x00,0x13 }; // 6
 static CVI_U8 data_st7701_hd228001c31_2[] = { 0xef, 0x08 }; // 2
