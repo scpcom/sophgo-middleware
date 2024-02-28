@@ -22,6 +22,7 @@ extern "C" {
 #include "dsi_st7701_d300fpc9307a.h"
 #include "dsi_ota7290b.h"
 #include "dsi_ota7290b_1920.h"
+#include "dsi_st7701_dxq5d0019b480854.h"
 #include "dsi_icn9707.h"
 #include "dsi_3aml069lp01g.h"
 #include "dsi_st7701.h"

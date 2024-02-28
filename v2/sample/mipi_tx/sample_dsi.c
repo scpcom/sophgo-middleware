@@ -50,6 +50,7 @@ typedef enum
 	DSI_PANEL_LT9611_1920x1080_60,
 	DSI_PANEL_LT9611_1920x1080_30,
 	DSI_PANEL_LT9611_1280x720_60,
+	DSI_PANEL_ST7701_DXQ5D0019B480854,
 	DSI_PANEL_LT9611_1024x768_60,
 	DSI_PANEL_LT9611_1280x1024_60,
 	DSI_PANEL_LT9611_1600x1200_60,
@@ -116,6 +117,7 @@ static const char* s_panel_model_type_arr[] = {
 	"LT9611_1920x1080_60HZ",
 	"LT9611_1920x1080_30HZ",
 	"LT9611_1280x720_60HZ",
+	"ST7701_DXQ5D0019B480854",
 	"LT9611_1024x768_60HZ",
 	"LT9611_1280x1024_60HZ",
 	"LT9611_1600x1200_60HZ",
@@ -489,6 +491,13 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.hs_timing_cfg = &hs_timing_cfg_lt9611;
 			g_panel_desc.dsi_init_cmds = NULL;
 			g_panel_desc.dsi_init_cmds_size = 0;
+			break;
+		case DSI_PANEL_ST7701_DXQ5D0019B480854:
+			g_panel_desc.panel_name = "ST7701-480x854dxq";
+			g_panel_desc.dev_cfg = &dev_cfg_st7701_480x854dxq;
+			g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_480x854dxq;
+			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_480x854dxq;
+			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_480x854dxq);
 			break;
 		case DSI_PANEL_HX8394_EVB:
 		default:
