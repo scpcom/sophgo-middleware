@@ -4,7 +4,7 @@
 include isp.mk
 
 all:
-	cp $(shell echo $(CHIP_ARCH) | tr A-Z a-z)/$(SDK_VER)/lib* $(MW_LIB)
+	cp lib/$(SDK_VER)/lib* $(MW_LIB)
 
 clean:
-	#
+

@@ -131,7 +131,7 @@ static CVI_S32 _vpss_update_rotation_mesh(VPSS_GRP VpssGrp, VPSS_CHN VpssChn,
 static CVI_S32 _vpss_update_ldc_mesh(VPSS_GRP VpssGrp, VPSS_CHN VpssChn,
 	const VPSS_LDC_ATTR_S *pstLDCAttr, ROTATION_E enRotation, CVI_U32 u32Width, CVI_U32 u32Height)
 {
-	CVI_U64 paddr = 0, paddr_old = 0;
+	CVI_U64 paddr, paddr_old;
 	CVI_VOID *vaddr, *vaddr_old;
 	struct cvi_gdc_mesh *pmesh = &mesh[VpssGrp][VpssChn];
 	CVI_S32 s32Ret;

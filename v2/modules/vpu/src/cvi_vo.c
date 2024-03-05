@@ -317,10 +317,9 @@ CVI_S32 CVI_VO_Suspend(void)
 		return CVI_ERR_VO_NOT_SUPPORT;
 	}
 
-	s32Ret = vo_sdk_suspend(fd);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_suspend(fd) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "vo sdk suspend fail\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	for (VO_DEV VoDev = 0; VoDev < VO_MAX_DEV_NUM; ++VoDev) {
@@ -375,10 +374,9 @@ CVI_S32 CVI_VO_Resume(void)
 		gVoCtx->is_layer_enable[VoLayer] = CVI_TRUE;
 	}
 	if (gVoCtx->is_chn_enable[VoLayer][VoChn]) {
-		s32Ret = vo_sdk_resume(fd);
-		if (s32Ret != CVI_SUCCESS) {
+		if (vo_sdk_resume(fd) != CVI_SUCCESS) {
 			CVI_TRACE_VO(CVI_DBG_ERR, "vo sdk resume fail\n");
-			return s32Ret;
+			return CVI_FAILURE;
 		}
 	}
 
@@ -392,7 +390,6 @@ CVI_S32 CVI_VO_SetPubAttr(VO_DEV VoDev, const VO_PUB_ATTR_S *pstPubAttr)
 {
 	CVI_S32 fd = -1;
 	struct vo_pub_attr_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -410,10 +407,9 @@ CVI_S32 CVI_VO_SetPubAttr(VO_DEV VoDev, const VO_PUB_ATTR_S *pstPubAttr)
 		vo_init();
 	}
 
-	s32Ret = vo_sdk_set_pubattr(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_set_pubattr(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoDev(%d) Set Pub Attr fail\n", VoDev);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -424,7 +420,6 @@ CVI_S32 CVI_VO_GetPubAttr(VO_DEV VoDev, VO_PUB_ATTR_S *pstPubAttr)
 {
 	CVI_S32 fd = -1;
 	struct vo_pub_attr_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -432,10 +427,9 @@ CVI_S32 CVI_VO_GetPubAttr(VO_DEV VoDev, VO_PUB_ATTR_S *pstPubAttr)
 
 	cfg.VoDev = VoDev;
 
-	s32Ret = vo_sdk_get_pubattr(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_get_pubattr(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoDev(%d) Get Pub Attr fail\n", VoDev);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	memcpy(pstPubAttr, &cfg.pstPubAttr, sizeof(VO_PUB_ATTR_S));
@@ -490,7 +484,6 @@ CVI_S32 CVI_VO_Enable(VO_DEV VoDev)
 {
 	CVI_S32 fd = -1;
 	struct vo_dev_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -498,10 +491,9 @@ CVI_S32 CVI_VO_Enable(VO_DEV VoDev)
 
 	cfg.VoDev = VoDev;
 
-	s32Ret = vo_sdk_enable(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_enable(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoDev(%d) Enable fail\n", VoDev);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 #if 0 // skip in FPGA test
@@ -515,7 +507,6 @@ CVI_S32 CVI_VO_Disable(VO_DEV VoDev)
 {
 	CVI_S32 fd = -1;
 	struct vo_dev_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -523,10 +514,9 @@ CVI_S32 CVI_VO_Disable(VO_DEV VoDev)
 
 	cfg.VoDev = VoDev;
 
-	s32Ret = vo_sdk_disable(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_disable(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoDev(%d) Disable fail\n", VoDev);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	if (_vo_proc_unmap() != CVI_SUCCESS) {
@@ -557,17 +547,15 @@ CVI_S32 CVI_VO_EnableVideoLayer(VO_LAYER VoLayer)
 {
 	CVI_S32 fd = -1;
 	struct vo_video_layer_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
 	}
 
 	cfg.VoLayer = VoLayer;
-	s32Ret = vo_sdk_enable_videolayer(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_enable_videolayer(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Enable Video Layer fail\n", VoLayer);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -577,17 +565,15 @@ CVI_S32 CVI_VO_DisableVideoLayer(VO_LAYER VoLayer)
 {
 	CVI_S32 fd = -1;
 	struct vo_video_layer_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
 	}
 
 	cfg.VoLayer = VoLayer;
-	s32Ret = vo_sdk_disable_videolayer(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_disable_videolayer(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Disable Video Layer fail\n", VoLayer);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -597,7 +583,6 @@ CVI_S32 CVI_VO_SetVideoLayerAttr(VO_LAYER VoLayer, const VO_VIDEO_LAYER_ATTR_S *
 {
 	CVI_S32 fd = -1;
 	struct vo_video_layer_attr_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -606,10 +591,9 @@ CVI_S32 CVI_VO_SetVideoLayerAttr(VO_LAYER VoLayer, const VO_VIDEO_LAYER_ATTR_S *
 	cfg.VoLayer = VoLayer;
 	memcpy(&cfg.pstLayerAttr, pstLayerAttr, sizeof(VO_VIDEO_LAYER_ATTR_S));
 
-	s32Ret = vo_sdk_set_videolayerattr(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_set_videolayerattr(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Set Video Layer Attr fail\n", VoLayer);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	if (!gVoCtx) {
@@ -627,7 +611,6 @@ CVI_S32 CVI_VO_GetVideoLayerAttr(VO_LAYER VoLayer, VO_VIDEO_LAYER_ATTR_S *pstLay
 {
 	CVI_S32 fd = -1;
 	struct vo_video_layer_attr_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -635,10 +618,9 @@ CVI_S32 CVI_VO_GetVideoLayerAttr(VO_LAYER VoLayer, VO_VIDEO_LAYER_ATTR_S *pstLay
 
 	cfg.VoLayer = VoLayer;
 
-	s32Ret = vo_sdk_get_videolayerattr(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_get_videolayerattr(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Get Video Layer Attr fail\n", VoLayer);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 	memcpy(pstLayerAttr, &cfg.pstLayerAttr, sizeof(VO_VIDEO_LAYER_ATTR_S));
 
@@ -788,7 +770,6 @@ CVI_S32 CVI_VO_SetChnAttr(VO_LAYER VoLayer, VO_CHN VoChn, const VO_CHN_ATTR_S *p
 {
 	CVI_S32 fd = -1;
 	struct vo_chn_attr_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -799,10 +780,9 @@ CVI_S32 CVI_VO_SetChnAttr(VO_LAYER VoLayer, VO_CHN VoChn, const VO_CHN_ATTR_S *p
 
 	memcpy(&cfg.pstChnAttr, pstChnAttr ,sizeof(VO_CHN_ATTR_S));
 
-	s32Ret = vo_sdk_set_chnattr(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_set_chnattr(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Set Chn Attr fail\n", VoLayer);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -812,7 +792,6 @@ CVI_S32 CVI_VO_GetChnAttr(VO_LAYER VoLayer, VO_CHN VoChn, VO_CHN_ATTR_S *pstChnA
 {
 	CVI_S32 fd = -1;
 	struct vo_chn_attr_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -821,10 +800,9 @@ CVI_S32 CVI_VO_GetChnAttr(VO_LAYER VoLayer, VO_CHN VoChn, VO_CHN_ATTR_S *pstChnA
 	cfg.VoLayer = VoLayer;
 	cfg.VoChn = VoChn;
 
-	s32Ret = vo_sdk_get_chnattr(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_get_chnattr(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Set Chn Attr fail\n", VoLayer);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	memcpy(pstChnAttr, &cfg.pstChnAttr, sizeof(VO_CHN_ATTR_S));
@@ -852,7 +830,6 @@ CVI_S32 CVI_VO_SetDisplayBufLen(VO_LAYER VoLayer, CVI_U32 u32BufLen)
 {
 	CVI_S32 fd = -1;
 	struct vo_display_buflen_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -861,10 +838,9 @@ CVI_S32 CVI_VO_SetDisplayBufLen(VO_LAYER VoLayer, CVI_U32 u32BufLen)
 	cfg.VoLayer = VoLayer;
 	cfg.u32BufLen = u32BufLen;
 
-	s32Ret = vo_sdk_set_displaybuflen(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_set_displaybuflen(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Set Display BufLen (%d)fail\n", VoLayer, u32BufLen);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -874,7 +850,6 @@ CVI_S32 CVI_VO_GetDisplayBufLen(VO_LAYER VoLayer, CVI_U32 *pu32BufLen)
 {
 	CVI_S32 fd = -1;
 	struct vo_display_buflen_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -882,10 +857,9 @@ CVI_S32 CVI_VO_GetDisplayBufLen(VO_LAYER VoLayer, CVI_U32 *pu32BufLen)
 
 	cfg.VoLayer = VoLayer;
 
-	s32Ret = vo_sdk_get_displaybuflen(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_get_displaybuflen(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Get Display BufLen (%d)fail\n", VoLayer, cfg.u32BufLen);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	*pu32BufLen = cfg.u32BufLen;
@@ -897,7 +871,6 @@ CVI_S32 CVI_VO_EnableChn(VO_LAYER VoLayer, VO_CHN VoChn)
 {
 	CVI_S32 fd = -1;
 	struct vo_chn_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -906,10 +879,9 @@ CVI_S32 CVI_VO_EnableChn(VO_LAYER VoLayer, VO_CHN VoChn)
 	cfg.VoLayer = VoLayer;
 	cfg.VoChn = VoChn;
 
-	s32Ret = vo_sdk_enable_chn(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_enable_chn(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Enable Chn(%d) fail\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -919,7 +891,6 @@ CVI_S32 CVI_VO_DisableChn(VO_LAYER VoLayer, VO_CHN VoChn)
 {
 	CVI_S32 fd = -1;
 	struct vo_chn_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -928,10 +899,9 @@ CVI_S32 CVI_VO_DisableChn(VO_LAYER VoLayer, VO_CHN VoChn)
 	cfg.VoLayer = VoLayer;
 	cfg.VoChn = VoChn;
 
-	s32Ret = vo_sdk_disable_chn(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_disable_chn(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Disable Chn(%d) fail\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -941,7 +911,6 @@ CVI_S32 CVI_VO_SetChnRotation(VO_LAYER VoLayer, VO_CHN VoChn, ROTATION_E enRotat
 {
 	CVI_S32 fd = -1;
 	struct vo_chn_rotation_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -957,10 +926,9 @@ CVI_S32 CVI_VO_SetChnRotation(VO_LAYER VoLayer, VO_CHN VoChn, ROTATION_E enRotat
 		CVI_TRACE_VO(CVI_DBG_ERR, "invalid rotation(%d).\n", enRotation);
 		return CVI_ERR_VO_ILLEGAL_PARAM;
 	}
-	s32Ret = vo_sdk_set_chnrotation(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_set_chnrotation(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Set Chn(%d) Rotation fail\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -970,7 +938,6 @@ CVI_S32 CVI_VO_GetChnRotation(VO_LAYER VoLayer, VO_CHN VoChn, ROTATION_E *penRot
 {
 	CVI_S32 fd = -1;
 	struct vo_chn_rotation_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -979,10 +946,9 @@ CVI_S32 CVI_VO_GetChnRotation(VO_LAYER VoLayer, VO_CHN VoChn, ROTATION_E *penRot
 	cfg.VoLayer = VoLayer;
 	cfg.VoChn = VoChn;
 
-	s32Ret = vo_sdk_get_chnrotation(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_get_chnrotation(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Set Chn(%d) Rotation fail\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	*penRotation = cfg.enRotation;
@@ -993,7 +959,6 @@ CVI_S32 CVI_VO_SendFrame(VO_LAYER VoLayer, VO_CHN VoChn, VIDEO_FRAME_INFO_S *pst
 {
 	CVI_S32 fd = -1;
 	struct vo_snd_frm_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -1005,10 +970,9 @@ CVI_S32 CVI_VO_SendFrame(VO_LAYER VoLayer, VO_CHN VoChn, VIDEO_FRAME_INFO_S *pst
 
 	memcpy(&cfg.stVideoFrame, pstVideoFrame, sizeof(VIDEO_FRAME_INFO_S));
 
-	s32Ret = vo_sdk_send_frame(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_send_frame(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Chn(%d) send frame fail\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -1018,7 +982,6 @@ CVI_S32 CVI_VO_ClearChnBuf(VO_LAYER VoLayer, VO_CHN VoChn, CVI_BOOL bClrAll)
 {
 	CVI_S32 fd = -1;
 	struct vo_clear_chn_buf_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -1028,10 +991,9 @@ CVI_S32 CVI_VO_ClearChnBuf(VO_LAYER VoLayer, VO_CHN VoChn, CVI_BOOL bClrAll)
 	cfg.VoChn = VoChn;
 	cfg.bClrAll = bClrAll;
 
-	s32Ret = vo_sdk_clearchnbuf(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_clearchnbuf(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Chn(%d) clean buf fail\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -1040,7 +1002,6 @@ CVI_S32 CVI_VO_ClearChnBuf(VO_LAYER VoLayer, VO_CHN VoChn, CVI_BOOL bClrAll)
 CVI_S32 CVI_VO_ShowChn(VO_LAYER VoLayer, VO_CHN VoChn)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	CHECK_VO_CHN_VALID(VoLayer, VoChn);
 
@@ -1048,10 +1009,9 @@ CVI_S32 CVI_VO_ShowChn(VO_LAYER VoLayer, VO_CHN VoChn)
 		return CVI_ERR_VO_NOT_SUPPORT;
 	}
 
-	s32Ret = vo_set_pattern(fd, CVI_VIP_PAT_OFF);
-	if (s32Ret != 0) {
+	if (vo_set_pattern(fd, CVI_VIP_PAT_OFF) != 0) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) VoChn(%d) Pattern Off failed.\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	if (!gVoCtx) {
@@ -1067,7 +1027,6 @@ CVI_S32 CVI_VO_ShowChn(VO_LAYER VoLayer, VO_CHN VoChn)
 CVI_S32 CVI_VO_HideChn(VO_LAYER VoLayer, VO_CHN VoChn)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	CHECK_VO_CHN_VALID(VoLayer, VoChn);
 
@@ -1075,10 +1034,9 @@ CVI_S32 CVI_VO_HideChn(VO_LAYER VoLayer, VO_CHN VoChn)
 		return CVI_ERR_VO_NOT_SUPPORT;
 	}
 
-	s32Ret = vo_set_pattern(fd, CVI_VIP_PAT_BLACK);
-	if (s32Ret != 0) {
+	if (vo_set_pattern(fd, CVI_VIP_PAT_BLACK) != 0) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) VoChn(%d) Pattern Black failed.\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 	gVoCtx->show = CVI_FALSE;
 
@@ -1088,16 +1046,14 @@ CVI_S32 CVI_VO_HideChn(VO_LAYER VoLayer, VO_CHN VoChn)
 CVI_S32 CVI_VO_ShowPattern(VO_DEV VoDev, enum VO_PATTERN_MODE PatternId)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
 	}
 
-	s32Ret = vo_set_pattern(fd, (enum cvi_vip_pattern)PatternId);
-	if (s32Ret != 0) {
+	if (vo_set_pattern(fd, (enum cvi_vip_pattern)PatternId) != 0) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoDev(%d) set Pattern failed.\n", VoDev);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -1141,7 +1097,6 @@ CVI_S32 CVI_VO_Get_Panel_Status(VO_LAYER VoLayer, VO_CHN VoChn, CVI_U32 *is_init
 {
 	CVI_S32 fd = -1;
 	struct vo_panel_status_cfg cfg;
-	CVI_S32 s32Ret;
 
 	if (_check_vo_exist(&fd)) {
 		return CVI_ERR_VO_NOT_SUPPORT;
@@ -1150,10 +1105,9 @@ CVI_S32 CVI_VO_Get_Panel_Status(VO_LAYER VoLayer, VO_CHN VoChn, CVI_U32 *is_init
 	cfg.VoLayer = VoLayer;
 	cfg.VoChn = VoChn;
 
-	s32Ret = vo_sdk_get_panelstatue(fd, &cfg);
-	if (s32Ret != CVI_SUCCESS) {
+	if (vo_sdk_get_panelstatue(fd, &cfg) != CVI_SUCCESS) {
 		CVI_TRACE_VO(CVI_DBG_ERR, "VoLayer(%d) Chn(%d) Get Panel Status fail\n", VoLayer, VoChn);
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	memcpy(&is_init, &cfg.is_init, sizeof(is_init));
@@ -1193,7 +1147,6 @@ CVI_BOOL CVI_VO_IsEnabled(VO_DEV VoDev)
 CVI_S32 CVI_VO_SetGammaInfo(VO_GAMMA_INFO_S *pinfo)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_VO, pinfo);
 
@@ -1204,11 +1157,7 @@ CVI_S32 CVI_VO_SetGammaInfo(VO_GAMMA_INFO_S *pinfo)
 	if (!CVI_VO_IsEnabled(0))
 		return CVI_ERR_VO_SYS_NOTREADY;
 
-	s32Ret = vo_set_gamma_ctrl(fd, pinfo);
-	if (s32Ret != CVI_SUCCESS) {
-		CVI_TRACE_VO(CVI_DBG_ERR, "Set gamma fail\n");
-		return s32Ret;
-	}
+	vo_set_gamma_ctrl(fd, pinfo);
 
 	memcpy(&vo_bin_info.gamma_info, pinfo, sizeof(VO_GAMMA_INFO_S));
 	vo_bin_info.guard_magic = VO_BIN_GUARDMAGIC;
@@ -1218,7 +1167,6 @@ CVI_S32 CVI_VO_SetGammaInfo(VO_GAMMA_INFO_S *pinfo)
 CVI_S32 CVI_VO_GetGammaInfo(VO_GAMMA_INFO_S *pinfo)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_VO, pinfo);
 
@@ -1230,11 +1178,7 @@ CVI_S32 CVI_VO_GetGammaInfo(VO_GAMMA_INFO_S *pinfo)
 		return CVI_ERR_VO_SYS_NOTREADY;
 
 	//calling HW
-	s32Ret = vo_get_gamma_ctrl(fd, pinfo);
-	if (s32Ret != CVI_SUCCESS) {
-		CVI_TRACE_VO(CVI_DBG_ERR, "Get gamma fail\n");
-		return s32Ret;
-	}
+	vo_get_gamma_ctrl(fd, pinfo);
 
 	return CVI_SUCCESS;
 }

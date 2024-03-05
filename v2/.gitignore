@@ -1,14 +1,7 @@
 *.d
 *.o
-*.a
-*.so
 *.dep
 *.dwo
-
-lib
-bin
-include
-tags
 
 *_asan
 sample/audio/sample_audio
@@ -35,7 +28,6 @@ sample/osdc/sample_osdc
 sample/scene_auto/sample_scene_auto
 sample/sensor_test/sensor_test
 sample/tp2863_tp2803/sample_test_tp2863_tp2803
-sample/sample_panel/sample_panel
 
 modules/venc/vc/jpeg/driver/bm_jpg_test
 modules/venc/vc/jpeg/driver/bmjpuapi/bmjpegdec
@@ -49,6 +41,3 @@ modules/venc/vc/vcodec/codebase/sample/cvi_vcodec_version.h
 modules/venc/vc/jpeg/driver/include/version.h
 
 .vscode/settings.json
-
-modules/isp
-component/isp

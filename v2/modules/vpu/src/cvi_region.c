@@ -44,16 +44,14 @@ static void rgn_init(void)
 CVI_S32 CVI_RGN_Create(RGN_HANDLE Handle, const RGN_ATTR_S *pstRegion)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstRegion);
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_create(fd, Handle, pstRegion);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_create(fd, Handle, pstRegion) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Create RGN fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	pthread_mutex_lock(&canvas_q_lock);
@@ -66,14 +64,12 @@ CVI_S32 CVI_RGN_Create(RGN_HANDLE Handle, const RGN_ATTR_S *pstRegion)
 CVI_S32 CVI_RGN_Destroy(RGN_HANDLE Handle)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_destroy(fd, Handle);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_destroy(fd, Handle) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Destroy RGN fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -82,16 +78,14 @@ CVI_S32 CVI_RGN_Destroy(RGN_HANDLE Handle)
 CVI_S32 CVI_RGN_GetAttr(RGN_HANDLE Handle, RGN_ATTR_S *pstRegion)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstRegion);
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_get_attr(fd, Handle, pstRegion);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_get_attr(fd, Handle, pstRegion) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Get RGN attributes fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -100,15 +94,13 @@ CVI_S32 CVI_RGN_GetAttr(RGN_HANDLE Handle, RGN_ATTR_S *pstRegion)
 CVI_S32 CVI_RGN_SetAttr(RGN_HANDLE Handle, const RGN_ATTR_S *pstRegion)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstRegion);
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_set_attr(fd, Handle, pstRegion);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_set_attr(fd, Handle, pstRegion) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Set RGN attributes fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -135,7 +127,6 @@ CVI_S32 CVI_RGN_SetBitMap(RGN_HANDLE Handle, const BITMAP_S *pstBitmap)
 CVI_S32 CVI_RGN_AttachToChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, const RGN_CHN_ATTR_S *pstChnAttr)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChn);
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChnAttr);
@@ -149,10 +140,9 @@ CVI_S32 CVI_RGN_AttachToChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, const RG
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_attach_to_chn(fd, Handle, pstChn, pstChnAttr);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_attach_to_chn(fd, Handle, pstChn, pstChnAttr) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Attach RGN to channel fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 	return CVI_SUCCESS;
 }
@@ -160,7 +150,6 @@ CVI_S32 CVI_RGN_AttachToChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, const RG
 CVI_S32 CVI_RGN_DetachFromChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChn);
 
@@ -173,10 +162,9 @@ CVI_S32 CVI_RGN_DetachFromChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn)
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_detach_from_chn(fd, Handle, pstChn);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_detach_from_chn(fd, Handle, pstChn) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Detach RGN from channel fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -185,17 +173,15 @@ CVI_S32 CVI_RGN_DetachFromChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn)
 CVI_S32 CVI_RGN_SetDisplayAttr(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, const RGN_CHN_ATTR_S *pstChnAttr)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChn);
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChnAttr);
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_set_display_attr(fd, Handle, pstChn, pstChnAttr);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_set_display_attr(fd, Handle, pstChn, pstChnAttr) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Set display RGN attributes fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -204,17 +190,15 @@ CVI_S32 CVI_RGN_SetDisplayAttr(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, const
 CVI_S32 CVI_RGN_GetDisplayAttr(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, RGN_CHN_ATTR_S *pstChnAttr)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChn);
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChnAttr);
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_get_display_attr(fd, Handle, pstChn, pstChnAttr);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_get_display_attr(fd, Handle, pstChn, pstChnAttr) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Get display RGN attributes fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -266,14 +250,12 @@ CVI_S32 CVI_RGN_UpdateCanvas(RGN_HANDLE Handle)
 {
 	CVI_S32 fd = -1;
 	struct rgn_canvas *canvas;
-	CVI_S32 s32Ret;
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_update_canvas(fd, Handle);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_update_canvas(fd, Handle) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Update RGN canvas fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	pthread_mutex_lock(&canvas_q_lock);
@@ -303,17 +285,15 @@ CVI_S32 CVI_RGN_UpdateCanvas(RGN_HANDLE Handle)
 CVI_S32 CVI_RGN_Invert_Color(RGN_HANDLE Handle, MMF_CHN_S *pstChn, CVI_U32 *pu32Color)
 {
 	CVI_S32 fd = -1;
-	CVI_S32 s32Ret;
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChn);
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pu32Color);
 
 	// Driver control
 	fd = get_rgn_fd();
-	s32Ret = rgn_invert_color(fd, Handle, pstChn, (void *)pu32Color);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_invert_color(fd, Handle, pstChn, (void *)pu32Color) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Invert RGN color fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;
@@ -322,7 +302,6 @@ CVI_S32 CVI_RGN_Invert_Color(RGN_HANDLE Handle, MMF_CHN_S *pstChn, CVI_U32 *pu32
 CVI_S32 CVI_RGN_SetChnPalette(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, RGN_PALETTE_S *pstPalette)
 {
 	struct vdev *d;
-	CVI_S32 s32Ret;
 
 	// Driver control
 	d = get_dev_info(VDEV_TYPE_RGN, 0);
@@ -331,10 +310,9 @@ CVI_S32 CVI_RGN_SetChnPalette(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, RGN_PA
 		return CVI_ERR_RGN_SYS_NOTREADY;
 	}
 
-	s32Ret = rgn_set_chn_palette(d->fd, Handle, pstChn, pstPalette);
-	if (s32Ret != CVI_SUCCESS) {
+	if (rgn_set_chn_palette(d->fd, Handle, pstChn, pstPalette) != CVI_SUCCESS) {
 		CVI_TRACE_RGN(CVI_DBG_INFO, "Invert RGN color fail.\n");
-		return s32Ret;
+		return CVI_FAILURE;
 	}
 
 	return CVI_SUCCESS;

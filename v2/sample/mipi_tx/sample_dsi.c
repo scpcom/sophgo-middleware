@@ -37,6 +37,7 @@ typedef struct _optionExt_ {
 
 typedef enum
 {
+	DSI_PANEL_ZCT2133V1,
 	DSI_PANEL_3AML069LP01G,
 	DSI_PANEL_GM8775C,
 	DSI_PANEL_HX8394_EVB,
@@ -45,9 +46,11 @@ typedef enum
 	DSI_PANEL_ILI9881C,
 	DSI_PANEL_ILI9881D,
 	DSI_PANEL_JD9366AB,
+	DSI_PANEL_ST7701_D300FPC9307A,
 	DSI_PANEL_LT9611_1920x1080_60,
 	DSI_PANEL_LT9611_1920x1080_30,
 	DSI_PANEL_LT9611_1280x720_60,
+	DSI_PANEL_ST7701_DXQ5D0019B480854,
 	DSI_PANEL_LT9611_1024x768_60,
 	DSI_PANEL_LT9611_1280x1024_60,
 	DSI_PANEL_LT9611_1600x1200_60,
@@ -55,6 +58,8 @@ typedef enum
 	DSI_PANEL_OTA7290B_1920,
 	DSI_PANEL_OTA7290B,
 	DSI_PANEL_ST7701,
+	DSI_PANEL_ST7701_HD228001C31,
+	DSI_PANEL_ST7701_HD228001C31_ALT0,
 	DSI_PANEL_ST7789V,
 	DSI_PANEL_ST7785M,
 	DSI_PANEL_MAX
@@ -99,6 +104,7 @@ static optionExt long_option_ext[] = {
 };
 
 static const char* s_panel_model_type_arr[] = {
+	"ZCT2133V1",
 	"3AML069LP01G",
 	"GM8775C",
 	"HX8394_EVB",
@@ -107,9 +113,11 @@ static const char* s_panel_model_type_arr[] = {
 	"ILI9881C",
 	"ILI9881D",
 	"JD9366AB",
+	"ST7701_D300FPC9307A",
 	"LT9611_1920x1080_60HZ",
 	"LT9611_1920x1080_30HZ",
 	"LT9611_1280x720_60HZ",
+	"ST7701_DXQ5D0019B480854",
 	"LT9611_1024x768_60HZ",
 	"LT9611_1280x1024_60HZ",
 	"LT9611_1600x1200_60HZ",
@@ -117,6 +125,8 @@ static const char* s_panel_model_type_arr[] = {
 	"OTA7290B_1920",
 	"OTA7290B",
 	"ST7701",
+	"ST7701_HD228001C31",
+	"ST7701_HD228001C31_ALT0",
 	"ST7789V",
 	"ST7785M",
 };
@@ -363,6 +373,13 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.dsi_init_cmds = dsi_init_cmds_ota7290b_320x1280;
 			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_ota7290b_320x1280);
 			break;
+		case DSI_PANEL_ST7701_D300FPC9307A:
+			g_panel_desc.panel_name = "ST7701-480x854";
+			g_panel_desc.dev_cfg = &dev_cfg_st7701_480x854;
+			g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_480x854;
+			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_480x854;
+			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_480x854);
+			break;
 		case DSI_PANEL_OTA7290B_1920:
 			g_panel_desc.panel_name = "OTA7290B-440x1920";
 			g_panel_desc.dev_cfg = &dev_cfg_ota7290b_440x1920;
@@ -391,6 +408,20 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_480x800;
 			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_480x800);
 			break;
+                case DSI_PANEL_ST7701_HD228001C31:
+                        g_panel_desc.panel_name = "ST7701-368x552";
+                        g_panel_desc.dev_cfg = &dev_cfg_st7701_368x552;
+                        g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_368x552;
+                        g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_368x552;
+                        g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_368x552);
+                        break;
+	case DSI_PANEL_ST7701_HD228001C31_ALT0:
+                        g_panel_desc.panel_name = "ST7701-368x552-alt0";
+                        g_panel_desc.dev_cfg = &dev_cfg_st7701_368x552_alt0;
+                        g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_368x552_alt0;
+                        g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_368x552_alt0;
+                        g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_368x552_alt0);
+                        break;
 		case DSI_PANEL_ST7785M:
 			g_panel_desc.panel_name = "ST77825M-240x320";
 			g_panel_desc.dev_cfg = &dev_cfg_st7785m_240x320;
@@ -398,6 +429,13 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7785m_240x320;
 			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7785m_240x320);
 			break;
+		case DSI_PANEL_ZCT2133V1:
+                        g_panel_desc.panel_name = "ZCT2133V1-800x1280";
+                        g_panel_desc.dev_cfg = &dev_cfg_zct2133v1_800x1280;
+                        g_panel_desc.hs_timing_cfg = &hs_timing_cfg_zct2133v1_800x1280;
+                        g_panel_desc.dsi_init_cmds = dsi_init_cmds_zct2133v1_800x1280;
+                        g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_zct2133v1_800x1280);
+                        break;
 		case DSI_PANEL_HX8399_1080P:
 			g_panel_desc.panel_name = "HX8399_1080x1920";
 			g_panel_desc.dev_cfg = &dev_cfg_hx8399_1080x1920;
@@ -453,6 +491,13 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.hs_timing_cfg = &hs_timing_cfg_lt9611;
 			g_panel_desc.dsi_init_cmds = NULL;
 			g_panel_desc.dsi_init_cmds_size = 0;
+			break;
+		case DSI_PANEL_ST7701_DXQ5D0019B480854:
+			g_panel_desc.panel_name = "ST7701-480x854dxq";
+			g_panel_desc.dev_cfg = &dev_cfg_st7701_480x854dxq;
+			g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_480x854dxq;
+			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_480x854dxq;
+			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_480x854dxq);
 			break;
 		case DSI_PANEL_HX8394_EVB:
 		default:

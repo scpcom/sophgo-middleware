@@ -17,76 +17,66 @@
 
 #define VO_S_CTRL_VALUE(_fd, _cfg, _ioctl)\
 	do {\
-		int ret;\
 		struct vo_ext_control ec1;\
 		memset(&ec1, 0, sizeof(ec1));\
 		ec1.id = _ioctl;\
 		ec1.value = _cfg;\
-		ret = ioctl(_fd, VO_IOC_S_CTRL, &ec1);\
-		if (ret < 0) {\
+		if (ioctl(_fd, VO_IOC_S_CTRL, &ec1) < 0) {\
 			fprintf(stderr, "VO_IOC_S_CTRL - %s NG, %s\n", __func__, strerror(errno));\
-			return ret;\
+			return -1;\
 		} \
 		return 0;\
 	} while (0)
 
 #define VO_S_CTRL_VALUE64(_fd, _cfg, _ioctl)\
 	do {\
-		int ret;\
 		struct vo_ext_control ec1;\
 		memset(&ec1, 0, sizeof(ec1));\
 		ec1.id = _ioctl;\
 		ec1.value64 = _cfg;\
-		ret = ioctl(_fd, VO_IOC_S_CTRL, &ec1);\
-		if (ret < 0) {\
+		if (ioctl(_fd, VO_IOC_S_CTRL, &ec1) < 0) {\
 			fprintf(stderr, "VO_IOC_S_CTRL - %s NG, %s\n", __func__, strerror(errno));\
-			return ret;\
+			return -1;\
 		} \
 		return 0;\
 	} while (0)
 
 #define VO_SDK_CTRL_PTR(_fd, _cfg, _ioctl, _sdk_id)\
 	do {\
-		int ret;\
 		struct vo_ext_control ec1;\
 		memset(&ec1, 0, sizeof(ec1));\
 		ec1.id = _ioctl;\
 		ec1.sdk_id = _sdk_id;\
 		ec1.ptr = (void *)_cfg;\
-		ret = ioctl(_fd, VO_IOC_S_CTRL, &ec1);\
-		if (ret < 0) {\
+		if (ioctl(_fd, VO_IOC_S_CTRL, &ec1) < 0) {\
 			fprintf(stderr, "VO_IOC_S_CTRL - %s NG, %s\n", __func__, strerror(errno));\
-			return ret;\
+			return -1;\
 		} \
 		return 0;\
 	} while (0)
 
 #define VO_S_CTRL_PTR(_fd, _cfg, _ioctl)\
 	do {\
-		int ret;\
 		struct vo_ext_control ec1;\
 		memset(&ec1, 0, sizeof(ec1));\
 		ec1.id = _ioctl;\
 		ec1.ptr = (void *)_cfg;\
-		ret = ioctl(_fd, VO_IOC_S_CTRL, &ec1);\
-		if (ret < 0) {\
+		if (ioctl(_fd, VO_IOC_S_CTRL, &ec1) < 0) {\
 			fprintf(stderr, "VO_IOC_S_CTRL - %s NG,%s\n", __func__, strerror(errno));\
-			return ret;\
+			return -1;\
 		} \
 		return 0;\
 	} while (0)
 
 #define VO_G_CTRL_VALUE(_fd, _out, _ioctl)\
 	do {\
-		int ret;\
 		struct vo_ext_control ec1;\
 		memset(&ec1, 0, sizeof(ec1));\
 		ec1.id = _ioctl;\
 		ec1.value = 0;\
-		ret = ioctl(_fd, VO_IOC_G_CTRL, &ec1);\
-		if (ret < 0) {\
+		if (ioctl(_fd, VO_IOC_G_CTRL, &ec1) < 0) {\
 			fprintf(stderr, "VO_IOC_G_CTRL - %s NG, %s\n", __func__, strerror(errno));\
-			return ret;\
+			return -1;\
 		} \
 		*_out = ec1.value;\
 		return 0;\
@@ -94,31 +84,27 @@
 
 #define VO_G_CTRL_PTR(_fd, _cfg, _ioctl)\
 	do {\
-		int ret;\
 		struct vo_ext_control ec1;\
 		memset(&ec1, 0, sizeof(ec1));\
 		ec1.id = _ioctl;\
 		ec1.ptr = (void *)_cfg;\
-		ret = ioctl(_fd, VO_IOC_G_CTRL, &ec1);\
-		if (ret < 0) {\
+		if (ioctl(_fd, VO_IOC_G_CTRL, &ec1) < 0) {\
 			fprintf(stderr, "VO_IOC_G_CTRL - %s NG, %s\n", __func__, strerror(errno));\
-			return ret;\
+			return -1;\
 		} \
 		return 0;\
 	} while (0)
 
 #define VO_S_CTRL_ARR(_fd, _cfg, _size, _ioctl)\
 	do {\
-		int ret;\
 		struct vo_ext_control ec1;\
 		memset(&ec1, 0, sizeof(ec1));\
 		ec1.id = _ioctl;\
 		ec1.ptr = (void *)_cfg;\
 		ec1.size = _size;\
-		ret = ioctl(_fd, VO_IOC_S_CTRL, &ec1);\
-		if (ret < 0) {\
+		if (ioctl(_fd, VO_IOC_S_CTRL, &ec1) < 0) {\
 			fprintf(stderr, "VO_IOC_G_CTRL - %s NG, %s\n", __func__, strerror(errno));\
-			return ret;\
+			return -1;\
 		} \
 		return 0;\
 	} while (0)

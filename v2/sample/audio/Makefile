@@ -181,19 +181,19 @@ endif
 
 
 %.o : %.c
-	@$(CC) $(DEPFLAGS) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ -c $<
+	$(CC) $(DEPFLAGS) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ -c $<
 	@echo [$(notdir $(CC))] $(notdir $@)
 
 sample_audio: $(TEST_OBJ)
-	@$(CXX) -o $@ $(TEST_OBJ) $(ELFFLAGS) $(STATIC_FLAG) $(EXTRA_LDFLAGS)
+	$(CXX) -o $@ $(TEST_OBJ) $(ELFFLAGS) $(STATIC_FLAG) $(EXTRA_LDFLAGS)
 	@echo -e $(BLUE)[LINK]$(END)[$(notdir $(CXX))] $(notdir $@)
 
 sample_audio_asan: $(TEST_OBJ)
-	@$(CXX) -o $@ $(TEST_OBJ) $(ELFFLAGS) $(EXTRA_LDFLAGS_WITH_ASAN) $(EXTRA_LDFLAGS)
+	$(CXX) -o $@ $(TEST_OBJ) $(ELFFLAGS) $(EXTRA_LDFLAGS_WITH_ASAN) $(EXTRA_LDFLAGS)
 	@echo -e $(BLUE)[LINK]$(END)[$(notdir $(CXX))] $(notdir $@)
 
 cvi_mp3player: $(MP3_PLAYER_OBJ)
-	@$(CXX) -o $@ $(MP3_PLAYER_OBJ) $(ELFFLAGS) $(EXTRA_LDFLAGS) $(MP3_EXTRA_LDFLAGS)
+	$(CXX) -o $@ $(MP3_PLAYER_OBJ) $(ELFFLAGS) $(EXTRA_LDFLAGS) $(MP3_EXTRA_LDFLAGS)
 	@echo -e $(BLUE)[LINK]$(END)[$(notdir $(CXX))] $(notdir $@)
 	@cp cvi_mp3player  sample_mp3player
 

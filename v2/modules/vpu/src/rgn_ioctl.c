@@ -20,17 +20,15 @@
 static inline CVI_S32 S_CTRL_PTR(int _fd, void *_cfg, int _ioctl, CVI_U32 _handle)
 {
 	struct rgn_ext_control ec1;
-	int ret;
 
 	memset(&ec1, 0, sizeof(ec1));
 	ec1.id = _ioctl;
 	ec1.handle = _handle;
 	ec1.ptr1 = (void *) _cfg;
 
-	ret = ioctl(_fd, RGN_IOC_S_CTRL, &ec1);
-	if (ret < 0) {
+	if (ioctl(_fd, RGN_IOC_S_CTRL, &ec1) < 0) {
 		fprintf(stderr, "RGN_IOC_S_CTRL - %s NG, %s\n", __func__, strerror(errno));
-		return ret;
+		return -1;
 	}
 	return 0;
 }
@@ -38,7 +36,6 @@ static inline CVI_S32 S_CTRL_PTR(int _fd, void *_cfg, int _ioctl, CVI_U32 _handl
 static inline CVI_S32 SDK_CTRL_GET_CFG(int _fd, void *_cfg1, void *_cfg2, int _ioctl, CVI_U32 _handle)
 {
 	struct rgn_ext_control ec1;
-	int ret;
 
 	memset(&ec1, 0, sizeof(ec1));
 	ec1.id = RGN_IOCTL_SDK_CTRL;
@@ -47,11 +44,10 @@ static inline CVI_S32 SDK_CTRL_GET_CFG(int _fd, void *_cfg1, void *_cfg2, int _i
 	ec1.ptr1 = _cfg1;
 	ec1.ptr2 = _cfg2;
 
-	ret = ioctl(_fd, RGN_IOC_G_CTRL, &ec1);
-	if (ret < 0) {
+	if (ioctl(_fd, RGN_IOC_G_CTRL, &ec1) < 0) {
 		fprintf(stderr, "RGN_SDK_IOC_G_CTRL(%d-%d) - %s NG, %s\n",
 			ec1.id, ec1.sdk_id, __func__, strerror(errno));
-		return ret;
+		return -1;
 	}
 	return 0;
 }
@@ -59,7 +55,6 @@ static inline CVI_S32 SDK_CTRL_GET_CFG(int _fd, void *_cfg1, void *_cfg2, int _i
 static inline CVI_S32 SDK_CTRL_SET_CFG(int _fd, void *_cfg1, void *_cfg2, int _ioctl, CVI_U32 _handle)
 {
 	struct rgn_ext_control ec1;
-	int ret;
 
 	memset(&ec1, 0, sizeof(ec1));
 	ec1.id = RGN_IOCTL_SDK_CTRL;
@@ -68,11 +63,10 @@ static inline CVI_S32 SDK_CTRL_SET_CFG(int _fd, void *_cfg1, void *_cfg2, int _i
 	ec1.ptr1 = _cfg1;
 	ec1.ptr2 = _cfg2;
 
-	ret = ioctl(_fd, RGN_IOC_S_CTRL, &ec1);
-	if (ret < 0) {
+	if (ioctl(_fd, RGN_IOC_S_CTRL, &ec1) < 0) {
 		fprintf(stderr, "RGN_SDK_IOC_S_CTRL(%d-%d) - %s NG, %s\n",
 			ec1.id, ec1.sdk_id, __func__, strerror(errno));
-		return ret;
+		return -1;
 	}
 	return 0;
 }

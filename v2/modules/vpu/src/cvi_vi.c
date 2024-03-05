@@ -211,9 +211,10 @@ static CVI_S32 _vi_proc_unmap(void)
 	return CVI_SUCCESS;
 }
 
-static CVI_S32 _vi_chn_enable_mirror_flip(VI_PIPE ViPipe, VI_CHN ViChn)
+static CVI_S32 _vi_chn_enable_mirror_flip(VI_CHN ViChn)
 {
 	ISP_SNS_MIRRORFLIP_TYPE_E eChnMirrorFlip;
+	VI_DEV ViDev = 0;
 
 	if (CHECK_VI_CTX_NULL_PTR(gViCtx) != CVI_SUCCESS)
 		return CVI_ERR_VI_FAILED_NOTCONFIG;
@@ -227,13 +228,18 @@ static CVI_S32 _vi_chn_enable_mirror_flip(VI_PIPE ViPipe, VI_CHN ViChn)
 	else
 		eChnMirrorFlip = ISP_SNS_NORMAL;
 
-	if (eChnMirrorFlip != ISP_SNS_NORMAL && !s_pfnDevMirrorFlip[ViPipe]) {
+	if (eChnMirrorFlip != ISP_SNS_NORMAL && !s_pfnDevMirrorFlip[ViChn]) {
 		CVI_TRACE_VI(CVI_DBG_ERR, "VI chn mirror/flip do not support this sensor.");
 		return CVI_ERR_VI_NOT_SUPPORT;
 	}
 
-	if (s_pfnDevMirrorFlip[ViPipe])
-		s_pfnDevMirrorFlip[ViPipe](ViPipe, eChnMirrorFlip);
+	if ((CVI_U32)ViChn < gViCtx->devAttr[0].chn_num)
+		ViDev = 0;
+	else
+		ViDev = 1;
+
+	if (s_pfnDevMirrorFlip[ViDev])
+		s_pfnDevMirrorFlip[ViDev](ViDev, eChnMirrorFlip);
 
 	return CVI_SUCCESS;
 }
@@ -627,23 +633,6 @@ CVI_S32 CVI_VI_GetDevNum(CVI_U32 *devNum)
 
 	return CVI_SUCCESS;
 }
-
-#if (defined ARCH_CV181X) || (defined ARCH_CV180X)
-CVI_S32 CVI_VI_QueryDevStatus(VI_PIPE ViPipe)
-{
-	CVI_S32 fd = get_vi_fd();
-	CVI_S32 s32Ret = CVI_SUCCESS;
-	CVI_BOOL bStatus;
-
-	CHECK_VI_PIPEID_VALID(ViPipe);
-
-	s32Ret = vi_sdk_get_dev_status(fd, ViPipe, &bStatus);
-	if (s32Ret != CVI_SUCCESS)
-		return CVI_FAILURE;
-
-	return bStatus == CVI_TRUE ? CVI_SUCCESS : CVI_FAILURE;
-}
-#endif
 
 CVI_S32 CVI_VI_SetDevAttr(VI_DEV ViDev, const VI_DEV_ATTR_S *pstDevAttr)
 {
@@ -1449,7 +1438,7 @@ CVI_S32 CVI_VI_EnableChn(VI_PIPE ViPipe, VI_CHN ViChn)
 		gViCtx->chn_bind[pstExtChnAttr->s32BindChn][0] = ViChn;
 	} else {
 		if (ViChn < VI_MAX_CHN_NUM)
-			_vi_chn_enable_mirror_flip(ViPipe, ViChn);
+			_vi_chn_enable_mirror_flip(ViChn);
 
 		if (gViCtx->total_dev_num != ViChn + 1)
 			return CVI_SUCCESS;
@@ -1762,7 +1751,7 @@ CVI_S32 CVI_VI_RegChnFlipMirrorCallBack(VI_PIPE ViPipe, VI_DEV ViDev, void *pvDa
 	CHECK_VI_DEVID_VALID(ViDev);
 	CHECK_VI_NULL_PTR(pvData);
 
-	s_pfnDevMirrorFlip[ViPipe] = (pfnChnMirrorFlip)pvData;
+	s_pfnDevMirrorFlip[ViDev] = (pfnChnMirrorFlip)pvData;
 	return CVI_SUCCESS;
 }
 
@@ -1771,7 +1760,7 @@ CVI_S32 CVI_VI_UnRegChnFlipMirrorCallBack(VI_PIPE ViPipe, VI_DEV ViDev)
 	CHECK_VI_PIPEID_VALID(ViPipe);
 	CHECK_VI_DEVID_VALID(ViDev);
 
-	s_pfnDevMirrorFlip[ViPipe] = CVI_NULL;
+	s_pfnDevMirrorFlip[ViDev] = CVI_NULL;
 	return CVI_SUCCESS;
 }
 
@@ -1790,7 +1779,7 @@ CVI_S32 CVI_VI_SetChnFlipMirror(VI_PIPE ViPipe, VI_CHN ViChn, CVI_BOOL bFlip, CV
 	gViCtx->chnAttr[ViChn].bFlip   = bFlip;
 	gViCtx->chnAttr[ViChn].bMirror = bMirror;
 
-	return _vi_chn_enable_mirror_flip(ViPipe, ViChn);
+	return _vi_chn_enable_mirror_flip(ViChn);
 }
 
 CVI_S32 CVI_VI_GetChnFlipMirror(VI_PIPE ViPipe, VI_CHN ViChn, CVI_BOOL *pbFlip, CVI_BOOL *pbMirror)
