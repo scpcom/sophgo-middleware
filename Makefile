@@ -35,7 +35,6 @@ module: prepare 3rdparty
 	@make -C modules/
 
 prepare:
-	@if [ -d mod_tmp ]; then mv mod_tmp modules; fi;
 	@mkdir -p include/isp
 	@cp -rf modules/isp/include/* include/isp
 ifeq ($(CHIP_ARCH), $(filter $(CHIP_ARCH), CV181X CV180X))
@@ -45,9 +44,9 @@ endif
 	@make -C 3rdparty/
 
 sample: module component
-	@mv modules mod_tmp
-	@make -C sample/ || mv mod_tmp modules
-	@mv mod_tmp modules
+	@rm -rf mod_tmp
+	@cp -rf modules mod_tmp
+	@make -C sample/
 
 component:
 	@make -C component/isp/ all
