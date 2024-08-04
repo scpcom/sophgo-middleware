@@ -15,9 +15,7 @@ include ../../sample.mk
 SDIR = $(PWD)
 SRCS = $(wildcard $(SDIR)/*.c)
 INCS = -I$(MW_INC) -I../common/ -I$(MW_INC)/../3rdparty/libmad/include -I ./
-ifeq ($(CHIP_ARCH), $(filter $(CHIP_ARCH), CV181X CV180X))
 INCS += -I$(KERNEL_INC)
-endif
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 

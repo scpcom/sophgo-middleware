@@ -29,7 +29,7 @@ extern "C" {
 #include <cvi_comm_vi.h>
 #include <cvi_comm_video.h>
 #include <cvi_defines.h>
-#elif defined(ARCH_CV181X) || defined(ARCH_CV180X) || defined(__CV181X__) || defined(__CV180X__)
+#elif defined(ARCH_CV181X) || defined(ARCH_CV180X) || defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 #include <linux/cvi_common.h>
 #include <linux/cvi_comm_vi.h>
 #include <linux/cvi_comm_video.h>

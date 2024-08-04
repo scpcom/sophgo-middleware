@@ -31,7 +31,7 @@
 #if defined(ARCH_CV183X)
 #define ACODEC_ADC	"/dev/cv1835adc"
 #define ACODEC_DAC	"/dev/cv1835dac"
-#elif defined(__CV181X__) || defined(__CV180X__)
+#elif defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 #define ACODEC_ADC	"/dev/cvitekaadc"
 #define ACODEC_DAC	"/dev/cvitekadac"
 #else

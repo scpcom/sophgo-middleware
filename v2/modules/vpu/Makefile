@@ -6,13 +6,8 @@ endif
 
 SDIR = $(PWD)/src
 SRCS = $(wildcard $(SDIR)/*.c)
-ifeq ($(CHIP_ARCH), $(filter $(CHIP_ARCH), CV180X CV181X CV182X MARS PHOBOS))
-	SRCS := $(filter-out $(SDIR)/cvi_gdc.c, $(SRCS))
-	SRCS := $(filter-out $(SDIR)/gdc_mesh.c, $(SRCS))
-else
-	SRCS := $(filter-out $(SDIR)/cvi_gdc_1822.c, $(SRCS))
-	SRCS := $(filter-out $(SDIR)/gdc_mesh_1822.c, $(SRCS))
-endif
+SRCS := $(filter-out $(SDIR)/cvi_gdc.c, $(SRCS))
+SRCS := $(filter-out $(SDIR)/gdc_mesh.c, $(SRCS))
 
 INCS = -I$(MW_INC) -I$(ISP_INC) -I$(KERNEL_INC) -I$(SYS_INC) -I$(BIN_INC) -I./include
 

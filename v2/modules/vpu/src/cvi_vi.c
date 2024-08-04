@@ -1838,7 +1838,7 @@ CVI_S32 CVI_VI_DumpHwRegisterToFile(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_T
 			return s32Ret;
 		}
 	}
-#elif defined(__CV181X__) || defined(__CV180X__)
+#elif defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 	if (IS_CHIP_CV181X(chip) || IS_CHIP_CV180X(chip)) {
 		s32Ret = dump_hw_register(ViPipe, fp, pstRegTbl);
 		if (s32Ret != CVI_SUCCESS) {
@@ -1897,9 +1897,9 @@ void _cfg_ctrl_test(struct vdev *d)
 		vi_put_usr_pic(d->fd, 0);
 		printf("Upload raw picture\n");
 		scanf("%d", &op);
-#if defined(__CV181X__)
+#if defined(__SOC_MARS__)
 		system("echo 0,0 > /sys/module/mars_vi/parameters/csi_patgen_en");
-#elif defined(__CV180X__)
+#elif defined(__SOC_PHOBOS__)
 		system("echo 0,0 > /sys/module/phobos_vi/parameters/csi_patgen_en");
 #endif
 	} else {
@@ -1907,12 +1907,12 @@ void _cfg_ctrl_test(struct vdev *d)
 		printf("is_pattern_gen(0/1)\n");
 		scanf("%d", &op);
 
-#if defined(__CV181X__)
+#if defined(__SOC_MARS__)
 		if (op == 1)
 			system("echo 1,0 > /sys/module/mars_vi/parameters/csi_patgen_en");
 		else
 			system("echo 0,0 > /sys/module/mars_vi/parameters/csi_patgen_en");
-#elif defined(__CV180X__)
+#elif defined(__SOC_PHOBOS__)
 		if (op == 1)
 			system("echo 1,0 > /sys/module/phobos_vi/parameters/csi_patgen_en");
 		else

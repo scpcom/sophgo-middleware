@@ -140,7 +140,7 @@ CVI_S32 CVI_RGN_AttachToChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn, const RG
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChn);
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChnAttr);
 
-#ifdef __CV180X__
+#ifdef __SOC_PHOBOS__
 	if (pstChn->enModId == CVI_ID_VO) {
 		CVI_TRACE_RGN(CVI_DBG_ERR, "No vo device, cannot attach to vo!\n");
 		return CVI_ERR_RGN_ILLEGAL_PARAM;
@@ -164,7 +164,7 @@ CVI_S32 CVI_RGN_DetachFromChn(RGN_HANDLE Handle, const MMF_CHN_S *pstChn)
 
 	MOD_CHECK_NULL_PTR(CVI_ID_RGN, pstChn);
 
-#ifdef __CV180X__
+#ifdef __SOC_PHOBOS__
 	if (pstChn->enModId == CVI_ID_VO) {
 		CVI_TRACE_RGN(CVI_DBG_ERR, "No vo device, cannot detach from vo!\n");
 		return CVI_ERR_RGN_ILLEGAL_PARAM;

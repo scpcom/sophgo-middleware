@@ -7,7 +7,7 @@
 #include <pthread.h>
 #include <inttypes.h>
 
-#if !(defined(__CV181X__) || defined(__CV180X__))
+#if !(defined(__SOC_MARS__) || defined(__SOC_PHOBOS__))
 #include "cvi_common.h"
 #include "cvi_math.h"
 #include "cvi_comm_video.h"

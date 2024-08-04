@@ -18,13 +18,8 @@ SRCS = $(wildcard $(SDIR)/*.c)
 INCS = -I$(MW_INC) -I$(ISP_INC) -I$(COMM_INC) -I$(3PARTY_INCLUDE) -Iaac_sample
 INCS += -I$(MW_INC)/../3rdparty/libmad/include
 INCS += -I$(MW_INC)/../3rdparty/lame/include
-ifeq ($(CVIARCH), $(filter $(CVIARCH), CV181X CV180X))
 INCS += -I$(PWD)/include -I$(KERNEL_INC)
 ifneq ($(CONFIG_ENABLE_SDK_ASAN), y)
-USE_CVIAUDIO_STATIC = no
-endif
-else
-INCS += -I$(PWD)/include
 USE_CVIAUDIO_STATIC = no
 endif
 
@@ -85,10 +80,7 @@ ifeq ($(USE_SONIC_LIB), yes)
 DEFINES += -DUSE_SONIC_LIB
 endif
 
-ifeq ($(CVIARCH), $(filter $(CVIARCH), CV181X CV180X))
 DEFINES += -DAUD_SUPPORT_KERNEL_MODE
-endif
-
 
 TEST_INCLUDES =
 TEST_INCLUDES += $(INCS)
@@ -105,9 +97,7 @@ endif
 INCS += -I ./include/
 
 AEC_TEST_LDLIBS += -lcvi_vqe
-ifeq ($(CVIARCH), $(filter $(CVIARCH), CV181X CV180X))
 AEC_TEST_LDLIBS += -lsys
-endif
 
 MP3_PLAYER_OBJ = ./cvi_mp3_player/cvi_mp3_player.o
 TEST_OBJ = cvi_sample_audio.o cvi_audio_parse_param.o
@@ -146,9 +136,7 @@ LDLIBS += -laaccomm2
 LDLIBS += -laacsbrenc2
 endif
 LDLIBS += -pthread
-ifeq ($(CVIARCH), $(filter $(CVIARCH), CV181X CV180X))
 LDLIBS += -lsys
-endif
 
 LDLIBS_WO_AAC = -lsys -latomic  -lcvi_audio -lcvi_vqe -lcvi_VoiceEngine -lcvi_RES1 -ltinyalsa -lm -lpthread -ldl
 

@@ -237,7 +237,7 @@ CVI_S32 CVI_SYS_Init(void)
 		//return CVI_ERR_SYS_NOTREADY;
 	}
 
-#ifndef __CV180X__
+#ifndef __SOC_PHOBOS__
 	s32ret = vo_dev_open();
 	if (s32ret != CVI_SUCCESS) {
 		CVI_TRACE_SYS(CVI_DBG_DEBUG, "base_vo_open failed\n");
@@ -323,7 +323,7 @@ CVI_S32 CVI_SYS_Exit(void)
 		return CVI_ERR_SYS_NOTREADY;
 	}
 
-#ifndef __CV180X__
+#ifndef __SOC_PHOBOS__
 	s32ret = vo_dev_close();
 	if (s32ret != CVI_SUCCESS) {
 		CVI_TRACE_SYS(CVI_DBG_ERR, "base_vo_close failed\n");
@@ -386,7 +386,7 @@ CVI_S32 _CVI_SYS_BindIOCtl(const MMF_CHN_S *pstSrcChn, const MMF_CHN_S *pstDestC
 
 CVI_S32 CVI_SYS_Bind(const MMF_CHN_S *pstSrcChn, const MMF_CHN_S *pstDestChn)
 {
-#ifdef __CV180X__
+#ifdef __SOC_PHOBOS__
 	if (pstDestChn && (pstDestChn->enModId == CVI_ID_VO)) {
 		CVI_TRACE_SYS(CVI_DBG_ERR, "No vo device, vo cannot be bind!\n");
 		return CVI_ERR_SYS_ILLEGAL_PARAM;
@@ -397,7 +397,7 @@ CVI_S32 CVI_SYS_Bind(const MMF_CHN_S *pstSrcChn, const MMF_CHN_S *pstDestChn)
 
 CVI_S32 CVI_SYS_UnBind(const MMF_CHN_S *pstSrcChn, const MMF_CHN_S *pstDestChn)
 {
-#ifdef __CV180X__
+#ifdef __SOC_PHOBOS__
 	if (pstDestChn && (pstDestChn->enModId == CVI_ID_VO)) {
 		CVI_TRACE_SYS(CVI_DBG_ERR, "No vo device, cannot unbind vo!\n");
 		return CVI_ERR_SYS_ILLEGAL_PARAM;

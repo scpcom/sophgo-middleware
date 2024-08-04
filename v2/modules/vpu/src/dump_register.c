@@ -213,7 +213,7 @@ static void _dump_gamma_table(FILE *fp, struct ip_info *ip_info_list, struct gam
 	GET_REGISTER_COMMON(tbl->shdw_sel.addr_ofs, tbl->shdw_sel.val_ofs, tbl->shdw_sel.data);
 	GET_REGISTER_COMMON(tbl->force_clk_enable.addr_ofs, tbl->force_clk_enable.val_ofs, tbl->force_clk_enable.data);
 
-#ifdef __CV181X__
+#ifdef __SOC_MARS__
 	//for 181x need read register at postraw done
 	CVI_U32 timeOut = 500;
 	CVI_U32 s32Ret = CVI_SUCCESS;
@@ -229,7 +229,7 @@ static void _dump_gamma_table(FILE *fp, struct ip_info *ip_info_list, struct gam
 	SET_REGISTER_COMMON(tbl->force_clk_enable.addr_ofs, tbl->force_clk_enable.val_ofs, 0);
 	WAIT_IP_DISABLE(tbl->enable.addr_ofs, tbl->enable.val_ofs);
 	SET_REGISTER_COMMON(tbl->prog_en.addr_ofs, tbl->prog_en.val_ofs, 1);
-#ifdef __CV180X__
+#ifdef __SOC_PHOBOS__
 	if (tbl->ip_info_id == IP_INFO_ID_RGBGAMMA ||
 		tbl->ip_info_id == IP_INFO_ID_YGAMMA ||
 		tbl->ip_info_id == IP_INFO_ID_DCI) {
@@ -1549,7 +1549,7 @@ CVI_S32 dump_hw_register(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_TABLE_S *pst
 	CHECK_VI_NULL_PTR(fp);
 	CHECK_VI_NULL_PTR(pstRegTbl);
 
-#if defined(__CV181X__) || defined(__CV180X__)
+#if defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 	CVI_S32 s32Ret = CVI_SUCCESS;
 	VI_DEV_ATTR_S stDevAttr;
 	struct ip_info *ip_info_list;
@@ -1580,7 +1580,7 @@ CVI_S32 dump_hw_register(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_TABLE_S *pst
 		free(ip_info_list);
 		return s32Ret;
 	}
-#ifdef __CV181X__
+#ifdef __SOC_MARS__
 	/* stop tuning update */
 	if (ViPipe == 0) {
 		system("echo 1,1,1,1 > /sys/module/cv181x_vi/parameters/tuning_dis");
@@ -1647,7 +1647,7 @@ CVI_S32 dump_hw_register(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_TABLE_S *pst
 		CVI_U8 enable = 0;
 		// CVI_U8 shdw_sel = 0;
 		CVI_U8 force_clk_enable = 0;
-#ifdef __CV181X__
+#ifdef __SOC_MARS__
 		CVI_U8 idx = (stDevAttr.stWDRAttr.enWDRMode == WDR_MODE_2To1_LINE) ? 2 : 1;
 		CVI_U32 *data_dpc = NULL;
 		CVI_CHAR name_list[2][16] = {"dpc_le_bp_tbl", "dpc_se_bp_tbl"};
@@ -1921,7 +1921,7 @@ CVI_S32 dump_hw_register(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_TABLE_S *pst
 		free(data_dtone_curve);
 
 		// bright tone
-#ifdef __CV181X__
+#ifdef __SOC_MARS__
 		length = 513;
 #else
 		length = 257;
@@ -1949,7 +1949,7 @@ CVI_S32 dump_hw_register(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_TABLE_S *pst
 		free(data_btone_curve);
 
 		// global tone
-#ifdef __CV181X__
+#ifdef __SOC_MARS__
 		length = 769;
 #else
 		length = 257;
@@ -2134,7 +2134,7 @@ CVI_S32 dump_hw_register(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_TABLE_S *pst
 		SET_REGISTER_COMMON(0x0, 2, 0); // reg_force_clk_enable
 		WAIT_IP_DISABLE(0x0, 0);
 		SET_REGISTER_COMMON(0x4, 8, 1); // reg_ycur_prog_en
-#ifdef __CV180X__
+#ifdef __SOC_PHOBOS__
 		CVI_U8 r_sel = 0;
 
 		GET_REGISTER_COMMON(0x4, 4, r_sel);
@@ -2217,7 +2217,7 @@ CVI_S32 dump_hw_register(VI_PIPE ViPipe, FILE *fp, VI_DUMP_REGISTER_TABLE_S *pst
 	fprintf(fp, "\t\"end\": {}\n");
 	fprintf(fp, "}");
 	/* start tuning update */
-#ifdef __CV181X__
+#ifdef __SOC_MARS__
 	system("echo 0,0,0,0 > /sys/module/cv181x_vi/parameters/tuning_dis");
 #else
 	system("echo 0,0,0,0 > /sys/module/cv180x_vi/parameters/tuning_dis");

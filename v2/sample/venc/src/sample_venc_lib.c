@@ -1418,12 +1418,12 @@ CVI_S32 vi_ut_plat_vi_init(void)
 		}
 	}
 
-#if defined(__CV181X__)
+#if defined(__SOC_MARS__)
 	if (vi_ut_ctx.is_patgen_enable)
 		system("echo 1,0 > /sys/module/mars_vi/parameters/csi_patgen_en");
 	else
 		system("echo 0,0 > /sys/module/mars_vi/parameters/csi_patgen_en");
-#elif defined(__CV180X__)
+#elif defined(__SOC_PHOBOS__)
 	if (vi_ut_ctx.is_patgen_enable)
 		system("echo 1,0 > /sys/module/phobos_vi/parameters/csi_patgen_en");
 	else

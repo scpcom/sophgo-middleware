@@ -12,11 +12,7 @@ OSS_MODULE_INSTALL_PATH = $(OUTPUT_DIR)/mw_$(SDK_VER)/cvitek_mw_sdk
 OSS_MODULE_INCLUDE_PATH = $(OSS_MODULE_INSTALL_PATH)/include
 OSS_MODULE_LIB_PATH = $(OSS_MODULE_INSTALL_PATH)/lib
 
-ifneq ($(findstring $(CHIP_ARCH), CV183X CV182X MARS PHOBOS CV181X CV180X),)
 ISP_BIN_DIR = $(MW_PATH)/modules/isp/$(shell echo $(CHIP_ARCH) | tr A-Z a-z)/isp_bin/inc
-else
-$(error UNKNOWN chip architecture - $(CHIP_ARCH))
-endif
 
 SRCS_ASM = $(wildcard $(SDIR)/*.S)
 INCS = -I$(MW_INC) -I$(KERNEL_INC) -I$(SYS_INC) -I$(VPU_INC) -I$(ISP_INC) -Iinclude

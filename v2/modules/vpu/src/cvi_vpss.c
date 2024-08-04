@@ -110,7 +110,7 @@ static CVI_S32 _vpss_update_rotation_mesh(VPSS_GRP VpssGrp, VPSS_CHN VpssChn,
 	UNUSED(enRotation);
 	// TODO: dummy settings
 	pmesh->paddr = DEFAULT_MESH_PADDR;
-#elif defined(__CV181X__) || defined(__CV180X__)
+#elif defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 	CVI_S32 fd = get_vpss_fd();
 	struct cvi_gdc_mesh *pmesh = &mesh[VpssGrp][VpssChn];
 	struct vpss_chn_rot_cfg cfg;
@@ -178,7 +178,7 @@ static CVI_S32 _vpss_update_ldc_mesh(VPSS_GRP VpssGrp, VPSS_CHN VpssChn,
 	CVI_TRACE_VPSS(CVI_DBG_DEBUG, "Grp(%d) Chn(%d) mesh base(%#"PRIx64") vaddr(%p)\n"
 		      , VpssGrp, VpssChn, paddr, vaddr);
 
-#if defined(__CV181X__) || defined(__CV180X__)
+#if defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 	CVI_S32 fd = get_vpss_fd();
 	struct vpss_chn_ldc_cfg cfg;
 
@@ -525,7 +525,7 @@ CVI_S32 CVI_VPSS_SetGrpProcAmp(VPSS_GRP VpssGrp, PROC_AMP_E type, const CVI_S32 
 		return CVI_ERR_VPSS_ILLEGAL_PARAM;
 	}
 
-#if defined(__CV181X__) || defined(__CV180X__)
+#if defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 	CVI_S32 fd = get_vpss_fd();
 	struct vpss_grp_csc_cfg csc_cfg;
 	struct vpss_proc_amp_cfg amp_cfg;
@@ -1508,7 +1508,7 @@ CVI_S32 CVI_VPSS_TriggerSnapFrame(VPSS_GRP VpssGrp, VPSS_CHN VpssChn, CVI_U32 u3
 	return CVI_SUCCESS;
 }
 
-#if defined(__CV181X__) || defined(__CV180X__)
+#if defined(__SOC_MARS__) || defined(__SOC_PHOBOS__)
 CVI_S32 CVI_VPSS_SetChnBufWrapAttr(VPSS_GRP VpssGrp, VPSS_CHN VpssChn, const VPSS_CHN_BUF_WRAP_S *pstVpssChnBufWrap)
 {
 	CVI_S32 fd = get_vpss_fd();

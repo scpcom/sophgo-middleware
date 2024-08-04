@@ -35,16 +35,8 @@ module: prepare 3rdparty
 	@make -C modules/
 
 prepare:
-	@if [ -d mod_tmp ]; then mv mod_tmp modules; fi;
-ifeq ($(CHIP_ARCH), $(filter $(CHIP_ARCH), CV180X CV181X CV182X))
-else
-	@cp $(CHIP_DIR)/cvi_defines.h $(MW_INC)
-endif
 	@mkdir -p include/isp
 	@cp -rf modules/isp/include/* include/isp
-ifeq ($(CHIP_ARCH), $(filter $(CHIP_ARCH), CV181X CV180X))
-	@cp -rf modules/isp/cv181x/isp-daemon2/inc/cvi_ispd2.h include/isp/cv181x/
-endif
 3rdparty:
 	@make -C 3rdparty/
 
@@ -103,10 +95,6 @@ package:
 endif
 clean:
 	@if [ -d mod_tmp ]; then mv mod_tmp modules; fi;
-ifeq ($(CHIP_ARCH), $(filter $(CHIP_ARCH), CV180X CV181X CV182X))
-else
-	@rm -f $(MW_INC)/cvi_defines.h
-endif
 	@rm -rf include/isp
 	@make -C modules/ clean
 	@make -C 3rdparty/ clean
