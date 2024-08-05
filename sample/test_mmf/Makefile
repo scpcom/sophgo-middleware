@@ -5,6 +5,14 @@ ifeq ($(PARAM_FILE), )
 endif
 include ../sample.mk
 
+TEST_MMF_VER = $(SDK_VER)
+ifeq ($(SDK_VER), glibc_riscv64)
+TEST_MMF_VER = riscv64
+endif
+ifeq ($(SDK_VER), musl_riscv64)
+TEST_MMF_VER = riscv64
+endif
+
 SDIR = $(PWD)
 SRCS = $(wildcard $(SDIR)/*.c)
 INCS = -I$(MW_INC) -I$(ISP_INC) -I../common/ -I$(KERNEL_INC) -I$(MW_INC)/linux -I$(SDIR) -I$(SENSOR_LIST_INC)
@@ -54,8 +62,12 @@ EXTRA_CFLAGS = $(INCS) $(DEFS)
 EXTRA_LDFLAGS = $(LIBS) -lpthread -lm -lini
 
 MSK_LIBD = media_server-1.0.x/release.linux
+MMF_LIBD = maix_mmf/release.linux
+ifeq ($(TEST_MMF_VER), riscv64)
+MMF_LIBD = .
+endif
 
-LIBS += -L$(SDIR)/$(MSK_LIBD) -L. -lrtsp -lhttp -lflv -lmov -lrtp -lmpeg -lsdk -lavcodec -lavbsf
+LIBS += -L$(SDIR)/$(MSK_LIBD) -L$(MMF_LIBD) -lrtsp -lhttp -lflv -lmov -lrtp -lmpeg -lsdk -lavcodec -lavbsf
 
 # IVE_SUPPORT = 1
 ifeq ($(IVE_SUPPORT), 1)
@@ -88,11 +100,13 @@ mmflibs:
 	@cp -p media_server-1.0.x/media-server/libmpeg/release.linux/libmpeg.a $(MSK_LIBD)/
 	@cp -p media_server-1.0.x/media-server/librtp/release.linux/librtp.a $(MSK_LIBD)/
 	@cp -p media_server-1.0.x/media-server/librtsp/release.linux/librtsp.a $(MSK_LIBD)/
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C maix_mmf/
 
 clean_mmflibs:
 	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/sdk/ clean
 	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/avcodec/ clean
 	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/media-server/ clean
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C maix_mmf/ clean
 
 $(COMMON_DIR)/%.o: $(COMMON_DIR)/%.c
 	@$(CC) $(DEPFLAGS) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ -c $<
