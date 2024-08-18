@@ -21,6 +21,14 @@ ifeq ($(CHIP_ARCH), CV181X)
 	INCS += -I$(GDC_INC)
 	INCS += -I$(RGN_INC)
 	DEFS += -DCHIP_ARCH_CV181X
+else ifeq ($(CHIP_ARCH), SG200X)
+	INCS += -I$(ISP_BASE_PATH)/isp/inc
+	INCS += -I$(VI_INC)
+	INCS += -I$(VPSS_INC)
+	INCS += -I$(VO_INC)
+	INCS += -I$(GDC_INC)
+	INCS += -I$(RGN_INC)
+	DEFS += -DCHIP_ARCH_CV181X
 else ifeq ($(CHIP_ARCH), CV180X)
 	INCS += -I$(ISP_BASE_PATH)/isp/inc
 	INCS += -I$(VI_INC)

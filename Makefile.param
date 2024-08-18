@@ -189,11 +189,17 @@ endif
 
 CFLAGS += -DARCH_$(CHIP_ARCH)
 
+ifeq ("$(CVIARCH)", "SG200X")
+CFLAGS += -D__CV181X__
+CFLAGS += -D__SOC_MARS__
+endif
 ifeq ("$(CVIARCH)", "CV181X")
 CFLAGS += -D__CV181X__
+CFLAGS += -D__SOC_MARS__
 endif
 ifeq ("$(CVIARCH)", "CV180X")
 CFLAGS += -D__CV180X__
+CFLAGS += -D__SOC_PHOBOS__
 endif
 
 ## COLOR ##

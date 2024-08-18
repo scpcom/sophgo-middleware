@@ -221,6 +221,12 @@ class MarcoDict():
         self.marcoDict.update({"ISP_WDR_FRAME_IDX_SIZE":"4"})
         self.marcoDict.update({"VO_LVDS_LANE_MAX":"5"})
         self.marcoDict.update({"PROC_AMP_MAX":"4"})
+        self.marcoDict.update({"VI_COMPMASK_NUM":"2"})
+        self.marcoDict.update({"VI_MAX_ADCHN_NUM":"4"})
+        self.marcoDict.update({"VI_PIPE_MIN_WIDTH":"0"})
+        self.marcoDict.update({"VI_PIPE_MAX_WIDTH":"4294967295"})
+        self.marcoDict.update({"VI_PIPE_MIN_HEIGHT":"0"})
+        self.marcoDict.update({"VI_PIPE_MAX_HEIGHT":"4294967295"})
         self.addViNumMarcoDict()
     def parseStr(self, str):
         str = re.sub("\s+"," ",str)
