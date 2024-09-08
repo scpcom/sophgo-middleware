@@ -7,7 +7,7 @@ ISP_3A_DIR = $(ISP_BASE_PATH)/algo
 
 all:
 	@cd isp; $(MAKE) all;
-	@cd isp_bin; $(MAKE) all;
+	#@cd isp_bin; $(MAKE) all;
 	@cd $(ISP_COMMON_DIR)/toolJsonGenerator; ./generate_toolJson.sh cv181x
 	@cd isp-daemon2; $(MAKE) -j4; $(MAKE) install;
 	@cd $(ISP_COMMON_DIR)/raw_replay; $(MAKE) all;
