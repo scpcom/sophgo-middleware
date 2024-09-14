@@ -1,0 +1,4 @@
+[submodule "component/isp"]
+	path = component/isp
+	url = https://github.com/scpcom/sophgo-SensorSupportList
+	branch = sg200x-dev
