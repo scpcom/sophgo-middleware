@@ -22,6 +22,7 @@ INCLUDES = . \
 					$(ISP_INC) \
 					../../common/ \
 					$(KERNEL_INC) \
+					$(SENSOR_LIST_INC) \
 					$(ROOT)
 
 #-------------------------------Source-------------------------------
