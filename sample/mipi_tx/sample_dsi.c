@@ -12,7 +12,7 @@
 #include <inttypes.h>
 
 #include "sample_comm.h"
-#include "mipi_tx.h"
+#include "cvi_mipi_tx.h"
 #include "sample_dsi_panel.h"
 
 #define PANLE_ADAPTIVITY 0
@@ -148,7 +148,7 @@ int dsi_init(int devno, const struct dsc_instr *cmds, int size)
 			.cmd = (void *)instr->data
 		};
 
-		ret = mipi_tx_send_cmd(fd, &cmd_info);
+		ret = CVI_MIPI_TX_SendCmd(fd, &cmd_info);
 		if (instr->delay)
 			usleep(instr->delay * 1000);
 
@@ -178,7 +178,7 @@ static int dsi_get_panel_id(int devno, unsigned int *id)
 		};
 		memset(buf, 0, sizeof(buf));
 
-		ret = mipi_tx_recv_cmd(fd, &get_cmd_info);
+		ret = CVI_MIPI_TX_RecvCmd(fd, &get_cmd_info);
 		if (ret < 0) {
 			SAMPLE_PRT("dsi get panel id fail.\n");
 			return ret;
@@ -198,7 +198,7 @@ static void dsi_panel_init_adaptivity(void)
 	int size = 0;
 
 	//use one type panel's cfg to init
-	mipi_tx_cfg(fd, (struct combo_dev_cfg_s *)&dev_cfg_hx8394_720x1280);
+	CVI_MIPI_TX_Cfg(fd, (struct combo_dev_cfg_s *)&dev_cfg_hx8394_720x1280);
 
 	dsi_get_panel_id(0, &panelid);
 	printf("Panel ID: 0x%X\n", panelid);
@@ -225,9 +225,9 @@ static void dsi_panel_init_adaptivity(void)
 	}
 
 	if (panelid != 0xF9483)
-		mipi_tx_cfg(fd, (struct combo_dev_cfg_s *)dev_cfg);
+		CVI_MIPI_TX_Cfg(fd, (struct combo_dev_cfg_s *)dev_cfg);
 	dsi_init(0, dsi_init_cmds, size);
-	mipi_tx_set_hs_settle(fd, hs_timing_cfg);
+	CVI_MIPI_TX_SetHsSettle(fd, hs_timing_cfg);
 }
 #else
 static void dsi_panel_init(void)
@@ -243,9 +243,9 @@ static void dsi_panel_init(void)
 	size = ARRAY_SIZE(dsi_init_cmds_hx8394_720x1280);
 	memcpy(panel_name, "HX8394-720x1280", sizeof("HX8394-720x1280"));
 
-	mipi_tx_cfg(fd, (struct combo_dev_cfg_s *)dev_cfg);
+	CVI_MIPI_TX_Cfg(fd, (struct combo_dev_cfg_s *)dev_cfg);
 	dsi_init(0, dsi_init_cmds, size);
-	mipi_tx_set_hs_settle(fd, hs_timing_cfg);
+	CVI_MIPI_TX_SetHsSettle(fd, hs_timing_cfg);
 }
 #endif
 #endif
@@ -558,11 +558,11 @@ CVI_S32 SAMPLE_MIPI_TX_ENABLE()
 		return CVI_FAILURE;
 	}
 
-	mipi_tx_disable(fd);
-	mipi_tx_cfg(fd, (struct combo_dev_cfg_s *)g_panel_desc.dev_cfg);
+	CVI_MIPI_TX_Disable(fd);
+	CVI_MIPI_TX_Cfg(fd, (struct combo_dev_cfg_s *)g_panel_desc.dev_cfg);
 	dsi_init(0, g_panel_desc.dsi_init_cmds, g_panel_desc.dsi_init_cmds_size);
-	mipi_tx_set_hs_settle(fd, g_panel_desc.hs_timing_cfg);
-	mipi_tx_enable(fd);
+	CVI_MIPI_TX_SetHsSettle(fd, g_panel_desc.hs_timing_cfg);
+	CVI_MIPI_TX_Enable(fd);
 
 	printf("Init for MIPI-Driver-%s\n", g_panel_desc.panel_name);
 
@@ -597,7 +597,7 @@ void SAMPLE_DSI_CONTROLE()
 				data[len++] = tmp;
 			} while (len < cmd_info.cmd_size);
 			cmd_info.cmd = data;
-			mipi_tx_send_cmd(fd, &cmd_info);
+			CVI_MIPI_TX_SendCmd(fd, &cmd_info);
 		} else if (tmp == 1) {
 			struct get_cmd_info_s cmd_info;
 			CVI_U8 data[4] = { 0 };
@@ -615,18 +615,18 @@ void SAMPLE_DSI_CONTROLE()
 			cmd_info.data_param = tmp;
 
 			cmd_info.get_data = data;
-			mipi_tx_recv_cmd(fd, &cmd_info);
+			CVI_MIPI_TX_RecvCmd(fd, &cmd_info);
 			printf("data[0]: %#x [1]: %#x [2]: %#x [3]: %#x\n"
 				, cmd_info.get_data[0], cmd_info.get_data[1]
 				, cmd_info.get_data[2], cmd_info.get_data[3]);
 		} else if (tmp == 2) {
-			mipi_tx_disable(fd);
+			CVI_MIPI_TX_Disable(fd);
 		} else if (tmp == 3) {
-			mipi_tx_enable(fd);
+			CVI_MIPI_TX_Enable(fd);
 		} else if (tmp == 4) {
 			struct hs_settle_s hs_cfg;
 
-			mipi_tx_get_hs_settle(fd, &hs_cfg);
+			CVI_MIPI_TX_GetHsSettle(fd, &hs_cfg);
 			printf("prepare(%d) zero(%d) trail(%d)\n",
 				hs_cfg.prepare, hs_cfg.zero, hs_cfg.trail);
 		} else if (tmp == 5) {
@@ -644,7 +644,7 @@ void SAMPLE_DSI_CONTROLE()
 			scanf("%d", &tmp);
 			hs_cfg.trail = tmp;
 
-			mipi_tx_set_hs_settle(fd, &hs_cfg);
+			CVI_MIPI_TX_SetHsSettle(fd, &hs_cfg);
 		} else
 			break;
 	} while (1);
