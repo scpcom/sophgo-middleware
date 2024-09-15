@@ -197,6 +197,7 @@ CVI_S32 CVI_SYS_IonInvalidateCache(CVI_U64 u64PhyAddr, CVI_VOID *pVirAddr, CVI_U
  */
 CVI_S32 CVI_SYS_IonGetFd(CVI_VOID);
 
+#if 0
 /**
  * @brief The user get ION memory statics
  *
@@ -204,6 +205,7 @@ CVI_S32 CVI_SYS_IonGetFd(CVI_VOID);
  * @return CVI_S32 Return CVI_SUCCESS if succeed.
  */
 CVI_S32 CVI_SYS_IonGetMMStatics(ION_MM_STATICS_S *statics);
+#endif
 
 /**
  * @brief memory copy by TPU.

@@ -747,6 +747,7 @@ CVI_S32 CVI_SYS_IonFree(CVI_U64 u64PhyAddr, CVI_VOID *pVirAddr)
 	return CVI_SUCCESS;
 }
 
+#if 0
 CVI_S32 CVI_SYS_IonGetMMStatics(ION_MM_STATICS_S *statics)
 {
 	CVI_S32 fd = -1;
@@ -767,6 +768,7 @@ CVI_S32 CVI_SYS_IonGetMMStatics(ION_MM_STATICS_S *statics)
 
 	return ret;
 }
+#endif
 
 CVI_S32 CVI_SYS_IonFlushCache(CVI_U64 u64PhyAddr, CVI_VOID *pVirAddr, CVI_U32 u32Len)
 {

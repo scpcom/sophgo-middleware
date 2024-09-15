@@ -45,6 +45,7 @@ CVI_S32 SAMPLE_PLAT_SYS_INIT(SIZE_S stSize)
 	CVI_S32 s32Ret = CVI_SUCCESS;
 	COMPRESS_MODE_E    enCompressMode   = COMPRESS_MODE_NONE;
 	struct sigaction sa = {};
+#if 0
 	ION_MM_STATICS_S statics = {0};
 
 	s32Ret = CVI_SYS_IonGetMMStatics(&statics);
@@ -52,6 +53,7 @@ CVI_S32 SAMPLE_PLAT_SYS_INIT(SIZE_S stSize)
 		SAMPLE_PRT("CVI_SYS_IonGetMMStatics failed with %#x\n", s32Ret);
 		return s32Ret;
 	}
+#endif
 
 	memset(&sa, 0, sizeof(struct sigaction));
 	sigemptyset(&sa.sa_mask);
@@ -71,10 +73,18 @@ CVI_S32 SAMPLE_PLAT_SYS_INIT(SIZE_S stSize)
 
 	stVbConf.astCommPool[0].u32BlkSize	= u32BlkSize;
 
+#if 0
 	if (u32BlkSize * 8 > statics.max_avail_size)
 		stVbConf.astCommPool[0].u32BlkCnt	= 3;
 	else
 		stVbConf.astCommPool[0].u32BlkCnt	= 8;
+#else
+#if !defined(DDR_64MB_SIZE)
+	stVbConf.astCommPool[0].u32BlkCnt	= 8;
+#else
+	stVbConf.astCommPool[0].u32BlkCnt	= 3;
+#endif
+#endif
 
 	stVbConf.astCommPool[0].enRemapMode	= VB_REMAP_MODE_CACHED;
 	SAMPLE_PRT("common pool[0] BlkSize %d\n", u32BlkSize);
