@@ -2,6 +2,10 @@ SHELL = /bin/bash
 
 include $(BUILD_PATH)/.config
 
+ifeq ("$(CHIP_ARCH)", "SG200X")
+CHIP_ARCH := CV181X
+endif
+
 ## setup path ##
 ROOT_DIR:=$(shell dirname $(realpath $(PARAM_FILE)))
 export MW_PATH:= $(ROOT_DIR)
