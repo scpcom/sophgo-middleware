@@ -627,6 +627,7 @@ CVI_S32 CVI_VI_GetDevNum(CVI_U32 *devNum)
 }
 
 #if (defined ARCH_CV181X) || (defined ARCH_CV180X)
+#ifdef WANT_CVI_VI_QUERYDEVSTATUS
 CVI_S32 CVI_VI_QueryDevStatus(VI_PIPE ViPipe)
 {
 	CVI_S32 fd = get_vi_fd();
@@ -641,6 +642,7 @@ CVI_S32 CVI_VI_QueryDevStatus(VI_PIPE ViPipe)
 
 	return bStatus == CVI_TRUE ? CVI_SUCCESS : CVI_FAILURE;
 }
+#endif
 #endif
 
 CVI_S32 CVI_VI_SetDevAttr(VI_DEV ViDev, const VI_DEV_ATTR_S *pstDevAttr)

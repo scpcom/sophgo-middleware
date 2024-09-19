@@ -68,7 +68,7 @@ static CVI_S32 get_file_size(FILE *fp, CVI_U32 *size);
 static CVI_S32 id_is_valid_IspID(enum CVI_BIN_SECTION_ID id);
 static CVI_BOOL check_bin_file_is_new_version(CVI_CHAR *pchVersion);
 static CVI_S32 write_md5_value_to_buf(CVI_U8 *buf, CVI_U32 u32BufSize);
-static CVI_S32 check_sensor_num_is_exceeded(void);
+static CVI_S32 check_sensor_num_is_exceeded(enum CVI_BIN_SECTION_ID id);
 
 static pfn_cvi_bin_getbinsize getBinSizeFunc[CVI_BIN_ID_MAX] = {
 	header_bin_getBinSize, /*CVI_BIN_ID_HEADER*/
@@ -212,7 +212,7 @@ static CVI_S32 get_bin_Info_from_buf(CVI_U8 *buf, struct BIN_BUF_INFO *pstBufInf
 
 	/*get bin size total size.*/
 	for (CVI_U32 idx = CVI_BIN_ID_MIN; idx < CVI_BIN_ID_MAX; idx++) {
-		if (getBinSizeFunc[idx] != NULL) {
+		if ((getBinSizeFunc[idx] != NULL) && (check_sensor_num_is_exceeded(idx) == CVI_SUCCESS)) {
 			pstBufInfo->u32BlkSize[idx] = pstHeader->size[idx];
 			u32BinSize += pstHeader->size[idx];
 		}
@@ -222,7 +222,7 @@ static CVI_S32 get_bin_Info_from_buf(CVI_U8 *buf, struct BIN_BUF_INFO *pstBufInf
 	if (check_bin_file_is_new_version(pstBufInfo->achBinVersion)) {
 		pstJsonHeader = (CVI_JSON_HEADER *)(buf + u32BinSize);
 		for (CVI_U32 idx = CVI_BIN_ID_MIN; idx < CVI_BIN_ID_MAX; idx++) {
-			if (getBinSizeFunc[idx] != NULL) {
+			if ((getBinSizeFunc[idx] != NULL) && (check_sensor_num_is_exceeded(idx)) == CVI_SUCCESS) {
 				u32JsonSize += pstJsonHeader->size[idx].u32CompreSize;
 			}
 		}
@@ -250,19 +250,16 @@ static CVI_S32 id_is_valid_IspID(enum CVI_BIN_SECTION_ID id)
 	return CVI_FAILURE;
 }
 
-static CVI_S32 check_sensor_num_is_exceeded(void)
+static CVI_S32 check_sensor_num_is_exceeded(enum CVI_BIN_SECTION_ID id)
 {
 	CVI_S32 ret = CVI_SUCCESS;
-	CVI_U32 u32CurSensorNum = 0;
+	CVI_U32 u32CurSensorNum = id - CVI_BIN_ID_ISP0 + 1;
 	struct BIN_BUF_INFO *pstBufInfo = get_current_buf_info();
 
-	for (CVI_U32 idx = CVI_BIN_ID_ISP0; idx <= CVI_BIN_ID_ISP3; idx++) {
-		if (CVI_VI_QueryDevStatus(idx - CVI_BIN_ID_ISP0) == CVI_SUCCESS) {
-			u32CurSensorNum++;
+	if (id_is_valid_IspID(id) == CVI_SUCCESS) {
+		if (u32CurSensorNum > pstBufInfo->u32SensorNumber) {
+			ret = CVI_BIN_SENSORNUM_ERROR;
 		}
-	}
-	if (u32CurSensorNum > pstBufInfo->u32SensorNumber) {
-		ret = CVI_BIN_SENSORNUM_ERROR;
 	}
 
 	return ret;
@@ -270,16 +267,14 @@ static CVI_S32 check_sensor_num_is_exceeded(void)
 
 static CVI_S32 check_is_register_id(enum CVI_BIN_SECTION_ID id)
 {
+	CVI_U32 u32DevNum = 0;
+
 	if (id_is_valid_IspID(id) == CVI_SUCCESS) {
-		if (CVI_VI_QueryDevStatus(id - CVI_BIN_ID_ISP0) != CVI_SUCCESS) {
-			return CVI_BIN_MODULE_NOT_REGISTER_ERROR;
+		CVI_VI_GetDevNum(&u32DevNum);
+		if (id - CVI_BIN_ID_ISP0 >= u32DevNum) {
+			return CVI_FAILURE;
 		}
 	}
-
-	if (((id < CVI_BIN_ID_MAX) && (getBinSizeFunc[id] == NULL)) || (id > CVI_BIN_ID_MAX)) {
-		return CVI_BIN_MODULE_NOT_REGISTER_ERROR;
-	}
-
 	return CVI_SUCCESS;
 }
 /* Static function */
@@ -640,27 +635,20 @@ CVI_S32 CVI_BIN_ImportBinData(CVI_U8 *pu8Buffer, CVI_U32 u32DataLength)
 	CVI_BIN_HEADER *pstHeader = (CVI_BIN_HEADER *)pu8Buffer;
 	CVI_U8 *pu8BlockAddr = (CVI_U8 *)pu8Buffer;
 	CVI_BOOL bBlkSizeInvalid = CVI_FALSE;
-	CVI_U8 *pu8BlockTempAddr = (CVI_U8 *)pu8Buffer;
 
 	ret = check_bin_file_validity(pu8Buffer, u32DataLength);
 	if (ret == (CVI_S32)CVI_BIN_FILE_ERROR) {
 		goto ERROR_HANDLER;
 	}
-	ret = check_sensor_num_is_exceeded();
-	if (ret != CVI_SUCCESS) {
-		goto ERROR_HANDLER;
-	}
 
 	for (CVI_U32 idx = CVI_BIN_ID_MIN; idx < CVI_BIN_ID_MAX; idx++) {
 		if ((getParamFromBinFunc[idx] != NULL) && (check_is_register_id(idx) == CVI_SUCCESS)) {
-			if (idx <= CVI_BIN_ID_ISP3) {
-				pu8BlockAddr = pu8Buffer;
-			} else {
-				pu8BlockAddr = pu8BlockTempAddr;
+			ret = check_sensor_num_is_exceeded(idx);
+			if (ret != CVI_SUCCESS) {
+				CVI_TRACE_SYS(CVI_DBG_WARN, "Sensor number exceeds specified number in PQbin file\n");
+				goto ERROR_HANDLER;
 			}
-			pu8BlockTempAddr += pstHeader->size[idx];
-
-			bBlkSizeInvalid = pstHeader->size[idx] == 0 ? CVI_TRUE : CVI_FALSE;
+			bBlkSizeInvalid = !(pstHeader->size[idx]);
 			if (bBlkSizeInvalid) {
 				#ifndef DISABLE_PQBIN_JSON
 				CVI_TRACE_SYS(CVI_DBG_WARN, "Size of block(%d) is 0, get para from json!\n", idx);
@@ -689,6 +677,7 @@ CVI_S32 CVI_BIN_ImportBinData(CVI_U8 *pu8Buffer, CVI_U32 u32DataLength)
 				}
 			}
 		}
+		pu8BlockAddr += pstHeader->size[idx];
 	}
 	ret = tmpRet;
 
