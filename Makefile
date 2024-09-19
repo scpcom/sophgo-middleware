@@ -107,7 +107,7 @@ package:
 	@echo "package done"
 endif
 clean:
-	@if [ -d mod_tmp ]; then mv mod_tmp modules; fi;
+	@if [ -d mod_tmp ]; then rm -rf mod_tmp; fi;
 ifeq ($(CHIP_ARCH), $(filter $(CHIP_ARCH), CV180X CV181X CV182X))
 else
 	@rm -f $(MW_INC)/cvi_defines.h
