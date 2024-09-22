@@ -237,6 +237,7 @@ CVI_S32 CVI_BIN_ExportBinData(CVI_U8 *pu8Buffer, CVI_U32 u32DataLength);
  */
 CVI_S32 CVI_BIN_ImportBinData(CVI_U8 *pu8Buffer, CVI_U32 u32DataLength);
 
+#ifdef WANT_ISP_BIN_BYPASSPARAMS
 /* CVI_ISP_BIN_SetBypassParams:
  * set the params of ispBinBypass, indicatting which param to be bypassed.
  * [in]	id: sensor id whose params selecetd to be bypassed.
@@ -259,6 +260,7 @@ CVI_S32 CVI_ISP_BIN_SetBypassParams(enum CVI_BIN_SECTION_ID id, ISP_BIN_BYPASS_U
  *      0xCB000013: invalid id error. The given id is not valid Sensor id.
  */
 CVI_S32 CVI_ISP_BIN_GetBypassParams(enum CVI_BIN_SECTION_ID id, ISP_BIN_BYPASS_U *ispBinBypass);
+#endif
 // -------- If you want to change these interfaces, please contact the isp team. --------
 
 #ifdef __cplusplus

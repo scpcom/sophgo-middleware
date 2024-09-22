@@ -1018,6 +1018,7 @@ CVI_S32 CVI_BIN_GetBinName(CVI_CHAR *binName)
 	return _getBinNameImp(binName);
 }
 
+#ifdef WANT_ISP_BIN_BYPASSPARAMS
 // set the params of ispBinBypass, indicatting which param to be bypassed
 CVI_S32 CVI_ISP_BIN_SetBypassParams(enum CVI_BIN_SECTION_ID id, ISP_BIN_BYPASS_U *ispBinBypass)
 {
@@ -1053,3 +1054,4 @@ CVI_S32 CVI_ISP_BIN_GetBypassParams(enum CVI_BIN_SECTION_ID id, ISP_BIN_BYPASS_U
 
 	return ret;
 }
+#endif
