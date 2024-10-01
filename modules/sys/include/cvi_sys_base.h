@@ -158,8 +158,15 @@ struct dis_info {
 
 // ++++++++ If you want to change these interfaces, please contact the isp team. ++++++++
 struct mlv_info {
+#ifdef WANT_VI_MOTION_TH
 	CVI_U8  raw_num;
 	CVI_U8  motion_th;
+#else
+	CVI_U8  sensor_num;
+	CVI_U32 frm_num;
+	CVI_U8  mlv;
+	CVI_U8  mtable[Mo_Table_Size];
+#endif
 };
 // -------- If you want to change these interfaces, please contact the isp team. --------
 

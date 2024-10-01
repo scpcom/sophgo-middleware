@@ -557,8 +557,15 @@ CVI_VOID CVI_VI_SetMotionLV(struct mlv_info mlevel_i)
 	}
 
 	if (s32Ret == CVI_SUCCESS) {
+#ifdef WANT_VI_MOTION_TH
 		mlv_i_tmp.raw_num = mlevel_i.raw_num;
 		mlv_i_tmp.motion_th        = mlevel_i.motion_th;
+#else
+		mlv_i_tmp.sensor_num = mlevel_i.sensor_num;
+		mlv_i_tmp.frm_num    = mlevel_i.frm_num;
+		mlv_i_tmp.mlv        = mlevel_i.mlv;
+		memcpy(mlv_i_tmp.mtable, mlevel_i.mtable, MO_TBL_SIZE);
+#endif
 
 		s32Ret = vi_sdk_set_motion_lv(d->fd, &mlv_i_tmp);
 		if (s32Ret != CVI_SUCCESS) {

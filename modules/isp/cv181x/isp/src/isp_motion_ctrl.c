@@ -191,14 +191,25 @@ static CVI_S32 isp_motion_ctrl_postprocess(VI_PIPE ViPipe)
 	CVI_S32 ret = CVI_SUCCESS;
 
 	struct isp_motion_ctrl_runtime *runtime = _get_motion_ctrl_runtime(ViPipe);
+#ifdef WANT_VI_MOTION_TH
 	struct motion_param_in *ptParamIn = &(runtime->motion_param_in);
+#else
+	struct motion_param_out *ptParamOut = &(runtime->motion_param_out);
+#endif
 	struct mlv_info m_i;
 
 	CVI_BOOL is_postprocess_update = ((runtime->postprocess_updated == CVI_TRUE) || (IS_MULTI_CAM()));
 
 	if (is_postprocess_update && !runtime->is_module_bypass) {
+#ifdef WANT_VI_MOTION_TH
 		m_i.raw_num	= ViPipe;
 		m_i.motion_th			= ptParamIn->motionThreshold;
+#else
+		m_i.sensor_num	= ViPipe;
+		m_i.frm_num		= ptParamOut->frameCnt;
+		m_i.mlv			= ptParamOut->motionLevel;
+#endif
+
 		CVI_VI_SetMotionLV(m_i);
 	}
 
