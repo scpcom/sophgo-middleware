@@ -30,7 +30,7 @@ TARGET_WITH_ASAN =
 endif
 
 PKG_CONFIG_PATH = $(MW_PATH)/pkgconfig
-REQUIRES = cvi_common cvi_vdec cvi_sample
+REQUIRES = cvi_common cvi_audio cvi_vdec cvi_sample
 LIBS += $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --libs --define-variable=mw_dir=$(MW_PATH) $(REQUIRES))
 
 ifeq ($(MULTI_PROCESS_SUPPORT), 1)
