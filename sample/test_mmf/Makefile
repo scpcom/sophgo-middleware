@@ -9,24 +9,24 @@ SDIR = $(PWD)
 SRCS = $(wildcard $(SDIR)/*.c)
 INCS = -I$(MW_INC) -I$(ISP_INC) -I../common/ -I$(KERNEL_INC) -I$(MW_INC)/linux -I$(SDIR) -I$(SENSOR_LIST_INC)
 
-SRCS_CPP += $(wildcard $(SDIR)/media_server-1.0.1/*.cpp) \
-$(wildcard $(SDIR)/media_server-1.0.1/media/*.cpp)
+SRCS_CPP += $(wildcard $(SDIR)/rtsp_server/*.cpp) \
+$(wildcard $(SDIR)/rtsp_server/media/*.cpp)
 
-CFLAGS += -I$(SDIR)/media_server-1.0.1
+CFLAGS += -I$(SDIR)/rtsp_server
 CPPFLAGS += -I$(SDIR)/media_server-1.0.1/include \
--I$(SDIR)/media_server-1.0.1/librtsp/include \
--I$(SDIR)/media_server-1.0.1/librtsp/source/server \
+-I$(SDIR)/media_server-1.0.1/media-server/librtsp/include \
+-I$(SDIR)/media_server-1.0.1/media-server/librtsp/source/server \
 -I$(SDIR)/media_server-1.0.1/sdk/include \
 -I$(SDIR)/media_server-1.0.1/sdk/libhttp/include \
--I$(SDIR)/media_server-1.0.1/librtp/include \
--I$(SDIR)/media_server-1.0.1/libmpeg/include \
--I$(SDIR)/media_server-1.0.1/libflv/include \
--I$(SDIR)/media_server-1.0.1/libmkv/include \
+-I$(SDIR)/media_server-1.0.1/media-server/librtp/include \
+-I$(SDIR)/media_server-1.0.1/media-server/libmpeg/include \
+-I$(SDIR)/media_server-1.0.1/media-server/libflv/include \
+-I$(SDIR)/media_server-1.0.1/media-server/libmkv/include \
 -I$(SDIR)/media_server-1.0.1 \
--I$(SDIR)/media_server-1.0.1/media \
+-I$(SDIR)/rtsp_server/media \
 -I$(SDIR)/media_server-1.0.1/avcodec/avcodec/include \
 -I$(SDIR)/media_server-1.0.1/avcodec/avbsf/include \
--I$(SDIR)/media_server-1.0.1/libmov/include \
+-I$(SDIR)/media_server-1.0.1/media-server/libmov/include \
 -D__ERROR__=00*10000000+__LINE__*1000
 
 
