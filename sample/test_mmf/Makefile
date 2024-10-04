@@ -13,20 +13,20 @@ SRCS_CPP += $(wildcard $(SDIR)/rtsp_server/*.cpp) \
 $(wildcard $(SDIR)/rtsp_server/media/*.cpp)
 
 CFLAGS += -I$(SDIR)/rtsp_server
-CPPFLAGS += -I$(SDIR)/media_server-1.0.1/include \
--I$(SDIR)/media_server-1.0.1/media-server/librtsp/include \
--I$(SDIR)/media_server-1.0.1/media-server/librtsp/source/server \
--I$(SDIR)/media_server-1.0.1/sdk/include \
--I$(SDIR)/media_server-1.0.1/sdk/libhttp/include \
--I$(SDIR)/media_server-1.0.1/media-server/librtp/include \
--I$(SDIR)/media_server-1.0.1/media-server/libmpeg/include \
--I$(SDIR)/media_server-1.0.1/media-server/libflv/include \
--I$(SDIR)/media_server-1.0.1/media-server/libmkv/include \
--I$(SDIR)/media_server-1.0.1 \
+CPPFLAGS += -I$(SDIR)/media_server-1.0.x/include \
+-I$(SDIR)/media_server-1.0.x/media-server/librtsp/include \
+-I$(SDIR)/media_server-1.0.x/media-server/librtsp/source/server \
+-I$(SDIR)/media_server-1.0.x/sdk/include \
+-I$(SDIR)/media_server-1.0.x/sdk/libhttp/include \
+-I$(SDIR)/media_server-1.0.x/media-server/librtp/include \
+-I$(SDIR)/media_server-1.0.x/media-server/libmpeg/include \
+-I$(SDIR)/media_server-1.0.x/media-server/libflv/include \
+-I$(SDIR)/media_server-1.0.x/media-server/libmkv/include \
+-I$(SDIR)/media_server-1.0.x \
 -I$(SDIR)/rtsp_server/media \
--I$(SDIR)/media_server-1.0.1/avcodec/avcodec/include \
--I$(SDIR)/media_server-1.0.1/avcodec/avbsf/include \
--I$(SDIR)/media_server-1.0.1/media-server/libmov/include \
+-I$(SDIR)/media_server-1.0.x/avcodec/avcodec/include \
+-I$(SDIR)/media_server-1.0.x/avcodec/avbsf/include \
+-I$(SDIR)/media_server-1.0.x/media-server/libmov/include \
 -D__ERROR__=00*10000000+__LINE__*1000
 
 
@@ -53,7 +53,9 @@ endif
 EXTRA_CFLAGS = $(INCS) $(DEFS)
 EXTRA_LDFLAGS = $(LIBS) -lpthread -lm -lini
 
-LIBS += -L$(SDIR)/media_server-1.0.1/libs -L. -lrtsp -lhttp -lflv -lmov -lrtp -lmpeg -lsdk -lavcodec -lavbsf
+MSK_LIBD = media_server-1.0.x/release.linux
+
+LIBS += -L$(SDIR)/$(MSK_LIBD) -L. -lrtsp -lhttp -lflv -lmov -lrtp -lmpeg -lsdk -lavcodec -lavbsf
 
 # IVE_SUPPORT = 1
 ifeq ($(IVE_SUPPORT), 1)
@@ -71,6 +73,27 @@ endif
 .PHONY : clean all
 all: $(TARGET)
 
+mmflibs:
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/sdk/
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/avcodec/
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/media-server/
+	@mkdir -p $(MSK_LIBD)
+	@cp -p media_server-1.0.x/sdk/libhttp/release.linux/libhttp.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/sdk/libsdk/release.linux/libsdk.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/avcodec/avbsf/release.linux/libavbsf.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/avcodec/avcodec/release.linux/libavcodec.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/media-server/libflv/release.linux/libflv.a $(MSK_LIBD)/
+	#@cp -p media_server-1.0.x/media-server/libmkv/release.linux/libmkv.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/media-server/libmov/release.linux/libmov.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/media-server/libmpeg/release.linux/libmpeg.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/media-server/librtp/release.linux/librtp.a $(MSK_LIBD)/
+	@cp -p media_server-1.0.x/media-server/librtsp/release.linux/librtsp.a $(MSK_LIBD)/
+
+clean_mmflibs:
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/sdk/ clean
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/avcodec/ clean
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/media-server/ clean
+
 $(COMMON_DIR)/%.o: $(COMMON_DIR)/%.c
 	@$(CC) $(DEPFLAGS) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ -c $<
 	@echo [$(notdir $(CC))] $(notdir $@)
@@ -79,11 +102,11 @@ $(SDIR)/%.o: $(SDIR)/%.c
 	@$(CC) $(DEPFLAGS) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ -c $<
 	@echo [$(notdir $(CC))] $(notdir $@)
 
-$(TARGET): $(COMM_OBJ) $(OBJS) $(ISP_OBJ) $(MW_LIB)/libvenc.a $(MW_LIB)/libsys.a
+$(TARGET): mmflibs $(COMM_OBJ) $(OBJS) $(ISP_OBJ) $(MW_LIB)/libvenc.a $(MW_LIB)/libsys.a
 	@$(CXX) -o $@ -Wl,--start-group $(OBJS) $(COMM_OBJS) -lsys $(MW_LIB)/libsys.a -Wl,--end-group -lmaix_mmf $(ELFFLAGS) $(EXTRA_LDFLAGS)
 	@echo -e $(BLUE)[LINK]$(END)[$(notdir $(CXX))] $(notdir $@)
 
-clean:
+clean: clean_mmflibs
 	@rm -f $(OBJS) $(DEPS) $(COMM_OBJ) $(COMM_DEPS) $(TARGET)
 
 -include $(DEPS)

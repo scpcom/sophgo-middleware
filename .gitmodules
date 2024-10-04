@@ -2,3 +2,7 @@
 	path = component/isp
 	url = https://github.com/scpcom/sophgo-SensorSupportList
 	branch = sg200x-dev
+[submodule "sample/test_mmf/media_server-1.0.x"]
+	path = sample/test_mmf/media_server-1.0.x
+	url = https://github.com/scpcom/ireader
+	branch = maixcdk
