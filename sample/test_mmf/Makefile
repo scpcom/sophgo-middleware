@@ -14,6 +14,7 @@ $(wildcard $(SDIR)/media_server-1.0.1/media/*.cpp)
 
 CFLAGS += -I$(SDIR)/media_server-1.0.1
 CPPFLAGS += -I$(SDIR)/media_server-1.0.1/include \
+-I$(SDIR)/media_server-1.0.1/librtsp/include \
 -I$(SDIR)/media_server-1.0.1/librtsp/source/server \
 -I$(SDIR)/media_server-1.0.1/sdk/include \
 -I$(SDIR)/media_server-1.0.1/sdk/libhttp/include \
