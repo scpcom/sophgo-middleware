@@ -755,13 +755,18 @@ int rtsp_server_init(char *ip, int port)
 
 	char new_ip[16] = {0};
 	if (ip == NULL) {
-		strcpy(new_ip, "0.0.0.0");
+		// if (get_ip((char *)"eth0", new_ip) && get_ip((char *)"usb0", new_ip)) {
+		// 	strcpy(new_ip, "0.0.0.0");
+		// }
+		if (get_ip((char *)"eth0", new_ip) && get_ip((char *)"wlan0", new_ip) && get_ip((char *)"usb0", new_ip)) {
+			strcpy(new_ip, "0.0.0.0");
+		}
 	} else {
 		strcpy(new_ip, ip);
 	}
 
 	// create server socket
-	socket = socket_tcp_listen(0 /*AF_UNSPEC*/, new_ip, port, SOMAXCONN, 1, 0);
+	socket = socket_tcp_listen(0 /*AF_UNSPEC*/, new_ip, port, SOMAXCONN, 0, 0);
 	if (socket_invalid == socket)
 		return -1;
 
