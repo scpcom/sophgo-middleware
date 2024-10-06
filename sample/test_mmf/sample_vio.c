@@ -22,7 +22,7 @@
 #include "sample_comm.h"
 #include "maix_mmf.h"
 // #include "vo_uapi.h"
-#include "rtsp-server.h"
+#include "rtsp_server.h"
 #include "fomat.h"
 
 #include <stdio.h>
@@ -2349,6 +2349,7 @@ static void* _rtsp_user_thread(void *args)
 	(void)args;
     uint8_t *m_ptr = NULL;
     size_t m_capacity = 0;
+    uint64_t timestamp = 0;
 	const char *file = "test.h265";
 	FILE* fp = fopen(file, "rb");
     if(fp) {
@@ -2361,6 +2362,7 @@ static void* _rtsp_user_thread(void *args)
 		fclose(fp);
 	}
 
+	uint64_t last_loop_us = _get_time_us();
 	while (1) {
 		const uint8_t* end = m_ptr + m_capacity;
 		const uint8_t* nalu = search_start_code(m_ptr, end);
@@ -2369,12 +2371,14 @@ static void* _rtsp_user_thread(void *args)
 			const unsigned char* pn = search_start_code(p + 4, end);
 			size_t bytes = pn - nalu;
 
-			rtsp_send_h265_data((uint8_t *)nalu, bytes);
+			rtsp_send_h265_data(timestamp, (uint8_t *)nalu, bytes);
 
 			nalu = pn;
 			p = pn;
 
 			usleep(40 * 1000);
+			timestamp += (_get_time_us() - last_loop_us) / 1000;
+			last_loop_us = _get_time_us();
 		}
 	}
 
@@ -2447,6 +2451,7 @@ static int _test_vi_venc_h265_rtsp(void)
 
 	uint64_t start = _get_time_us();
 	uint64_t last_loop_us = start;
+	uint64_t timestamp = 0;
 	while (!exit_flag) {
 		void *data;
 		int data_size, width, height, format;
@@ -2492,13 +2497,13 @@ static int _test_vi_venc_h265_rtsp(void)
 						memcpy(stream_buffer + copy_length, stream.data[i], stream.data_size[i]);
 						copy_length += stream.data_size[i];
 					}
-					rtsp_send_h265_data(stream_buffer, copy_length);
+					rtsp_send_h265_data(timestamp, stream_buffer, copy_length);
 					free(stream_buffer);
 				} else {
 					DEBUG("malloc failed!\r\n");
 				}
 			} else if (stream.count == 1) {
-				rtsp_send_h265_data((uint8_t *)stream.data[0], stream.data_size[0]);
+				rtsp_send_h265_data(timestamp, (uint8_t *)stream.data[0], stream.data_size[0]);
 			}
 		}
 		DEBUG("use %ld us\r\n", _get_time_us() - start);
@@ -2511,6 +2516,7 @@ static int _test_vi_venc_h265_rtsp(void)
 		DEBUG("use %ld us\r\n", _get_time_us() - start);
 
 		DEBUG("use %ld us\r\n", _get_time_us() - last_loop_us);
+		timestamp += (_get_time_us() - last_loop_us) / 1000;
 		last_loop_us = _get_time_us();
 	}
 
@@ -2754,6 +2760,7 @@ static int _test_vi_region_venc_h265_rtsp(void)
 
 	uint64_t start = _get_time_us();
 	uint64_t last_loop_us = start;
+	uint64_t timestamp = 0;
 	uint8_t frame_count = 0;
 
 	void *data, *data2;
@@ -2797,13 +2804,13 @@ static int _test_vi_region_venc_h265_rtsp(void)
 							memcpy(stream_buffer + copy_length, stream.data[i], stream.data_size[i]);
 							copy_length += stream.data_size[i];
 						}
-						rtsp_send_h265_data(stream_buffer, copy_length);
+						rtsp_send_h265_data(timestamp, stream_buffer, copy_length);
 						free(stream_buffer);
 					} else {
 						DEBUG("malloc failed!\r\n");
 					}
 				} else if (stream.count == 1) {
-					rtsp_send_h265_data((uint8_t *)stream.data[0], stream.data_size[0]);
+					rtsp_send_h265_data(timestamp, (uint8_t *)stream.data[0], stream.data_size[0]);
 				}
 			}
 			DEBUG("use %ld us\r\n", _get_time_us() - start);
@@ -2881,6 +2888,7 @@ static int _test_vi_region_venc_h265_rtsp(void)
 		DEBUG(">>>>>> flush vo frame %ld\n", _get_time_us() - start);
 
 		DEBUG("use %ld us\r\n", _get_time_us() - last_loop_us);
+		timestamp += (_get_time_us() - last_loop_us) / 1000;
 		last_loop_us = _get_time_us();
 	}
 
