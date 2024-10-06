@@ -19,6 +19,8 @@ void rtsp_send_h265_data(uint64_t time, uint8_t *asddata, size_t data_len);
 }
 #endif
 
+#ifdef __cplusplus
 std::vector<std::string> rtsp_get_server_urls(void);
+#endif
 
 #endif // __RTSP_SERVER_H
