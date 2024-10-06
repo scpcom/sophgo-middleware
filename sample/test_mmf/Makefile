@@ -9,10 +9,9 @@ SDIR = $(PWD)
 SRCS = $(wildcard $(SDIR)/*.c)
 INCS = -I$(MW_INC) -I$(ISP_INC) -I../common/ -I$(KERNEL_INC) -I$(MW_INC)/linux -I$(SDIR) -I$(SENSOR_LIST_INC)
 
-SRCS_CPP += $(wildcard $(SDIR)/rtsp_server/*.cpp) \
-$(wildcard $(SDIR)/rtsp_server/media/*.cpp)
+SRCS_CPP += $(wildcard $(SDIR)/rtsp_server/src/*.cpp)
 
-CFLAGS += -I$(SDIR)/rtsp_server
+CFLAGS += -I$(SDIR)/rtsp_server/inc
 CPPFLAGS += -I$(SDIR)/media_server-1.0.x/include \
 -I$(SDIR)/media_server-1.0.x/media-server/librtsp/include \
 -I$(SDIR)/media_server-1.0.x/media-server/librtsp/source/server \
@@ -23,7 +22,7 @@ CPPFLAGS += -I$(SDIR)/media_server-1.0.x/include \
 -I$(SDIR)/media_server-1.0.x/media-server/libflv/include \
 -I$(SDIR)/media_server-1.0.x/media-server/libmkv/include \
 -I$(SDIR)/media_server-1.0.x \
--I$(SDIR)/rtsp_server/media \
+-I$(SDIR)/rtsp_server/inc \
 -I$(SDIR)/media_server-1.0.x/avcodec/avcodec/include \
 -I$(SDIR)/media_server-1.0.x/avcodec/avbsf/include \
 -I$(SDIR)/media_server-1.0.x/media-server/libmov/include \

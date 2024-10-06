@@ -1,18 +1,18 @@
-#ifndef _pcm_file_source_h_
-#define _pcm_file_source_h_
+#ifndef _rtsp_camera_source_h_
+#define _rtsp_camera_source_h_
 
+#include "rtsp-camera-reader.h"
 #include "media-source.h"
 #include "sys/process.h"
 #include "time64.h"
 #include "rtp.h"
 #include <string>
-#include <stdio.h>
 
-class PCMFileSource : public IMediaSource
+class RtspCameraSource : public IMediaSource
 {
 public:
-	PCMFileSource(const char *file);
-	virtual ~PCMFileSource();
+	RtspCameraSource(const char *file);
+	virtual ~RtspCameraSource();
 
 public:
 	virtual int Play();
@@ -23,7 +23,8 @@ public:
 	virtual int GetSDPMedia(std::string& sdp) const;
 	virtual int GetRTPInfo(const char* uri, char *rtpinfo, size_t bytes) const;
 	virtual int SetTransport(const char* track, std::shared_ptr<IRTPTransport> transport);
-
+	int Push(int64_t time, const uint8_t* nalu, size_t bytes);
+	int SetPspFromFrame(const uint8_t* nalu, size_t bytes);
 private:
 	static void OnRTCPEvent(void* param, const struct rtcp_msg_t* msg);
 	void OnRTCPEvent(const struct rtcp_msg_t* msg);
@@ -34,10 +35,11 @@ private:
 	static int RTPPacket(void* param, const void *packet, int bytes, uint32_t timestamp, int flags);
 
 private:
-	FILE* m_fp;
 	void* m_rtp;
+	uint32_t m_timestamp;
 	time64_t m_rtp_clock;
 	time64_t m_rtcp_clock;
+    RtspCameraReader m_reader;
 	std::shared_ptr<IRTPTransport> m_transport;
 
 	int m_status;
@@ -45,7 +47,7 @@ private:
 	double m_speed;
 
 	void *m_rtppacker;
-	unsigned char m_packet[MAX_UDP_PACKET + 14];
+	unsigned char m_packet[MAX_UDP_PACKET+14];
 };
 
-#endif /* !_pcm_file_source_h_ */
+#endif /* !_rtsp_camera_source_h_ */

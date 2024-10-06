@@ -2,7 +2,7 @@
 #define _rtp_udp_transport_h_
 
 #include "sys/sock.h"
-#include "media/media-source.h"
+#include "media-source.h"
 
 class RTPUdpTransport : public IRTPTransport
 {

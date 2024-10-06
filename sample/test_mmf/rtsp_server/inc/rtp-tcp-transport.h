@@ -1,8 +1,7 @@
 #ifndef _rtp_tcp_transport_h_
 #define _rtp_tcp_transport_h_
 
-#include "media/media-source.h"
-#include "rtsp-server-internal.h"
+#include "media-source.h"
 
 class RTPTcpTransport : public IRTPTransport
 {
