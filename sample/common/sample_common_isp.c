@@ -27,7 +27,9 @@
 #include "cvi_sns_ctrl.h"
 #include "cvi_ae.h"
 #include "cvi_isp.h"
+#ifdef WANT_SAMPLE_COMM_ISP_MOTOR
 #include "motor_ioctl.h"//it depend cb how to design
+#endif
 
 #ifdef SUPPORT_ISP_PQTOOL
 #include <dlfcn.h>
@@ -37,7 +39,9 @@ static void *g_ISPDHandle;
 #define ISPD_CONNECT_PORT 5566
 #endif
 
+#ifdef WANT_SAMPLE_COMM_ISP_MOTOR
 #define DEVICE_NAME "/dev/cvi-motor"
+#endif
 
 static pthread_t g_IspPid[VI_MAX_DEV_NUM];
 static CVI_U32 g_au32IspSnsId[ISP_MAX_DEV_NUM] = { 0, 1, 2, 4, 5};
@@ -48,6 +52,7 @@ SAMPLE_SNS_TYPE_E g_enSnsType[VI_MAX_DEV_NUM] = {
 };
 
 static ISP_INIT_ATTR_S gstInitAttr[ISP_MAX_DEV_NUM];
+#ifdef WANT_SAMPLE_COMM_ISP_MOTOR
 static int motor_fd = -1;
 
 CVI_S32 SAMPLE_COMM_ISP_Motor_SetFocusInCb(VI_PIPE ViPipe, CVI_U8 step)
@@ -336,6 +341,7 @@ CVI_S32 SAMPLE_COMM_ISP_Motor_GetLensInfoCb(VI_PIPE ViPipe, ISP_AF_LEN_INFO_S *i
 
 	return CVI_SUCCESS;
 }
+#endif
 
 CVI_S32 SAMPLE_COMM_ISP_GetIspAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, ISP_PUB_ATTR_S *pstPubAttr)
 {
@@ -567,6 +573,7 @@ CVI_S32 SAMPLE_COMM_ISP_Aflib_Callback(ISP_DEV IspDev)
 	strncpy(stAfLib.acLibName, CVI_AF_LIB_NAME, sizeof(stAfLib.acLibName));
 	s32Ret = CVI_AF_Register(IspDev, &stAfLib);
 
+#ifdef WANT_SAMPLE_COMM_ISP_MOTOR
 	//register control motor cb func if you use sophgo af algo
 	//you can implement control motor cb func by yourself
 	//use sophgo cb func for example
@@ -581,6 +588,7 @@ CVI_S32 SAMPLE_COMM_ISP_Aflib_Callback(ISP_DEV IspDev)
 	motorCb.pfn_af_set_zoom_focus = SAMPLE_COMM_ISP_Motor_SetZoomAndFocusCb;
 	motorCb.pfn_af_get_len_info = SAMPLE_COMM_ISP_Motor_GetLensInfoCb;
 	CVI_AF_MOTOR_Register(IspDev, &motorCb);
+#endif
 
 	if (s32Ret != CVI_SUCCESS) {
 		printf("AF Algo register failed!, error: %d\n", s32Ret);
@@ -594,9 +602,11 @@ CVI_S32 SAMPLE_COMM_ISP_Aflib_UnCallback(ISP_DEV IspDev)
 	CVI_S32 s32Ret = 0;
 	ALG_LIB_S stAfLib;
 
+#ifdef WANT_SAMPLE_COMM_ISP_MOTOR
 	ISP_AF_MOTOR_FUNC_S motorCb;
 
 	CVI_AF_MOTOR_UnRegister(IspDev, &motorCb);
+#endif
 
 	stAfLib.s32Id = IspDev;
 	strncpy(stAfLib.acLibName, CVI_AF_LIB_NAME, sizeof(stAfLib.acLibName));

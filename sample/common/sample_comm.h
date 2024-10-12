@@ -678,6 +678,7 @@ CVI_S32 SAMPLE_COMM_VDEC_Bind_VO(VDEC_CHN VdecChn, VO_LAYER VoLayer, VO_CHN VoCh
 CVI_S32 SAMPLE_COMM_VDEC_UnBind_VO(VDEC_CHN VdecChn, VO_LAYER VoLayer, VO_CHN VoChn);
 
 #define ENABLE_AF_LIB (0)
+#ifdef WANT_SAMPLE_COMM_ISP_MOTOR
 //The customer can deisgin the control of the motor by themself,
 //and sophgo also provides the public practice for customer reference
 //please contact sophgo get motor ko source code
@@ -692,6 +693,7 @@ CVI_S32 SAMPLE_COMM_ISP_Motor_SetZoomOutCb(VI_PIPE ViPipe, CVI_U8 step);
 CVI_S32 SAMPLE_COMM_ISP_Motor_SetZoomAndFocusInternalCb(VI_PIPE ViPipe, AF_DIRECTION eDir, CVI_U8 zoomStep, CVI_U8 focusStep);
 CVI_S32 SAMPLE_COMM_ISP_Motor_GetLensInfoCb(VI_PIPE ViPipe, ISP_AF_LEN_INFO_S *info);
 //cb sample end
+#endif
 CVI_S32 SAMPLE_COMM_ISP_Run(CVI_U8 IspDev);
 CVI_VOID SAMPLE_COMM_ISP_Stop(CVI_U8 IspDev);
 CVI_VOID SAMPLE_COMM_All_ISP_Stop(void);
