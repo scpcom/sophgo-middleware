@@ -60,6 +60,7 @@ VO_INC = $(MW_PATH)/modules/vo/include
 GDC_INC = $(MW_PATH)/modules/gdc/include
 RGN_INC = $(MW_PATH)/modules/rgn/include
 AUD_INC = $(MW_PATH)/modules/audio/include
+OSDC_INC = $(MW_PATH)/modules/osdc/include
 BIN_INC = $(MW_PATH)/modules/bin/include
 SENSOR_LIST_INC = $(MW_PATH)/component/isp/common
 
