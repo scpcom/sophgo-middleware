@@ -27,6 +27,8 @@ LIB_DIRS = $(MW_LIB) $(TRD_LIB_PATH)
 CINCS = $(foreach incdir, $(INC_DIRS), -I$(incdir))
 LINCS = $(foreach libdir, $(LIB_DIRS), -L$(libdir))
 
+STATIC_LIBS = $(TRD_LIB_PATH)/libcvi_json-c.a
+
 TMP_FOLDER = tmp
 OUT_FOLDER = build
 RELEASE_FOLDER_BIN = $(PWD)/bin
@@ -74,14 +76,14 @@ $(TMP_FOLDER)/%.o: $(BASE_DIR)/%.c $(TMP_FOLDER)
 	@$(CC) $(CFLAGS) $(LOCAL_CFLAGS) -c $< -o $@
 	@echo [$(notdir $(CC))] $(notdir $@)
 
-$(TARGET_A): $(OBJS) $(OUT_FOLDER)
+$(TARGET_A): $(OBJS) $(STATIC_LIBS) $(OUT_FOLDER)
 	@$(AR) $(ARFLAGS) $(OUT_FOLDER)/$(TARGET_A) $(OBJS)
 	@echo -e $(YELLOW)[LINK]$(END)[$(notdir $(AR))] $(notdir $(TARGET_A))
 	@cp $(BASE_DIR)/inc/cvi_ispd2.h $(OUT_FOLDER)
 	@cp -a $(TRD_LIB_PATH)/libcvi_json-c.a $(OUT_FOLDER)
 
-$(TARGET_SO): $(OBJS) $(OUT_FOLDER)
-	@$(LD) $(LDFLAGS) $(LOCAL_LDFLAGS) -o $(OUT_FOLDER)/$(TARGET_SO) --start-group $(OBJS) --end-group
+$(TARGET_SO): $(OBJS) $(STATIC_LIBS) $(OUT_FOLDER)
+	@$(LD) $(LDFLAGS) $(LOCAL_LDFLAGS) -o $(OUT_FOLDER)/$(TARGET_SO) --start-group $(OBJS) $(STATIC_LIBS) --end-group
 	@echo -e $(GREEN)[LINK]$(END)[$(notdir $(LD))] $(notdir $(TARGET_SO))
 	@cp $(BASE_DIR)/inc/cvi_ispd2.h $(OUT_FOLDER)
 	@cp -a $(TRD_LIB_PATH)/libcvi_json-c.a $(OUT_FOLDER)
