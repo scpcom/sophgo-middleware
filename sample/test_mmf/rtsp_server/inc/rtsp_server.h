@@ -12,9 +12,11 @@ int rtsp_server_init(char *ip, int port);
 int rtsp_server_deinit(void);
 char *rtsp_get_server_ip(void);
 int rtsp_get_server_port(void);
+int rtsp_memory_server_start(int type);
 int rtsp_server_start(void);
 int rtsp_server_stop(void);
 void rtsp_send_h265_data(uint64_t time, uint8_t *asddata, size_t data_len);
+void rtsp_send_memory_data(uint64_t time, uint8_t *data, size_t data_len);
 #ifdef __cplusplus
 }
 #endif

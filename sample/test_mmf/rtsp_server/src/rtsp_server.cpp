@@ -13,6 +13,7 @@
 // #include "media/ps-file-source.h"
 #include "h264-file-source.h"
 #include "h265-file-source.h"
+#include "h264-memory-source.h"
 #include "rtsp-camera-source.h"
 // #include "media/mp4-file-source.h"
 #include "rtp-udp-transport.h"
@@ -50,7 +51,8 @@ static const char* s_workdir = "./";
 #endif
 
 static ThreadLocker s_locker;
-static RtspCameraSource *camera_source = NULL;
+static int source_type = 1;
+static IMediaSource *camera_source = NULL;
 struct rtsp_media_t
 {
 	std::shared_ptr<IMediaSource> media;
@@ -68,6 +70,14 @@ struct TFileDescription
 	std::string sdpmedia;
 };
 static std::map<std::string, TFileDescription> s_describes;
+
+IMediaSource *newMemorySource(const char *file)
+{
+	if (source_type == 2)
+		return new H264MemorySource(file);
+	else
+		return new RtspCameraSource(file);
+}
 
 static int rtsp_uri_parse(const char* uri, std::string& path)
 {
@@ -142,7 +152,7 @@ static int rtsp_ondescribe(void* /*ptr*/, rtsp_server_t* rtsp, const char* uri)
 // 				source.reset(new FFLiveSource("video=Integrated Webcam"));
 // #endif
 				if (!camera_source) {
-					camera_source = new RtspCameraSource("output.h265");
+					camera_source = newMemorySource("output.h26x");
 				}
 				source.reset(camera_source);
 				// int offset = snprintf(buffer, sizeof(buffer), pattern_live, ntp64_now(), ntp64_now(), "0.0.0.0", uri);
@@ -252,7 +262,7 @@ static int rtsp_onsetup(void* /*ptr*/, rtsp_server_t* rtsp, const char* uri, con
 // #if defined(_HAVE_FFMPEG_)
 // 			item.media.reset(new FFLiveSource("video=Integrated Webcam"));
 // #endif
-			camera_source = new RtspCameraSource("output.h265");
+			camera_source = newMemorySource("output.h26x");
 			item.media.reset(camera_source);
 		}
 		else
@@ -804,7 +814,7 @@ void rtsp_send_h265_data(uint64_t time, uint8_t *data, size_t data_len)
 {
 	TSessions::iterator it;
 	AutoThreadLocker locker(s_locker);
-	RtspCameraSource *media = camera_source;
+	RtspCameraSource *media = (RtspCameraSource *)camera_source;
 	if (media) {
 		media->SetPspFromFrame(data, data_len);
 	}
@@ -816,6 +826,32 @@ void rtsp_send_h265_data(uint64_t time, uint8_t *data, size_t data_len)
 			media->Push(time, (uint8_t *)data, data_len);
 		}
 	}
+}
+
+void rtsp_send_h264_data(uint64_t time, uint8_t *data, size_t data_len)
+{
+	TSessions::iterator it;
+	AutoThreadLocker locker(s_locker);
+	H264MemorySource *media = (H264MemorySource *)camera_source;
+	if (media) {
+		media->SetPspFromFrame(data, data_len);
+	}
+
+	for (it = s_sessions.begin(); it != s_sessions.end(); ++it)
+	{
+		rtsp_media_t& session = it->second;
+		if(session.status == 1) {
+			media->Push(time, (uint8_t *)data, data_len);
+		}
+	}
+}
+
+void rtsp_send_memory_data(uint64_t time, uint8_t *data, size_t data_len)
+{
+	if (source_type == 2)
+		rtsp_send_h264_data(time, data, data_len);
+	else
+		rtsp_send_h265_data(time, data, data_len);
 }
 
 static void* _rtsp_server_thread(void *args)
@@ -884,7 +920,7 @@ static void* _rtsp_server_thread(void *args)
 	return NULL;
 }
 
-int rtsp_server_start(void)
+int rtsp_memory_server_start(int type)
 {
 	if (!priv.rtsp_is_init) {
 		return -1;
@@ -894,7 +930,8 @@ int rtsp_server_start(void)
 		return 0;
 	}
 
-	camera_source = new RtspCameraSource(NULL);
+	source_type = type;
+	camera_source = newMemorySource(NULL);
 	if (!camera_source) {
 		perror("create rtsp camera source failed!\r\n");
 		return -1;
@@ -906,6 +943,11 @@ int rtsp_server_start(void)
 
 	priv.rtsp_is_start = true;
 	return 0;
+}
+
+int rtsp_server_start(void)
+{
+	return rtsp_memory_server_start(1);
 }
 
 int rtsp_server_stop(void)
