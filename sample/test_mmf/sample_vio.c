@@ -43,6 +43,8 @@
 #include <assert.h>
 
 
+#define RTSP_SERVER_TYPE 1  //1, h265, 2, h264
+
 // #define DEBUG_EN
 #ifdef DEBUG_EN
 #define DEBUG(fmt, args...) printf("[%s][%d]: "fmt, __func__, __LINE__, ##args)
@@ -1733,9 +1735,29 @@ static CVI_S32 _mmf_free_frame(VIDEO_FRAME_INFO_S *pstVideoFrame)
 //     _mmf_dump_venc_rc_attr(&venc_chn_attr->stRcAttr);
 // }
 
+int mmf_enc_h264_init(int ch, int w, int h)
+{
+	mmf_venc_cfg_t cfg = {
+		.type = 2,  //1, h265, 2, h264
+		.w = w,
+		.h = h,
+		.fmt = PIXEL_FORMAT_NV21,
+		.jpg_quality = 0,       // unused
+		.gop = 50,
+		.intput_fps = 30,
+		.output_fps = 30,
+		.bitrate = 3000,
+	};
+
+	return mmf_add_venc_channel(ch, &cfg);
+}
+
 int test_mmf_venc_init(int ch, int w, int h)
 {
-	return mmf_enc_h265_init(ch, w, h);
+	if (RTSP_SERVER_TYPE == 2)
+		return mmf_enc_h264_init(ch, w, h);
+	else
+		return mmf_enc_h265_init(ch, w, h);
 }
 
 static int _test_venc_h265(void)
@@ -2313,10 +2335,6 @@ _exit:
 	return 0;
 }
 
-extern int rtsp_server_init(char *ip, int port);
-extern int rtsp_server_deinit(void);
-extern int rtsp_server_start(void);
-
 static inline const uint8_t* search_start_code(const uint8_t* ptr, const uint8_t* end)
 {
     for(const uint8_t *p = ptr; p + 3 < end; p++)
@@ -2354,7 +2372,7 @@ static void* _rtsp_user_thread(void *args)
 			const unsigned char* pn = search_start_code(p + 4, end);
 			size_t bytes = pn - nalu;
 
-			rtsp_send_h265_data(timestamp, (uint8_t *)nalu, bytes);
+			rtsp_send_memory_data(timestamp, (uint8_t *)nalu, bytes);
 
 			nalu = pn;
 			p = pn;
@@ -2374,7 +2392,7 @@ static int _test_rtsp_h265(void)
 	pthread_create(&pthread_id, NULL, _rtsp_user_thread, NULL);
 
 	rtsp_server_init(NULL, 8554);
-	rtsp_server_start();
+	rtsp_memory_server_start(RTSP_SERVER_TYPE);
 
 	printf("rtsp://%s:%d/live\n", rtsp_get_server_ip(), rtsp_get_server_port());
 
@@ -2395,7 +2413,7 @@ static int _test_vi_venc_h265_rtsp(void)
 		return 0;
 	}
 
-	if (0 != rtsp_server_start()) {
+	if (0 != rtsp_memory_server_start(RTSP_SERVER_TYPE)) {
 		printf("rtsp server start\n");
 		return 0;
 	}
@@ -2497,13 +2515,13 @@ static int _test_vi_venc_h265_rtsp(void)
 						memcpy(stream_buffer + copy_length, stream.data[i], stream.data_size[i]);
 						copy_length += stream.data_size[i];
 					}
-					rtsp_send_h265_data(timestamp, stream_buffer, copy_length);
+					rtsp_send_memory_data(timestamp, stream_buffer, copy_length);
 					free(stream_buffer);
 				} else {
 					DEBUG("malloc failed!\r\n");
 				}
 			} else if (stream.count == 1) {
-				rtsp_send_h265_data(timestamp, (uint8_t *)stream.data[0], stream.data_size[0]);
+				rtsp_send_memory_data(timestamp, (uint8_t *)stream.data[0], stream.data_size[0]);
 			}
 		}
 		DEBUG("use %ld us\r\n", _get_time_us() - start);
@@ -2672,7 +2690,7 @@ static int _test_vi_region_venc_h265_rtsp(void)
 		return 0;
 	}
 
-	if (0 != rtsp_server_start()) {
+	if (0 != rtsp_memory_server_start(RTSP_SERVER_TYPE)) {
 		printf("rtsp server start\n");
 		return 0;
 	}
@@ -2812,13 +2830,13 @@ static int _test_vi_region_venc_h265_rtsp(void)
 							memcpy(stream_buffer + copy_length, stream.data[i], stream.data_size[i]);
 							copy_length += stream.data_size[i];
 						}
-						rtsp_send_h265_data(timestamp, stream_buffer, copy_length);
+						rtsp_send_memory_data(timestamp, stream_buffer, copy_length);
 						free(stream_buffer);
 					} else {
 						DEBUG("malloc failed!\r\n");
 					}
 				} else if (stream.count == 1) {
-					rtsp_send_h265_data(timestamp, (uint8_t *)stream.data[0], stream.data_size[0]);
+					rtsp_send_memory_data(timestamp, (uint8_t *)stream.data[0], stream.data_size[0]);
 				}
 			}
 			DEBUG("use %ld us\r\n", _get_time_us() - start);
