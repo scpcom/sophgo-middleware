@@ -882,10 +882,12 @@ CVI_S32 CVI_BIN_GetSingleISPBinLen(enum CVI_BIN_SECTION_ID id)
 			if (is_target_id(idx, id) != CVI_TRUE) {
 				continue;
 			}
+#ifndef DISABLE_PQBIN_JSON
 			if ((getBinSizeFunc[idx] != NULL) && (check_is_register_id(idx) == CVI_SUCCESS)) {
 				CVI_JSON_SaveParamToBuffer(NULL, idx, &stJsonHeader.size[idx], setParamToJsonBuf[idx],
 				0);
 			}
+#endif
 		}
 	}
 
@@ -958,6 +960,7 @@ CVI_S32 CVI_BIN_ExportSingleISPBinData(enum CVI_BIN_SECTION_ID id, CVI_U8 *pu8Bu
 			if (is_target_id(idx, id) != CVI_TRUE) {
 				continue;
 			}
+#ifndef DISABLE_PQBIN_JSON
 			if ((setParamToBufFunc[idx] != NULL) && (check_is_register_id(idx) == CVI_SUCCESS)) {
 				ret = CVI_JSON_SaveParamToBuffer(pu8Buffer, idx, &stJsonHeader.size[idx],
 				setParamToJsonBuf[idx], u32DataLength);
@@ -965,6 +968,7 @@ CVI_S32 CVI_BIN_ExportSingleISPBinData(enum CVI_BIN_SECTION_ID id, CVI_U8 *pu8Bu
 					break;
 				}
 			}
+#endif
 		}
 		u32DataLength -= stJsonHeader.size[idx].u32CompreSize;
 		pu8Buffer += stJsonHeader.size[idx].u32CompreSize;
