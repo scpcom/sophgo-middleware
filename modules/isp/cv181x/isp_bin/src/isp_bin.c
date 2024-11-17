@@ -817,6 +817,7 @@ CVI_S32 isp_bin_getBinBypassParams(VI_PIPE ViPipe, ISP_BIN_BYPASS_U *ispBinBypas
 	return ret;
 }
 
+#ifndef ISP_LIGHT
 /**************************************************************************
  *   Json related APIs.
  **************************************************************************/
@@ -920,6 +921,7 @@ ERROR_HANDLER:
 	free(pisp_3a_parameter);
 	return ret;
 }
+#endif
 
 #if defined(__GNUC__) && defined(__riscv)
 #pragma GCC diagnostic pop
