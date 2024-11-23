@@ -719,6 +719,9 @@ static int _test_vi_only(void)
 
 	struct timeval tv;
 	uint64_t last_loop = 0;
+#ifndef DEBUG_EN
+	UNUSED(last_loop);
+#endif
 
 	void *data;
 	int data_size, width, height, format;
@@ -891,6 +894,9 @@ static int _test_vio(void)
 	uint64_t start, start2 = 0;
 	void *data;
 	int data_size, width, height, format;
+#ifndef DEBUG_EN
+	UNUSED(start); UNUSED(start2);
+#endif
 
 	// first snap, do nothing
 	if (0 == mmf_vi_frame_pop(vi_ch, &data, &data_size, &width, &height, &format)) {
@@ -1031,6 +1037,9 @@ static int _test_region(void)
 	uint64_t start, start2, end;
 	void *data;
 	int data_size, width, height, format;
+#ifndef DEBUG_EN
+	UNUSED(start2);
+#endif
 
 	// first snap, do nothing
 	if (0 == mmf_vi_frame_pop(vi_ch, &data, &data_size, &width, &height, &format)) {
@@ -1351,6 +1360,9 @@ static int _test_venc_jpg(void)
 	int loop_count = 0;
 	int fail_count = 0;
 	uint64_t start = _get_time_us();
+#ifndef DEBUG_EN
+	UNUSED(start);
+#endif
 #if 1
 	while (!exit_flag) {
 		// pop last push frame
@@ -1915,6 +1927,9 @@ static int _test_vi_venc_h265(void)
 
 	uint64_t start = _get_time_us();
 	uint64_t last_loop_us = start;
+#ifndef DEBUG_EN
+	UNUSED(start); UNUSED(last_loop_us);
+#endif
 	while (!exit_flag) {
 		void *data;
 		int data_size, width, height, format;
@@ -2603,6 +2618,9 @@ static int _test_multiple_vi(void)
 	void *data, *data2;
 	int data_size, width, height, format;
 	int data_size2, width2, height2, format2;
+#ifndef DEBUG_EN
+	UNUSED(start); UNUSED(start2);
+#endif
 
 	int show_img_size = 0;
 	if (img_fmt == PIXEL_FORMAT_RGB_888)
