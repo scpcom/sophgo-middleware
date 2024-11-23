@@ -43,7 +43,7 @@
 #include <assert.h>
 
 
-#define RTSP_SERVER_TYPE 1  //1, h265, 2, h264
+static int rtsp_server_type = 1;  //1, h265, 2, h264
 
 // #define DEBUG_EN
 #ifdef DEBUG_EN
@@ -1765,7 +1765,7 @@ int mmf_enc_h264_init(int ch, int w, int h)
 
 int test_mmf_venc_init(int ch, int w, int h)
 {
-	if (RTSP_SERVER_TYPE == 2)
+	if (rtsp_server_type == 2)
 		return mmf_enc_h264_init(ch, w, h);
 	else
 		return mmf_enc_h265_init(ch, w, h);
@@ -2011,13 +2011,12 @@ _exit:
 	return 0;
 }
 
+static int _test_vi_venc_h26x_rtsp(void);
+
 static int _test_rtsp_h264(void)
 {
-	printf("Not support!\r\n");
-    while(!exit_flag){
-        sleep(1);
-    }
-	return 0;
+	rtsp_server_type = 2;
+	return _test_vi_venc_h26x_rtsp();
 }
 
 
@@ -2395,13 +2394,13 @@ static void* _rtsp_user_thread(void *args)
 	return NULL;
 }
 
-static int _test_rtsp_h265(void)
+static int _test_rtsp_h26x(void)
 {
 	pthread_t pthread_id;
 	pthread_create(&pthread_id, NULL, _rtsp_user_thread, NULL);
 
 	rtsp_server_init(NULL, 8554);
-	rtsp_memory_server_start(RTSP_SERVER_TYPE);
+	rtsp_memory_server_start(rtsp_server_type);
 
 	printf("rtsp://%s:%d/live\n", rtsp_get_server_ip(), rtsp_get_server_port());
 
@@ -2415,14 +2414,14 @@ static int _test_rtsp_h265(void)
 }
 
 
-static int _test_vi_venc_h265_rtsp(void)
+static int _test_vi_venc_h26x_rtsp(void)
 {
 	if (0 != rtsp_server_init(NULL, 8554)) {
 		printf("rtsp server init\n");
 		return 0;
 	}
 
-	if (0 != rtsp_memory_server_start(RTSP_SERVER_TYPE)) {
+	if (0 != rtsp_memory_server_start(rtsp_server_type)) {
 		printf("rtsp server start\n");
 		return 0;
 	}
@@ -2566,6 +2565,18 @@ _exit:
 	return 0;
 }
 
+static int _test_rtsp_h265(void)
+{
+	rtsp_server_type = 1;
+	return _test_rtsp_h26x();
+}
+
+static int _test_vi_venc_h265_rtsp(void)
+{
+	rtsp_server_type = 1;
+	return _test_vi_venc_h26x_rtsp();
+}
+
 static int _test_multiple_vi(void)
 {
 	signal(SIGINT, sig_handle);
@@ -2695,14 +2706,14 @@ static int _test_multiple_vi(void)
 	return 0;
 }
 
-static int _test_vi_region_venc_h265_rtsp(void)
+static int _test_vi_region_venc_h26x_rtsp(void)
 {
 	if (0 != rtsp_server_init(NULL, 8554)) {
 		printf("rtsp server init\n");
 		return 0;
 	}
 
-	if (0 != rtsp_memory_server_start(RTSP_SERVER_TYPE)) {
+	if (0 != rtsp_memory_server_start(rtsp_server_type)) {
 		printf("rtsp server start\n");
 		return 0;
 	}
@@ -2967,6 +2978,12 @@ _exit:
 	close_oled();
 	return 0;
 
+}
+
+static int _test_vi_region_venc_h265_rtsp(void)
+{
+	rtsp_server_type = 1;
+	return _test_vi_region_venc_h26x_rtsp();
 }
 
 static int _test_i2c_oled(void)
