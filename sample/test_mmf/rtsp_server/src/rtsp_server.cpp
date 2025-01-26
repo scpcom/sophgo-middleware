@@ -768,7 +768,8 @@ int rtsp_server_init(char *ip, int port)
 		// if (get_ip((char *)"eth0", new_ip) && get_ip((char *)"usb0", new_ip)) {
 		// 	strcpy(new_ip, "0.0.0.0");
 		// }
-		if (get_ip((char *)"eth0", new_ip) && get_ip((char *)"wlan0", new_ip) && get_ip((char *)"usb0", new_ip)) {
+		if (get_ip((char *)"end0", new_ip) && get_ip((char *)"eth0", new_ip) &&
+		    get_ip((char *)"wlan0", new_ip) && get_ip((char *)"usb0", new_ip)) {
 			strcpy(new_ip, "0.0.0.0");
 		}
 	} else {
@@ -984,6 +985,9 @@ std::vector<std::string> rtsp_get_server_urls(void)
 	std::vector<std::string> ip_list;
 
 	if (!strcmp("0.0.0.0", priv.ip)) {
+		if (!get_ip((char *)"end0", new_ip)) {
+			ip_list.push_back("rtsp://" + std::string(new_ip) + ":" + std::to_string(priv.port) + "/live");
+		}
 		if (!get_ip((char *)"eth0", new_ip)) {
 			ip_list.push_back("rtsp://" + std::string(new_ip) + ":" + std::to_string(priv.port) + "/live");
 		}
