@@ -21,7 +21,7 @@ extern "C" {
 CVI_S32 isp_3aBinAttr_get_size(VI_PIPE ViPipe, CVI_U32 *size);
 CVI_S32 isp_3aBinAttr_get_param(VI_PIPE ViPipe, FILE *fp);
 CVI_S32 isp_3aBinAttr_get_parambuf(VI_PIPE ViPipe, CVI_U8 *buffer);
-CVI_S32 isp_3aBinAttr_set_param(VI_PIPE ViPipe, CVI_U8 **binPtr);
+CVI_S32 isp_3aBinAttr_set_param(VI_PIPE ViPipe, CVI_U8 **binPtr, CVI_BOOL bStats);
 CVI_S32 isp_3aJsonAttr_set_param(VI_PIPE ViPipe, ISP_3A_Parameter_Structures *stPtr);
 CVI_S32 isp_3aJsonAttr_get_param(VI_PIPE ViPipe, ISP_3A_Parameter_Structures *stPtr);
 

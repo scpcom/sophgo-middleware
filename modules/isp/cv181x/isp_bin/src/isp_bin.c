@@ -112,12 +112,13 @@ static CVI_S32 isp_bin_getBinSizeImp(VI_PIPE ViPipe, CVI_U32 *binSize);
 static CVI_S32 isp_bin_getBinParamImp(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize);
 static CVI_S32 isp_bin_setBinParamImp(VI_PIPE ViPipe, FILE *fp);
 static CVI_S32 isp_bin_setBinParamImptobuf(VI_PIPE ViPipe, unsigned char *buffer);
-static CVI_S32 isp_bin_checkMd5(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize);
+static CVI_S32 isp_bin_checkMd5(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize, CVI_U32 *pBinPad);
 static CVI_S32 isp_bin_checkBinVersion(CVI_U8 *addr, CVI_U32 binSize);
 static CVI_S32 isp_get_paramstruct(VI_PIPE ViPipe, ISP_Parameter_Structures *pstParaBuf);
 static CVI_S32 isp_set_paramstruct(VI_PIPE ViPipe, ISP_Parameter_Structures *pstParaBuf);
 
 static ISP_BIN_BYPASS g_binBypassParams = {0};
+static CVI_CHAR g_pqBinMd5[BIN_MD5_SIZE] = { 0 };
 
 CVI_S32 header_bin_getBinSize(CVI_U32 *binSize)
 {
@@ -421,10 +422,11 @@ static CVI_S32 isp_bin_getBinSizeImp(VI_PIPE ViPipe, CVI_U32 *binSize)
 static CVI_S32 isp_bin_getBinParamImp(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize)
 {
 	CVI_S32 ret = CVI_SUCCESS;
+	CVI_U32 binPad = 0;
 	CVI_U8 *buf_ofs = addr;
 	CVI_BIN_HEADER *pstHeader = (CVI_BIN_HEADER *)buf_ofs;
 
-	if (isp_bin_checkMd5(ViPipe, addr, binSize) != CVI_SUCCESS) {
+	if (isp_bin_checkMd5(ViPipe, addr, binSize, &binPad) != CVI_SUCCESS) {
 		CVI_TRACE_ISP_BIN(LOG_WARNING, "section[CVI_BIN_ID_ISP%d] Md5 not matched\n", ViPipe);
 		return CVI_FAILURE;
 	}
@@ -434,7 +436,7 @@ static CVI_S32 isp_bin_getBinParamImp(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binS
 
 	isp_set_paramstruct(ViPipe, (ISP_Parameter_Structures *)buf_ofs);
 	buf_ofs += sizeof(ISP_Parameter_Structures);
-	isp_3aBinAttr_set_param(ViPipe, &buf_ofs);
+	isp_3aBinAttr_set_param(ViPipe, &buf_ofs, !binPad);
 
 	CVI_TRACE_ISP_BIN(LOG_DEBUG, "apply bin setting to %d\n", ViPipe);
 
@@ -479,10 +481,11 @@ static CVI_S32 isp_bin_setBinParamImptobuf(VI_PIPE ViPipe, unsigned char *buffer
 	return ret;
 }
 
-static CVI_S32 isp_bin_checkMd5(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize)
+static CVI_S32 isp_bin_checkMd5(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize, CVI_U32 *pBinPad)
 {
 	CVI_S32 ret = CVI_SUCCESS;
 	CVI_U32 size = 0;
+	CVI_U32 binPad = 0;
 	CVI_CHAR binCommitId[BIN_COMMIT_SIZE];
 	CVI_CHAR binGerrit[BIN_GERRIT_SIZE];
 	CVI_CHAR curMd5[BIN_MD5_SIZE] = { 0 };
@@ -494,6 +497,18 @@ static CVI_S32 isp_bin_checkMd5(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize)
 	bin_get_repo_info(binGerrit, binCommitId, curMd5);
 
 	if (strcmp(binMd5, curMd5)) {
+		if(!strcmp(binMd5, "")) {
+			strncpy(binMd5, g_pqBinMd5, BIN_MD5_SIZE);
+		}
+		if (!strcmp(curMd5, "9b60189725b5bcb970ec86e4bbdbf600") &&
+		    !strcmp(binMd5, "d6db2297ddfd44e8252c1f3f888f47b2")) {
+			strncpy(binMd5, curMd5, BIN_MD5_SIZE);
+			binPad = 248;
+		}
+	}
+
+	if (strcmp(binMd5, curMd5)) {
+		printf("pqbin md5 mismatch, mwMd5:%s != pqBinMd5:%s\n", curMd5, binMd5);
 		CVI_TRACE_ISP_BIN(LOG_ERR, "%s%s%s",
 			"md5 mismatch means that you will read json in PQBIN, ",
 			"but the disadvantage is that the boot speed is slightly reduced. ",
@@ -503,7 +518,8 @@ static CVI_S32 isp_bin_checkMd5(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize)
 		ret = CVI_FAILURE;
 	} else {
 		isp_bin_getBinSizeImp(ViPipe, &size);
-		if (size != binSize) {
+		if (size != binSize && size != binSize + binPad) {
+			printf("vi(%d), Bin Size not matched(%u vs %u)\n", ViPipe, size, binSize);
 			CVI_TRACE_ISP_BIN(LOG_ERR, "vi(%d), Bin Size not matched(%u vs %u),", ViPipe, size, binSize);
 			CVI_TRACE_ISP_BIN(LOG_ERR, "%s%s",
 				"Size mismatch means that someone added the pqbin structure ",
@@ -512,6 +528,10 @@ static CVI_S32 isp_bin_checkMd5(VI_PIPE ViPipe, CVI_U8 *addr, CVI_U32 binSize)
 				binGerrit, binCommitId);
 			ret = CVI_FAILURE;
 		}
+	}
+
+	if (pBinPad) {
+		*pBinPad = binPad;
 	}
 
 	return ret;
@@ -594,6 +614,8 @@ static CVI_S32 isp_bin_checkBinVersion(CVI_U8 *addr, CVI_U32 binSize)
 		"tool Version:", toolVersion, "mode:", pqbinMode);
 	printf("********************************************************************************\n");
 
+	strncpy(g_pqBinMd5, binMd5, BIN_MD5_SIZE);
+
 	// check sensor
 	for (CVI_U8 i = 0; i < sensorInfo.num; ++i) {
 		if (strcmp(sensorInfo.name[i], sensorName[i]) != 0) {
@@ -605,7 +627,7 @@ static CVI_S32 isp_bin_checkBinVersion(CVI_U8 *addr, CVI_U32 binSize)
 
 	//check md5
 	if (strcmp(binMd5, ISP_BIN_MD5)) {
-		printf("pqbin md5 mismatch, mwMd5:%s != pqBinMd5:%s", ISP_BIN_MD5, binMd5);
+		printf("pqbin md5 mismatch, mwMd5:%s != pqBinMd5:%s\n", ISP_BIN_MD5, binMd5);
 		return CVI_SUCCESS;
 	}
 

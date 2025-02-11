@@ -214,7 +214,7 @@ CVI_S32 isp_3aBinAttr_get_parambuf(VI_PIPE ViPipe, CVI_U8 *buffer)
 	return CVI_SUCCESS;
 }
 
-CVI_S32 isp_3aBinAttr_set_param(VI_PIPE ViPipe, CVI_U8 **binPtr)
+CVI_S32 isp_3aBinAttr_set_param(VI_PIPE ViPipe, CVI_U8 **binPtr, CVI_BOOL bStats)
 {
 	// AE
 	ISP_WDR_EXPOSURE_ATTR_S stWDRExpAttr = { 0 };
@@ -297,6 +297,11 @@ CVI_S32 isp_3aBinAttr_set_param(VI_PIPE ViPipe, CVI_U8 **binPtr)
 	memcpy(&stWBCalibEx, (*binPtr), sizeof(ISP_AWB_Calibration_Gain_S_EX));
 	(*binPtr) += sizeof(ISP_AWB_Calibration_Gain_S_EX);
 	CVI_ISP_SetWBCalibrationEx(ViPipe, &stWBCalibEx);
+
+	if (!bStats) {
+		printf("%s: CVI_ISP_SetStatisticsConfig skipped.\n", __func__);
+		return CVI_SUCCESS;
+	}
 
 	ISP_STATISTICS_CFG_S stStatCfg = {0};
 
