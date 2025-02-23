@@ -857,7 +857,8 @@ int rtmp_server_init(char *ip, int port, const char* flv)
 		// if (get_ip((char *)"eth0", new_ip) && get_ip((char *)"usb0", new_ip)) {
 		// 	strcpy(new_ip, "0.0.0.0");
 		// }
-		if (get_ip((char *)"eth0", new_ip) && get_ip((char *)"wlan0", new_ip) && get_ip((char *)"usb0", new_ip)) {
+		if (get_ip((char *)"end0", new_ip) && get_ip((char *)"eth0", new_ip) &&
+		    get_ip((char *)"wlan0", new_ip) && get_ip((char *)"usb0", new_ip)) {
 			strcpy(new_ip, "0.0.0.0");
 		}
 	} else {
