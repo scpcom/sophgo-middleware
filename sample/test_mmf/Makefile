@@ -52,6 +52,8 @@ endif
 EXTRA_CFLAGS = $(INCS) $(DEFS)
 EXTRA_LDFLAGS = $(LIBS) -lpthread -lm -lini
 
+MSK_CFLAGS = $(filter-out -Werror, $(CFLAGS)) -Wno-incompatible-pointer-types
+
 MSK_LIBD = media_server-1.0.x/release.linux
 MMF_LIBD = maix_mmf/release.linux
 
@@ -74,9 +76,9 @@ endif
 all: $(TARGET)
 
 mmflibs:
-	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/sdk/
-	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/avcodec/
-	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) PLATFORM=linux RELEASE=1 -C media_server-1.0.x/media-server/
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) CFLAGS="$(MSK_CFLAGS)" PLATFORM=linux RELEASE=1 -C media_server-1.0.x/sdk/
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) CFLAGS="$(MSK_CFLAGS)" PLATFORM=linux RELEASE=1 -C media_server-1.0.x/avcodec/
+	@$(MAKE) AR=$(AR) CC=$(CC) CXX=$(CXX) CFLAGS="$(MSK_CFLAGS)" PLATFORM=linux RELEASE=1 -C media_server-1.0.x/media-server/
 	@mkdir -p $(MSK_LIBD)
 	@cp -p media_server-1.0.x/sdk/libhttp/release.linux/libhttp.a $(MSK_LIBD)/
 	@cp -p media_server-1.0.x/sdk/libsdk/release.linux/libsdk.a $(MSK_LIBD)/
