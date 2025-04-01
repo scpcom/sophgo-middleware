@@ -12,7 +12,8 @@ INCS = -I$(MW_INC) -I$(ISP_INC) -I../common/ -I$(KERNEL_INC) -I$(MW_INC)/linux -
 SRCS_CPP += $(wildcard $(SDIR)/rtsp_server/src/*.cpp)
 
 CFLAGS += -I$(SDIR)/rtsp_server/inc
-CPPFLAGS += -I$(SDIR)/media_server-1.0.x/include \
+CPPFLAGS +=  $(subst -std=gnu11,-std=gnu++11, $(CFLAGS)) \
+-I$(SDIR)/media_server-1.0.x/include \
 -I$(SDIR)/media_server-1.0.x/media-server/librtsp/include \
 -I$(SDIR)/media_server-1.0.x/media-server/librtsp/source/server \
 -I$(SDIR)/media_server-1.0.x/sdk/include \
@@ -112,6 +113,10 @@ $(COMMON_DIR)/%.o: $(COMMON_DIR)/%.c
 $(SDIR)/%.o: $(SDIR)/%.c
 	@$(CC) $(DEPFLAGS) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ -c $<
 	@echo [$(notdir $(CC))] $(notdir $@)
+
+$(SDIR)/%.o: $(SDIR)/%.cpp
+	@$(CXX) $(DEPFLAGS) $(CPPFLAGS) $(EXTRA_CFLAGS) -o $@ -c $<
+	@echo [$(notdir $(CXX))] $(notdir $@)
 
 $(TARGET): mmflibs $(COMM_OBJ) $(OBJS) $(ISP_OBJ) $(MW_LIB)/libvenc.a $(MW_LIB)/libsys.a
 	@$(CXX) -o $@ -Wl,--start-group $(OBJS) $(COMM_OBJS) -lsys $(MW_LIB)/libsys.a -Wl,--end-group -lmaix_mmf $(ELFFLAGS) $(EXTRA_LDFLAGS)
