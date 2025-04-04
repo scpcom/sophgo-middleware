@@ -22,6 +22,31 @@ else
 endif
 endif
 
+# try-run
+# Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+# Exit code chooses option. "$$TMP" is can be used as temporary file and
+# is automatically cleaned up.
+# modifed for U-Boot: prevent cc-option from leaving .*.su files
+try-run = $(shell set -e;		\
+	TMP="$(TMPOUT).$$$$.tmp";	\
+	TMPO="$(TMPOUT).$$$$.o";	\
+	TMPSU="$(TMPOUT).$$$$.su";	\
+	if ($(1)) >/dev/null 2>&1;	\
+	then echo "$(2)";		\
+	else echo "$(3)";		\
+	fi;				\
+	rm -f "$$TMP" "$$TMPO" "$$TMPSU")
+
+# __cc-option
+# Usage: MY_CFLAGS += $(call __cc-option,$(CC),$(MY_CFLAGS),-march=winchip-c6,-march=i586)
+__cc-option = $(call try-run,\
+	$(1) -Werror $(2) $(3) -c -x c /dev/null -o "$$TMP",$(3),$(4))
+
+# cc-option
+# Usage: cflags-y += $(call cc-option,-march=winchip-c6,-march=i586)
+cc-option = $(call __cc-option, $(1),\
+	,$(2),$(3))
+
 ifeq ($(SDK_VER), 32bit)
   export CROSS_COMPILE = $(CROSS_COMPILE_32)
   SYSROOT := $(ROOT_DIR)/../ramdisk/sysroot/sysroot-glibc-linaro-2.23-2017.05-arm-linux-gnueabihf/
@@ -42,13 +67,17 @@ else ifeq ($(SDK_VER), glibc_riscv64)
   SYSROOT := $(ROOT_DIR)/../host-tools/gcc/riscv64-linux-x86_64/sysroot
   KERNEL_INC := $(KERNEL_DIR)/riscv/usr/include
   OPT_LEVEL := -Os
-  OPT_LEVEL += -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d
+  OPT_LEVEL += $(call cc-option,$(CROSS_COMPILE)gcc,\
+    -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d,\
+    -mcpu=thead-c906 -march=rv64imafdc -mcmodel=medany -mabi=lp64d)
 else ifeq ($(SDK_VER), musl_riscv64)
   export CROSS_COMPILE = $(CROSS_COMPILE_MUSL_RISCV64)
   SYSROOT := $(ROOT_DIR)/../host-tools/gcc/riscv64-linux-musl-x86_64/sysroot
   KERNEL_INC := $(KERNEL_DIR)/riscv/usr/include
   OPT_LEVEL := -Os
-  OPT_LEVEL += -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d
+  OPT_LEVEL += $(call cc-option,$(CROSS_COMPILE)gcc,\
+    -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d,\
+    -mcpu=thead-c906 -march=rv64imafdc -mcmodel=medany -mabi=lp64d)
 endif
 
 ## INCLUDE PATH ##
@@ -133,11 +162,11 @@ LDFLAGS  = -shared -fPIC --gc-sections -export-dynamic -L$(MW_LIB) -L$(MW_3RD_LI
 ELFFLAGS = $(OPT_LEVEL) -Wl,--gc-sections -rdynamic -L$(MW_LIB) -L$(MW_3RD_LIB) $(CVI_TARGET_PACKAGES_LIBDIR)
 
 ifeq ($(SDK_VER), glibc_riscv64)
-CFLAGS += -mno-ldd
-CXXFLAGS += -mno-ldd
+CFLAGS += $(call cc-option,$(CC),-mno-ldd,)
+CXXFLAGS += $(call cc-option,$(CC),-mno-ldd,)
 else ifeq ($(SDK_VER), musl_riscv64)
-CFLAGS += -mno-ldd
-CXXFLAGS += -mno-ldd
+CFLAGS += $(call cc-option,$(CC),-mno-ldd,)
+CXXFLAGS += $(call cc-option,$(CC),-mno-ldd,)
 endif
 
 ifeq ($(CONFIG_DEBUG_INFO), y)
