@@ -21,7 +21,7 @@ ifeq ($(DEBUG), 1)
 EXTRA_CFLAGS += -g -O0
 endif
 
-ldflags-y = -lsys
+ldflags-y = -rpath='$$ORIGIN' -rpath=/mnt/system/usr/lib -lsys
 
 TMP_INC = $(MW_INC)/cvi_jpg* $(MW_INC)/cvi_h265*
 
