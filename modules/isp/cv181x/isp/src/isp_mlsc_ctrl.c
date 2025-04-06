@@ -20,8 +20,20 @@
 #include "isp_mlsc_ctrl.h"
 #include "isp_mgr_buf.h"
 
-#ifdef __riscv_vector
+#if defined(__riscv_xtheadvector)
+#include <riscv_th_vector.h>
+#elif defined(__riscv_vector)
 #include <riscv_vector.h>
+#endif
+#if defined (__riscv_v_intrinsic) || defined(__riscv_th_v_intrinsic)
+#define vsetvl_e16m8	__riscv_vsetvl_e16m8
+#define vlse16_v_u16m8	__riscv_vlse16_v_u16m8
+#define vnsrl_wx_u8m4	__riscv_vnsrl_wx_u8m4
+#define vsse8_v_u8m4	__riscv_vsse8_v_u8m4
+#define vsll_vx_u16m8	__riscv_vsll_vx_u16m8
+#define vand_vx_u16m8	__riscv_vand_vx_u16m8
+#define vor_vv_u8m4	__riscv_vor_vv_u8m4
+#define vncvt_x_x_w_u8m4	__riscv_vncvt_x_x_w_u8m4
 #endif
 typedef enum _LSC_COLOR_CHANNEL_E {
 	LSC_COLOR_CHANNEL_R = 0x0,

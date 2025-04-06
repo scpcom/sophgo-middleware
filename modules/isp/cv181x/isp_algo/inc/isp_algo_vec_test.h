@@ -14,7 +14,11 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#if defined(__riscv_xtheadvector) && defined(__riscv_th_v_intrinsic)
+#include <riscv_th_vector.h>
+#else
 #include <riscv_vector.h>
+#endif
 
 /**
  * @name TEST_REPORT_RUN_TIME(enable, desc, code_block)

@@ -3,7 +3,11 @@
 
 #ifdef __riscv_vector
 #include <stdlib.h>
+#if defined(__riscv_xtheadvector) && defined(__riscv_th_v_intrinsic)
+#include <riscv_th_vector.h>
+#else
 #include <riscv_vector.h>
+#endif
 
 void *rvv_memcpy(void *restrict destination, const void *restrict source, size_t n);
 
