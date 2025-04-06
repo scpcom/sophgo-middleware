@@ -67,17 +67,21 @@ else ifeq ($(SDK_VER), glibc_riscv64)
   SYSROOT := $(ROOT_DIR)/../host-tools/gcc/riscv64-linux-x86_64/sysroot
   KERNEL_INC := $(KERNEL_DIR)/riscv/usr/include
   OPT_LEVEL := -Os
+  # we can not enable xtheadvector here since static builds raise
+  # error: "`xtheadvector' is conflict with the `v' extension"
   OPT_LEVEL += $(call cc-option,$(CROSS_COMPILE)gcc,\
     -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d,\
-    -mcpu=thead-c906 -march=rv64imafdc -mcmodel=medany -mabi=lp64d)
+    -mcpu=thead-c906 -march=rv64imafdc_xtheadba_xtheadbb_xtheadbs_xtheadcmo -mcmodel=medany -mabi=lp64d)
 else ifeq ($(SDK_VER), musl_riscv64)
   export CROSS_COMPILE = $(CROSS_COMPILE_MUSL_RISCV64)
   SYSROOT := $(ROOT_DIR)/../host-tools/gcc/riscv64-linux-musl-x86_64/sysroot
   KERNEL_INC := $(KERNEL_DIR)/riscv/usr/include
   OPT_LEVEL := -Os
+  # we can not enable xtheadvector here since static builds raise
+  # error: "`xtheadvector' is conflict with the `v' extension"
   OPT_LEVEL += $(call cc-option,$(CROSS_COMPILE)gcc,\
     -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d,\
-    -mcpu=thead-c906 -march=rv64imafdc -mcmodel=medany -mabi=lp64d)
+    -mcpu=thead-c906 -march=rv64imafdc_xtheadba_xtheadbb_xtheadbs_xtheadcmo -mcmodel=medany -mabi=lp64d)
 endif
 
 ## INCLUDE PATH ##
