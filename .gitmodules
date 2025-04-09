@@ -10,3 +10,11 @@
 	path = sample/kvm_stream
 	url = https://github.com/scpcom/streameye
 	branch = kvm_stream
+[submodule "modules/bin/json-c"]
+	path = modules/bin/json-c
+	url = https://github.com/scpcom/json-c
+	branch = cvi
+[submodule "modules/bin/miniz"]
+	path = modules/bin/miniz
+	url = https://github.com/scpcom/miniz
+	branch = cvi
