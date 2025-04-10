@@ -5,7 +5,6 @@ ifeq ($(PARAM_FILE), )
 endif
 
 # 3rdparty lib
-TRD_MOD_PATH = $(MW_PATH)/modules/bin
 TRD_LIB_INCLUDE_PATH = $(MW_PATH)/modules/bin/prebuilt/include
 TRD_LIB_PATH = $(MW_PATH)/modules/bin/prebuilt/$(SDK_VER)
 
@@ -49,26 +48,7 @@ else
 all: prepare_3rdparty_module $(TARGET_A) $(TARGET_SO)
 endif
 
-$(TRD_LIB_PATH)/libcvi_json-c.a:
-	@mkdir -p $(TRD_LIB_PATH)
-	@mkdir -p $(TRD_MOD_PATH)/json-c-build
-	@mkdir -p $(TRD_MOD_PATH)/json-c-inst
-	@cd $(TRD_MOD_PATH)/json-c-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc cmake $(TRD_MOD_PATH)/json-c -DCMAKE_INSTALL_PREFIX=$(TRD_MOD_PATH)/json-c-inst
-	@cd $(TRD_MOD_PATH)/json-c-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc make install
-	@tar -C $(TRD_MOD_PATH)/json-c-inst -czf $(TRD_MOD_PATH)/json-c-inst/cvi-json-c.tar.gz include lib
-	@cp -p $(TRD_MOD_PATH)/json-c-inst/lib/libcvi_json-c.a $(TRD_LIB_PATH)/
-
-$(TRD_LIB_PATH)/libcvi_miniz.a:
-	@mkdir -p $(TRD_LIB_PATH)
-	@mkdir -p $(TRD_MOD_PATH)/miniz-build
-	@mkdir -p $(TRD_MOD_PATH)/miniz-inst
-	@cd $(TRD_MOD_PATH)/miniz-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc cmake $(TRD_MOD_PATH)/miniz -G"Unix Makefiles" -DAMALGAMATE_SOURCES=ON -DCMAKE_INSTALL_PREFIX=$(TRD_MOD_PATH)/miniz-inst
-	@cd $(TRD_MOD_PATH)/miniz-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc make install
-	@tar -C $(TRD_MOD_PATH)/miniz-inst -czf $(TRD_MOD_PATH)/miniz-inst/cvi-miniz.tar.gz include lib share
-	@cp -p $(TRD_MOD_PATH)/miniz-inst/lib/libcvi_miniz.a $(TRD_LIB_PATH)/
-	@rm -f $(TRD_MOD_PATH)/miniz/bin/example*
-
-prepare_3rdparty_module: $(TRD_LIB_PATH)/libcvi_json-c.a $(TRD_LIB_PATH)/libcvi_miniz.a
+prepare_3rdparty_module:
 	@mkdir -p $(TMP_FOLDER_LIB);cd $(TMP_FOLDER_LIB);\
 	cp $(TRD_LIB_PATH)/libcvi_miniz.a .;cp $(TRD_LIB_PATH)/libcvi_json-c.a .;\
 	$(AR) $(ARFLAGS_x) libcvi_miniz.a;$(AR) $(ARFLAGS_x) libcvi_json-c.a
@@ -98,9 +78,6 @@ sdk_release:
 clean:
 	@rm -f $(OBJS) $(DEPS) $(TARGET_A) $(TARGET_SO)
 	@rm -rf $(TMP_FOLDER_LIB)
-	@rm -f $(TRD_LIB_PATH)/libcvi_json-c.a $(TRD_LIB_PATH)/libcvi_miniz.a
-	@rm -rf $(TRD_MOD_PATH)/json-c-build $(TRD_MOD_PATH)/json-c-inst
-	@rm -rf $(TRD_MOD_PATH)/miniz-build $(TRD_MOD_PATH)/miniz-inst
 
 cleanall: clean
 	@rm -rf $(TMP_FOLDER)
