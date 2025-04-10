@@ -55,6 +55,7 @@ $(TRD_LIB_PATH)/libcvi_json-c.a:
 	@mkdir -p $(TRD_MOD_PATH)/json-c-inst
 	@cd $(TRD_MOD_PATH)/json-c-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc cmake $(TRD_MOD_PATH)/json-c -DCMAKE_INSTALL_PREFIX=$(TRD_MOD_PATH)/json-c-inst
 	@cd $(TRD_MOD_PATH)/json-c-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc make install
+	@tar -C $(TRD_MOD_PATH)/json-c-inst -czf $(TRD_MOD_PATH)/json-c-inst/cvi-json-c.tar.gz include lib
 	@cp -p $(TRD_MOD_PATH)/json-c-inst/lib/libcvi_json-c.a $(TRD_LIB_PATH)/
 
 $(TRD_LIB_PATH)/libcvi_miniz.a:
@@ -63,6 +64,7 @@ $(TRD_LIB_PATH)/libcvi_miniz.a:
 	@mkdir -p $(TRD_MOD_PATH)/miniz-inst
 	@cd $(TRD_MOD_PATH)/miniz-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc cmake $(TRD_MOD_PATH)/miniz -G"Unix Makefiles" -DAMALGAMATE_SOURCES=ON -DCMAKE_INSTALL_PREFIX=$(TRD_MOD_PATH)/miniz-inst
 	@cd $(TRD_MOD_PATH)/miniz-build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc make install
+	@tar -C $(TRD_MOD_PATH)/miniz-inst -czf $(TRD_MOD_PATH)/miniz-inst/cvi-miniz.tar.gz include lib share
 	@cp -p $(TRD_MOD_PATH)/miniz-inst/lib/libcvi_miniz.a $(TRD_LIB_PATH)/
 	@rm -f $(TRD_MOD_PATH)/miniz/bin/example*
 
