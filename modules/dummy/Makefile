@@ -10,7 +10,6 @@ isp_mod_dir := $(PWD)/../isp
 SDIR = $(PWD)/src
 SRCS := $(wildcard $(SDIR)/a*.c)
 ALGO_SRCS := $(wildcard $(SDIR)/isp_*.c)
-ALGO_SRCS += $(wildcard $(SDIR)/cvi_*.c)
 
 # 3rdparty lib
 BIN_INCLUDE_PATH = $(PWD)/../bin/prebuilt/include
