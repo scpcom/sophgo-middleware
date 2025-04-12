@@ -25,6 +25,9 @@ endif
 MW_LIBS = $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --libs --define-variable=mw_dir=$(MW_PATH) $(REQUIRES))
 
 LIBS = $(MW_LIBS)
+ifneq ($(SAMPLE_STATIC), 1)
+LIBS += -ldl
+endif
 LIBS += -lcvi_ispd2 -lsys
 ifeq ($(MULTI_PROCESS_SUPPORT), 1)
 DEFS += -DRPC_MULTI_PROCESS
