@@ -18,6 +18,9 @@ TARGET = sample_dsi_asan
 endif
 
 LIBS = -lsys -lmipi_tx -lmisc
+ifneq ($(SAMPLE_STATIC), 1)
+LIBS += -lgdc -lvi -lvo -lvpss
+endif
 
 ifeq ($(MULTI_PROCESS_SUPPORT), 1)
 DEFS += -DRPC_MULTI_PROCESS
