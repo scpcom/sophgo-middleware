@@ -15,6 +15,8 @@ endif
 
 ifeq ($(SAMPLE_STATIC), 1)
 ELFFLAGS += -static
+else
+ELFFLAGS += -Wl,-rpath='$$ORIGIN/dl_lib' -Wl,-rpath=/mnt/system/usr/lib -Wl,-rpath=/mnt/system/usr/lib/3rd
 endif
 
 #########################################################################
