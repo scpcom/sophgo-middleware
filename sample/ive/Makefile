@@ -15,10 +15,12 @@ MW_LIBS = $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --libs --define-
 
 ifeq ($(SAMPLE_STATIC), 1)
 LIBS += $(MW_PATH)/lib/libcvi_ive.a $(MW_PATH)/lib/libsys.a
-endif
 
 ifeq ($(SUBTYPE), asic)
-LIBS += $(MW_LIBS)
+LIBS += $(MW_LIBS) -lsys
+endif
+else
+LIBS += $(MW_LIBS) -lsys
 endif
 
 
