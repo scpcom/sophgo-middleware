@@ -21,10 +21,14 @@ VDEC_DEPS = $(VDEC_SRCS:.c=.d)
 
 TARGET = sample_vdecvo
 
+ifeq ($(CONFIG_ENABLE_SDK_ASAN), y)
 ifeq ($(SDK_VER),32bit)
 TARGET_WITH_ASAN = sample_vdecvo_asan
 else ifeq ($(SDK_VER),64bit)
 TARGET_WITH_ASAN = sample_vdecvo_asan
+else
+TARGET_WITH_ASAN =
+endif
 else
 TARGET_WITH_ASAN =
 endif

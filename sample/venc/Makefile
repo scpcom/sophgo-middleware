@@ -24,12 +24,17 @@ VCODEC_DEPS = $(VCODEC_SRCS:.c=.d)
 
 TARGET_VENC = sample_venc
 TARGET_VCODEC = sample_vcodec
+ifeq ($(CONFIG_ENABLE_SDK_ASAN), y)
 ifeq ($(SDK_VER),32bit)
 TARGET_VENC_WITH_ASAN = sample_venc_asan
 TARGET_VCODEC_WITH_ASAN = sample_vcodec_asan
 else ifeq ($(SDK_VER), 64bit)
 TARGET_VENC_WITH_ASAN = sample_venc_asan
 TARGET_VCODEC_WITH_ASAN = sample_vcodec_asan
+else
+TARGET_VENC_WITH_ASAN =
+TARGET_VCODEC_WITH_ASAN =
+endif
 else
 TARGET_VENC_WITH_ASAN =
 TARGET_VCODEC_WITH_ASAN =
