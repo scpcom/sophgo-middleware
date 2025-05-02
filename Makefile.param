@@ -52,6 +52,7 @@ ifeq ($(SDK_VER), 32bit)
   SYSROOT := $(ROOT_DIR)/../ramdisk/sysroot/sysroot-glibc-linaro-2.23-2017.05-arm-linux-gnueabihf/
   KERNEL_INC := $(KERNEL_DIR)/arm/usr/include
   OPT_LEVEL := -O3
+  OPT_LEVEL += -D__uint128_t='void*'
 else ifeq ($(SDK_VER), 64bit)
   export CROSS_COMPILE = $(CROSS_COMPILE_64)
   SYSROOT := $(ROOT_DIR)/../ramdisk/sysroot/sysroot-glibc-linaro-2.23-2017.05-aarch64-linux-gnu/
