@@ -9,9 +9,9 @@ SRCS := $(wildcard $(SDIR)/*.c)
 
 # 3rdparty lib
 TRD_MOD_PATH = $(PWD)
-TRD_INCLUDE_PATH = $(PWD)/prebuilt/include
-TRD_LIB_PATH = $(PWD)/prebuilt/$(SDK_VER)
-TRD_TMP_PATH = $(PWD)/tmp_3rd
+TRD_INCLUDE_PATH = $(realpath $(PWD)/..)/prebuilt/include
+TRD_LIB_PATH = $(realpath $(PWD)/..)/prebuilt/$(SDK_VER)
+TRD_TMP_PATH = $(realpath $(PWD)/..)/tmp
 
 .PHONY : clean all
 all : build_3rdparty_module
@@ -32,6 +32,6 @@ clean:
 	@rm -f $(TRD_LIB_PATH)/libgroupsock.a
 	@rm -f $(TRD_LIB_PATH)/libliveMedia.a
 	@rm -f $(TRD_LIB_PATH)/libUsageEnvironment.a
-	@rm -rf $(TRD_TMP_PATH)
+	@rm -rf $(TRD_TMP_PATH)/live555
 
 -include $(DEPS)
