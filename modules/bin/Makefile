@@ -45,8 +45,8 @@ $(TRD_LIB_PATH)/libcvi_json-c.a:
 	@mkdir -p $(TRD_LIB_PATH)
 	@mkdir -p $(TRD_TMP_PATH)/cvi_json-c/build
 	@mkdir -p $(TRD_TMP_PATH)/cvi_json-c/output
-	@cd $(TRD_TMP_PATH)/cvi_json-c/build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" cmake $(TRD_MOD_PATH)/json-c -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/cvi_json-c/output
-	@cd $(TRD_TMP_PATH)/cvi_json-c/build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" make install
+	@cd $(TRD_TMP_PATH)/cvi_json-c/build ; CMAKE_BUILD_TYPE="release" CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" cmake $(TRD_MOD_PATH)/json-c -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/cvi_json-c/output
+	@cd $(TRD_TMP_PATH)/cvi_json-c/build ; CMAKE_BUILD_TYPE="release" CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" make install
 	@tar -C $(TRD_TMP_PATH)/cvi_json-c/output -czf $(TRD_TMP_PATH)/cvi_json-c/output/cvi-json-c.tar.gz include lib
 	@cp -p $(TRD_TMP_PATH)/cvi_json-c/output/lib/libcvi_json-c.a $(TRD_LIB_PATH)/
 
