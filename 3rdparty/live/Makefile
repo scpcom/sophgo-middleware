@@ -1,0 +1,33 @@
+SHELL = /bin/bash
+ifeq ($(PARAM_FILE), )
+     PARAM_FILE:=../../Makefile.param
+     include $(PARAM_FILE)
+endif
+
+SDIR = $(PWD)/src
+SRCS := $(wildcard $(SDIR)/*.c)
+
+# 3rdparty lib
+TRD_MOD_PATH = $(PWD)
+TRD_INCLUDE_PATH = $(PWD)/prebuilt/include
+TRD_LIB_PATH = $(PWD)/prebuilt/$(SDK_VER)
+TRD_TMP_PATH = $(PWD)/tmp_3rd
+
+.PHONY : clean all
+all : build_3rdparty_module
+
+$(TRD_LIB_PATH)/libliveMedia.a:
+	@mkdir -p $(TRD_LIB_PATH)
+	@mkdir -p $(TRD_TMP_PATH)/live555/output
+	@cd $(TRD_MOD_PATH)/live555 ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS)" DESTDIR=$(TRD_TMP_PATH)/live555/output ./genMakefiles linux
+	@cd $(TRD_MOD_PATH)/live555 ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS)" DESTDIR=$(TRD_TMP_PATH)/live555/output make install
+	@tar -C $(TRD_TMP_PATH)/live555/output/usr/local -czf $(TRD_TMP_PATH)/live555/output/live555.tar.gz bin include lib
+	@cp -p $(TRD_TMP_PATH)/live555/output/usr/local/lib/lib*.a $(TRD_LIB_PATH)/
+
+build_3rdparty_module: $(TRD_LIB_PATH)/libliveMedia.a
+
+clean:
+	@rm -f $(TRD_LIB_PATH)/libliveMedia.a
+	@rm -rf $(TRD_TMP_PATH)
+
+-include $(DEPS)

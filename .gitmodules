@@ -18,3 +18,7 @@
 	path = modules/bin/miniz
 	url = https://github.com/scpcom/miniz
 	branch = cvi
+[submodule "3rdparty/live/live555"]
+	path = 3rdparty/live/live555
+	url = https://github.com/scpcom/live555
+	branch = sg200x-dev
