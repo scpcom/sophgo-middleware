@@ -1,0 +1,34 @@
+SHELL = /bin/bash
+ifeq ($(PARAM_FILE), )
+     PARAM_FILE:=../../Makefile.param
+     include $(PARAM_FILE)
+endif
+
+SDIR = $(PWD)/src
+SRCS := $(wildcard $(SDIR)/*.c)
+
+# 3rdparty lib
+TRD_MOD_PATH = $(PWD)
+TRD_INCLUDE_PATH = $(PWD)/prebuilt/include
+TRD_LIB_PATH = $(PWD)/prebuilt/$(SDK_VER)
+TRD_TMP_PATH = $(PWD)/tmp_3rd
+
+.PHONY : clean all
+all : build_3rdparty_module
+
+$(TRD_LIB_PATH)/libjson-c.a:
+	@mkdir -p $(TRD_LIB_PATH)
+	@mkdir -p $(TRD_TMP_PATH)/json-c/build
+	@mkdir -p $(TRD_TMP_PATH)/json-c/output
+	@cd $(TRD_TMP_PATH)/json-c/build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" cmake $(TRD_MOD_PATH)/json-c -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/json-c/output
+	@cd $(TRD_TMP_PATH)/json-c/build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" make install
+	@tar -C $(TRD_TMP_PATH)/json-c/output -czf $(TRD_TMP_PATH)/json-c/output/json-c.tar.gz include lib
+	@cp -p $(TRD_TMP_PATH)/json-c/output/lib/libjson-c.a $(TRD_LIB_PATH)/
+
+build_3rdparty_module: $(TRD_LIB_PATH)/libjson-c.a
+
+clean:
+	@rm -f $(TRD_LIB_PATH)/libjson-c.a
+	@rm -rf $(TRD_TMP_PATH)
+
+-include $(DEPS)
