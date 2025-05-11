@@ -27,7 +27,11 @@ $(TRD_LIB_PATH)/libliveMedia.a:
 build_3rdparty_module: $(TRD_LIB_PATH)/libliveMedia.a
 
 clean:
+	@cd $(TRD_MOD_PATH)/live555 ; [ ! -e Makefile ] || CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS)" DESTDIR=$(TRD_TMP_PATH)/live555/output make clean
+	@rm -f $(TRD_LIB_PATH)/libBasicUsageEnvironment.a
+	@rm -f $(TRD_LIB_PATH)/libgroupsock.a
 	@rm -f $(TRD_LIB_PATH)/libliveMedia.a
+	@rm -f $(TRD_LIB_PATH)/libUsageEnvironment.a
 	@rm -rf $(TRD_TMP_PATH)
 
 -include $(DEPS)
