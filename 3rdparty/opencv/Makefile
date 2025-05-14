@@ -23,6 +23,11 @@ else ifeq ($(SDK_VER), musl_riscv64)
 CMAKE_SYSTEM_PROCESSOR = riscv64
 endif
 
+OPENCV_CMAKE_ENV = CMAKE_BUILD_TYPE="Release" \
+	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" \
+	CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS)"
+
 OPENCV_CMAKE_OPTS = -DCMAKE_SYSTEM_PROCESSOR=$(CMAKE_SYSTEM_PROCESSOR)
 
 OPENCV_CMAKE_OPTS += \
@@ -172,17 +177,24 @@ $(TRD_LIB_PATH)/libopencv_core.so:
 	@mkdir -p $(TRD_LIB_PATH)
 	@mkdir -p $(TRD_TMP_PATH)/opencv/build
 	@mkdir -p $(TRD_TMP_PATH)/opencv/output
-	@cd $(TRD_TMP_PATH)/opencv/build ; CMAKE_BUILD_TYPE="release" CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS)" cmake $(TRD_MOD_PATH)/opencv -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/opencv/output $(OPENCV_CMAKE_OPTS)
-	@cd $(TRD_TMP_PATH)/opencv/build ; CMAKE_BUILD_TYPE="release" CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS)" make install
-	@cd $(TRD_TMP_PATH)/opencv/output ; mkdir share/OpenCV/3rdparty
-	@cd $(TRD_TMP_PATH)/opencv/output ; rsync -avpPxH ../build/3rdparty/lib share/OpenCV/3rdparty/
+	@cd $(TRD_TMP_PATH)/opencv/build ; $(OPENCV_CMAKE_ENV) cmake $(TRD_MOD_PATH)/opencv -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/opencv/output $(OPENCV_CMAKE_OPTS)
+	@cd $(TRD_TMP_PATH)/opencv/build ; $(OPENCV_CMAKE_ENV) make install
 	@tar -C $(TRD_TMP_PATH)/opencv/output -czf $(TRD_TMP_PATH)/opencv/output/opencv.tar.gz include lib share
-	@tar -C $(TRD_TMP_PATH)/opencv/output -cf $(TRD_TMP_PATH)/opencv/output/opencv_aisdk.tar.gz include lib share
 	@rsync -avpPxH $(TRD_TMP_PATH)/opencv/output/lib/libopencv*.so* $(TRD_LIB_PATH)/
 
-build_3rdparty_module: $(TRD_LIB_PATH)/libopencv_core.so
+$(TRD_LIB_PATH)/libopencv_core.a: $(TRD_LIB_PATH)/libopencv_core.so
+	@mkdir -p $(TRD_LIB_PATH)
+	@mkdir -p $(TRD_TMP_PATH)/opencv/build_static
+	@mkdir -p $(TRD_TMP_PATH)/opencv/output
+	@cd $(TRD_TMP_PATH)/opencv/build_static ; $(OPENCV_CMAKE_ENV) cmake $(TRD_MOD_PATH)/opencv -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/opencv/output $(OPENCV_CMAKE_OPTS) -DBUILD_SHARED_LIBS=OFF
+	@cd $(TRD_TMP_PATH)/opencv/build_static ; $(OPENCV_CMAKE_ENV) make install
+	@tar -C $(TRD_TMP_PATH)/opencv/output -cf $(TRD_TMP_PATH)/opencv/output/opencv_aisdk.tar.gz include lib share
+	@rsync -avpPxH $(TRD_TMP_PATH)/opencv/output/lib/libopencv*.a $(TRD_LIB_PATH)/
+
+build_3rdparty_module: $(TRD_LIB_PATH)/libopencv_core.a
 
 clean:
+	@rm -f $(TRD_LIB_PATH)/libopencv*.a
 	@rm -f $(TRD_LIB_PATH)/libopencv*.so*
 	@rm -rf $(TRD_TMP_PATH)/opencv
 
