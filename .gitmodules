@@ -34,3 +34,7 @@
 	path = 3rdparty/zlib/zlib
 	url = https://github.com/scpcom/zlib
 	branch = 3rd
+[submodule "3rdparty/opencv/opencv"]
+	path = 3rdparty/opencv/opencv
+	url = https://github.com/scpcom/opencv
+	branch = 3rd
