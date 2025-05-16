@@ -11,6 +11,7 @@ SRCS := $(wildcard $(SDIR)/*.c)
 TRD_MOD_PATH = $(PWD)
 TRD_INCLUDE_PATH = $(PWD)/prebuilt/include
 TRD_LIB_PATH = $(PWD)/prebuilt/$(SDK_VER)
+TRD_TAR_PATH = $(realpath $(PWD)/../..)/3rdparty/oss/oss_release_tarball/$(SDK_VER)
 TRD_TMP_PATH = $(PWD)/tmp_3rd
 
 ifneq ($(findstring $(CHIP_ARCH), MARS PHOBOS CV181X CV180X),)
@@ -43,20 +44,22 @@ all : build_3rdparty_module $(TARGET_A) $(TARGET_SO)
 
 $(TRD_LIB_PATH)/libcvi_json-c.a:
 	@mkdir -p $(TRD_LIB_PATH)
+	@mkdir -p $(TRD_TAR_PATH)
 	@mkdir -p $(TRD_TMP_PATH)/cvi_json-c/build
 	@mkdir -p $(TRD_TMP_PATH)/cvi_json-c/output
 	@cd $(TRD_TMP_PATH)/cvi_json-c/build ; CMAKE_BUILD_TYPE="release" CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" cmake $(TRD_MOD_PATH)/json-c -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/cvi_json-c/output
 	@cd $(TRD_TMP_PATH)/cvi_json-c/build ; CMAKE_BUILD_TYPE="release" CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" make install
-	@tar -C $(TRD_TMP_PATH)/cvi_json-c/output -czf $(TRD_TMP_PATH)/cvi_json-c/output/cvi-json-c.tar.gz include lib
+	@tar -C $(TRD_TMP_PATH)/cvi_json-c/output -czf $(TRD_TAR_PATH)/cvi-json-c.tar.gz include lib
 	@cp -p $(TRD_TMP_PATH)/cvi_json-c/output/lib/libcvi_json-c.a $(TRD_LIB_PATH)/
 
 $(TRD_LIB_PATH)/libcvi_miniz.a:
 	@mkdir -p $(TRD_LIB_PATH)
+	@mkdir -p $(TRD_TAR_PATH)
 	@mkdir -p $(TRD_TMP_PATH)/cvi_miniz/build
 	@mkdir -p $(TRD_TMP_PATH)/cvi_miniz/output
 	@cd $(TRD_TMP_PATH)/cvi_miniz/build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" cmake $(TRD_MOD_PATH)/miniz -G"Unix Makefiles" -DAMALGAMATE_SOURCES=ON -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/cvi_miniz/output
 	@cd $(TRD_TMP_PATH)/cvi_miniz/build ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" make install
-	@tar -C $(TRD_TMP_PATH)/cvi_miniz/output -czf $(TRD_TMP_PATH)/cvi_miniz/output/cvi-miniz.tar.gz include lib share
+	@tar -C $(TRD_TMP_PATH)/cvi_miniz/output -czf $(TRD_TAR_PATH)/cvi-miniz.tar.gz include lib share
 	@cp -p $(TRD_TMP_PATH)/cvi_miniz/output/lib/libcvi_miniz.a $(TRD_LIB_PATH)/
 	@rm -f $(TRD_MOD_PATH)/miniz/bin/example*
 
@@ -83,6 +86,7 @@ $(TARGET_SO): $(OBJS) $(OBJS_ASM)
 clean:
 	@rm -f $(OBJS) $(OBJS_ASM) $(DEPS) $(TARGET_A) $(TARGET_SO)
 	@rm -f $(TRD_LIB_PATH)/libcvi_json-c.a $(TRD_LIB_PATH)/libcvi_miniz.a
+	@rm -f $(TRD_TAR_PATH)/cvi-json-c.tar.gz $(TRD_TAR_PATH)/cvi-miniz.tar.gz
 	@rm -rf $(TRD_TMP_PATH)
 
 -include $(DEPS)
