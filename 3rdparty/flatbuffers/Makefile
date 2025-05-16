@@ -9,7 +9,7 @@ SDIR = $(PWD)/src
 SRCS := $(wildcard $(SDIR)/*.c)
 
 # 3rdparty lib
-TRD_MOD_PATH = $(realpath $(ROOT_DIR)/..)
+TRD_MOD_PATH = $(PWD)
 
 FLATBUFFERS_CMAKE_ENV = CMAKE_BUILD_TYPE="RELEASE" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
@@ -39,7 +39,6 @@ $(TRD_LIB_PATH)/libflatbuffers.a:
 build_3rdparty_module: $(TRD_LIB_PATH)/libflatbuffers.a
 
 clean:
-	@cd $(TRD_MOD_PATH)/flatbuffers ; CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS)" DESTDIR=$(TRD_TMP_PATH)/flatbuffers/output make distclean
 	@rm -f $(TRD_LIB_PATH)/libflatbuffers.a
 	@rm -rf $(TRD_TMP_PATH)/flatbuffers
 

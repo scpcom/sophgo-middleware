@@ -38,3 +38,7 @@
 	path = 3rdparty/opencv/opencv
 	url = https://github.com/scpcom/opencv
 	branch = 3rd
+[submodule "3rdparty/flatbuffers/flatbuffers"]
+	path = 3rdparty/flatbuffers/flatbuffers
+	url = https://github.com/scpcom/flatbuffers
+	branch = licheervnano-cvisdk
