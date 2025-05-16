@@ -3,15 +3,13 @@ ifeq ($(PARAM_FILE), )
      PARAM_FILE:=../../Makefile.param
      include $(PARAM_FILE)
 endif
+include ../3rdparty.mk
 
 SDIR = $(PWD)/src
 SRCS := $(wildcard $(SDIR)/*.c)
 
 # 3rdparty lib
 TRD_MOD_PATH = $(PWD)
-TRD_INCLUDE_PATH = $(realpath $(PWD)/..)/prebuilt/include
-TRD_LIB_PATH = $(realpath $(PWD)/..)/prebuilt/$(SDK_VER)
-TRD_TMP_PATH = $(realpath $(PWD)/..)/tmp
 
 .PHONY : clean all
 all : build_3rdparty_module

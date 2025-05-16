@@ -3,15 +3,13 @@ ifeq ($(PARAM_FILE), )
      PARAM_FILE:=../../Makefile.param
      include $(PARAM_FILE)
 endif
+include ../3rdparty.mk
 
 SDIR = $(PWD)/src
 SRCS := $(wildcard $(SDIR)/*.c)
 
 # 3rdparty lib
 TRD_MOD_PATH = $(realpath $(ROOT_DIR)/..)
-TRD_INCLUDE_PATH = $(realpath $(PWD)/..)/prebuilt/include
-TRD_LIB_PATH = $(realpath $(PWD)/..)/prebuilt/$(SDK_VER)
-TRD_TMP_PATH = $(realpath $(PWD)/..)/tmp
 
 FLATBUFFERS_CMAKE_ENV = CMAKE_BUILD_TYPE="RELEASE" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
