@@ -8,9 +8,6 @@ include ../3rdparty.mk
 SDIR = $(PWD)/src
 SRCS := $(wildcard $(SDIR)/*.c)
 
-# 3rdparty lib
-TRD_MOD_PATH = $(PWD)
-
 FLATBUFFERS_CMAKE_ENV = CMAKE_BUILD_TYPE="RELEASE" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS)" \

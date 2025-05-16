@@ -8,9 +8,6 @@ include ../3rdparty.mk
 SDIR = $(PWD)/src
 SRCS := $(wildcard $(SDIR)/*.c)
 
-# 3rdparty lib
-TRD_MOD_PATH = $(PWD)
-
 ifeq ($(SDK_VER), 32bit)
 CMAKE_SYSTEM_PROCESSOR = arm
 OPENCV_SYSTEM_PROCESSOR = ARM
