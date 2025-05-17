@@ -5,9 +5,6 @@ ifeq ($(PARAM_FILE), )
 endif
 include ../3rdparty.mk
 
-SDIR = $(PWD)/src
-SRCS := $(wildcard $(SDIR)/*.c)
-
 .PHONY : clean all
 all : build_3rdparty_module
 

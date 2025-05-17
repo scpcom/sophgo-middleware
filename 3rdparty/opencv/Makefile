@@ -5,9 +5,6 @@ ifeq ($(PARAM_FILE), )
 endif
 include ../3rdparty.mk
 
-SDIR = $(PWD)/src
-SRCS := $(wildcard $(SDIR)/*.c)
-
 ifeq ($(SDK_VER), 32bit)
 CMAKE_SYSTEM_PROCESSOR = arm
 OPENCV_SYSTEM_PROCESSOR = ARM
