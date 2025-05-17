@@ -12,7 +12,7 @@ TRD_MOD_PATH = $(PWD)
 TRD_INCLUDE_PATH = $(PWD)/prebuilt/include
 TRD_LIB_PATH = $(PWD)/prebuilt/$(SDK_VER)
 TRD_TAR_PATH = $(realpath $(PWD)/../..)/3rdparty/oss/oss_release_tarball/$(SDK_VER)
-TRD_TMP_PATH = $(PWD)/tmp_3rd
+TRD_TMP_PATH = $(PWD)/tmp_3rd/$(SDK_VER)
 
 ifneq ($(findstring $(CHIP_ARCH), MARS PHOBOS CV181X CV180X),)
 ISP_BIN_DIR = $(MW_PATH)/modules/isp/$(shell echo $(CHIP_ARCH) | tr A-Z a-z)/isp_bin/inc
