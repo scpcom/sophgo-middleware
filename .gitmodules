@@ -42,3 +42,7 @@
 	path = 3rdparty/flatbuffers/flatbuffers
 	url = https://github.com/scpcom/flatbuffers
 	branch = licheervnano-cvisdk
+[submodule "3rdparty/nanomsg/nanomsg"]
+	path = 3rdparty/nanomsg/nanomsg
+	url = https://github.com/scpcom/nanomsg
+	branch = 3rd
