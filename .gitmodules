@@ -46,3 +46,7 @@
 	path = 3rdparty/nanomsg/nanomsg
 	url = https://github.com/scpcom/nanomsg
 	branch = 3rd
+[submodule "3rdparty/uv/uv"]
+	path = 3rdparty/uv/uv
+	url = https://github.com/scpcom/libuv
+	branch = 3rd
