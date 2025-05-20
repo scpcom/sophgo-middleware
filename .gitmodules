@@ -50,3 +50,7 @@
 	path = 3rdparty/uv/uv
 	url = https://github.com/scpcom/libuv
 	branch = 3rd
+[submodule "3rdparty/openssl/openssl"]
+	path = 3rdparty/openssl/openssl
+	url = https://github.com/scpcom/openssl
+	branch = 3rd
