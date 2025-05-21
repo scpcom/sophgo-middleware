@@ -58,3 +58,7 @@
 	path = 3rdparty/libwebsockets/libwebsockets
 	url = https://github.com/scpcom/libwebsockets
 	branch = 3rd
+[submodule "3rdparty/sqlite/sqlite"]
+	path = 3rdparty/sqlite/sqlite
+	url = https://github.com/scpcom/sqlite
+	branch = 3rd
