@@ -62,3 +62,7 @@
 	path = 3rdparty/sqlite/sqlite
 	url = https://github.com/scpcom/sqlite
 	branch = 3rd
+[submodule "3rdparty/glog/glog"]
+	path = 3rdparty/glog/glog
+	url = https://github.com/scpcom/glog
+	branch = 3rd
