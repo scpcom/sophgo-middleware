@@ -66,3 +66,7 @@
 	path = 3rdparty/glog/glog
 	url = https://github.com/scpcom/glog
 	branch = 3rd
+[submodule "3rdparty/ffmpeg/ffmpeg"]
+	path = 3rdparty/ffmpeg/ffmpeg
+	url = https://github.com/scpcom/FFmpeg
+	branch = 3rd
