@@ -173,7 +173,7 @@ $(TRD_LIB_PATH)/libavcodec.a: $(TRD_LIB_PATH)/libssl.a $(TRD_LIB_PATH)/libopencv
 	@mkdir -p $(TRD_TAR_PATH)
 	@mkdir -p $(TRD_TMP_PATH)/ffmpeg/output
 	@cd $(TRD_MOD_PATH)/ffmpeg ; $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output ./configure $(FFMPEG_CONF_OPTS)
-	@cd $(TRD_MOD_PATH)/ffmpeg ; $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output make install
+	@cd $(TRD_MOD_PATH)/ffmpeg ; $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output make ARCH=$(FFMPEG_ARCH) install
 	@tar -C $(TRD_TMP_PATH)/ffmpeg/output/usr/local -czf $(TRD_TAR_PATH)/ffmpeg.tar.gz bin include lib share
 	@rsync -avpPxH $(TRD_TMP_PATH)/ffmpeg/output/usr/local/include/ $(TRD_INCLUDE_PATH)/
 	@cp -p $(TRD_TMP_PATH)/ffmpeg/output/usr/local/lib/libav*.a $(TRD_LIB_PATH)/
@@ -184,7 +184,7 @@ $(TRD_LIB_PATH)/libavcodec.a: $(TRD_LIB_PATH)/libssl.a $(TRD_LIB_PATH)/libopencv
 build_3rdparty_module: $(TRD_LIB_PATH)/libavcodec.a
 
 clean:
-	@cd $(TRD_MOD_PATH)/ffmpeg ; $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output make distclean
+	@cd $(TRD_MOD_PATH)/ffmpeg ; $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output make ARCH=$(FFMPEG_ARCH) distclean
 	@rm -f $(TRD_LIB_PATH)/libav*.a
 	@rm -f $(TRD_LIB_PATH)/libav*.so*
 	@rm -f $(TRD_LIB_PATH)/libswresample.a
