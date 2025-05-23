@@ -2,6 +2,7 @@
 *.o
 *.a
 *.so
+*.so.*
 *.dep
 *.dwo
 
@@ -53,3 +54,6 @@ modules/venc/vc/jpeg/driver/include/version.h
 
 #modules/isp
 component/isp
+3rdparty/oss/oss_release_tarball
+3rdparty/prebuilt/include
+3rdparty/tmp
