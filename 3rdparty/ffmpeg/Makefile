@@ -172,6 +172,7 @@ $(TRD_LIB_PATH)/libavcodec.a: $(TRD_LIB_PATH)/libssl.a $(TRD_LIB_PATH)/libopencv
 	@mkdir -p $(TRD_LIB_PATH)
 	@mkdir -p $(TRD_TAR_PATH)
 	@mkdir -p $(TRD_TMP_PATH)/ffmpeg/output
+	@cd $(TRD_MOD_PATH)/ffmpeg ; sed -i s/'std=c11'/'std=gnu11'/g ./configure
 	@cd $(TRD_MOD_PATH)/ffmpeg ; $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output ./configure $(FFMPEG_CONF_OPTS)
 	@cd $(TRD_MOD_PATH)/ffmpeg ; $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output make ARCH=$(FFMPEG_ARCH) install
 	@tar -C $(TRD_TMP_PATH)/ffmpeg/output/usr/local -czf $(TRD_TAR_PATH)/ffmpeg.tar.gz bin include lib share
