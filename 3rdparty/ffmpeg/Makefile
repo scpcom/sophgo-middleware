@@ -7,7 +7,9 @@ include ../3rdparty.mk
 
 ifeq ($(SDK_VER), 32bit)
 FFMPEG_ARCH = arm
-GCC_TARGET_CPU = cortex-a7
+FFMPEG_ARM_CPU_HAS_VFPV2 = y
+FFMPEG_ARM_CPU_HAS_NEON = y
+GCC_TARGET_CPU = cortex-a53
 else ifeq ($(SDK_VER), 64bit)
 FFMPEG_ARCH = aarch64
 GCC_TARGET_CPU = cortex-a53
@@ -147,13 +149,27 @@ FFMPEG_CONF_OPTS = \
 	--disable-avx \
 	--disable-avx2 \
 	--disable-armv6 \
-	--disable-armv6t2 \
-	--disable-vfp \
-	--disable-neon \
+	--disable-armv6t2
+
+ifeq ($(FFMPEG_ARM_CPU_HAS_VFPV2),y)
+FFMPEG_CONF_OPTS += --enable-vfp
+else
+FFMPEG_CONF_OPTS += --disable-vfp
+endif
+ifeq ($(FFMPEG_ARM_CPU_HAS_NEON),y)
+FFMPEG_CONF_OPTS += --enable-neon
+else ifeq ($(FFMPEG_ARCH),aarch64)
+FFMPEG_CONF_OPTS += --enable-neon
+else
+FFMPEG_CONF_OPTS += --disable-neon
+endif
+
+FFMPEG_CONF_OPTS += \
 	--disable-altivec \
 	--extra-libs=-latomic \
 	--enable-pic \
 	--cpu="$(GCC_TARGET_CPU)"
+
 
 .PHONY : clean all
 all : build_3rdparty_module
