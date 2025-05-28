@@ -33,7 +33,7 @@ OPENSSL_CMAKE_ENV = \
 OPENSSL_BUILD_DIR = $(TRD_MOD_PATH)/openssl
 
 .PHONY : clean all
-all : build_3rdparty_module
+all : $(TRD_BUILD_OPTIONAL_MODULE)
 
 $(TRD_LIB_PATH)/libz.a:
 	cd $(TRD_MOD_PATH)/../zlib ; make

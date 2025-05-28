@@ -32,7 +32,7 @@ GLOG_CMAKE_OPTS += \
 	-DWITH_GFLAGS=OFF
 
 .PHONY : clean all
-all : build_3rdparty_module
+all : $(TRD_BUILD_OPTIONAL_MODULE)
 
 $(TRD_LIB_PATH)/libglog.a:
 	@mkdir -p $(TRD_LIB_PATH)

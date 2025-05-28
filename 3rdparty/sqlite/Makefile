@@ -23,7 +23,7 @@ SQLITE_CMAKE_ENV = \
 	CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS) -g0"
 
 .PHONY : clean all
-all : build_3rdparty_module
+all : $(TRD_BUILD_OPTIONAL_MODULE)
 
 $(TRD_LIB_PATH)/libsqlite3.a:
 	@mkdir -p $(TRD_INCLUDE_PATH)

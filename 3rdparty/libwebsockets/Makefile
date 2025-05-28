@@ -27,7 +27,7 @@ WEBSOCKETS_CMAKE_OPTS += \
 	-DLWS_LIBUV_LIBRARIES=$(TRD_LIB_PATH)
 
 .PHONY : clean all
-all : build_3rdparty_module
+all : $(TRD_BUILD_OPTIONAL_MODULE)
 
 $(TRD_LIB_PATH)/libssl.so:
 	cd $(TRD_MOD_PATH)/../openssl ; make

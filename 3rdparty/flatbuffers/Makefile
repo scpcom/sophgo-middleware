@@ -19,7 +19,7 @@ FLATBUFFERS_CMAKE_OPTS += \
 FLATBUFFERS_CMAKE_OPTS += -DFLATBUFFERS_BUILD_SHAREDLIB=OFF
 
 .PHONY : clean all
-all : build_3rdparty_module
+all : $(TRD_BUILD_TPUSDK_MODULE)
 
 $(TRD_LIB_PATH)/libflatbuffers.a:
 	@mkdir -p $(TRD_LIB_PATH)
