@@ -36,6 +36,7 @@ typedef struct _optionExt_ {
 
 typedef enum {
 	DSI_PANEL_3AML069LP01G,
+	DSI_PANEL_D240SI31,
 	DSI_PANEL_GM8775C,
 	DSI_PANEL_HX8394_EVB,
 	DSI_PANEL_MILKV_8HD,
@@ -110,6 +111,7 @@ static optionExt long_option_ext[] = {
 
 static char *s_panel_model_type_arr[] = {
 	"3AML069LP01G",
+	"D240SI31",
 	"GM8775C",
 	"HX8394_EVB",
 	"MILKV_8HD",
@@ -432,6 +434,13 @@ void SAMPLE_DSI_CONTROLE(void)
 void SAMPLE_SET_PANEL_DESC(void)
 {
 	switch (g_input_para.panel_model) {
+	case DSI_PANEL_D240SI31:
+		g_panel_desc.panel_type = PANEL_MODE_DSI;
+		g_panel_desc.stdsicfg.dev_cfg = &dev_cfg_d240si31;
+		g_panel_desc.stdsicfg.hs_timing_cfg = &hs_timing_cfg_d240si31;
+		g_panel_desc.stdsicfg.dsi_init_cmds = dsi_init_cmds_d240si31;
+		g_panel_desc.stdsicfg.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_d240si31);
+		break;
 	case DSI_PANEL_ILI9881C:
 		g_panel_desc.panel_type = PANEL_MODE_DSI;
 		g_panel_desc.stdsicfg.dev_cfg = &dev_cfg_ili9881c_720x1280;
