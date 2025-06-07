@@ -16,6 +16,7 @@ extern "C" {
 
 #include <linux/cvi_comm_vo.h>
 #include "dsi_hx8394_evb.h"
+#include "dsi_mtd70092b.h"
 #include "dsi_milkv_8hd.h"
 #include "dsi_milkv_8hd_2lane.h"
 #include "dsi_d240si31.h"

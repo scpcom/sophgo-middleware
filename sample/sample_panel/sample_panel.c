@@ -39,6 +39,7 @@ typedef enum {
 	DSI_PANEL_D240SI31,
 	DSI_PANEL_GM8775C,
 	DSI_PANEL_HX8394_EVB,
+	DSI_PANEL_MTD700920B,
 	DSI_PANEL_MILKV_8HD,
 	DSI_PANEL_MILKV_8HD_2LANE,
 	DSI_PANEL_HX8399_1080P,
@@ -115,6 +116,7 @@ static char *s_panel_model_type_arr[] = {
 	"D240SI31",
 	"GM8775C",
 	"HX8394_EVB",
+	"MTD700920B",
 	"MILKV_8HD",
 	"MILKV_8HD_2LANE",
 	"HX8399_1080P",
@@ -604,6 +606,12 @@ void SAMPLE_SET_PANEL_DESC(void)
 		g_panel_desc.stdsicfg.dsi_init_cmds = dsi_init_cmds_hx8394_720x1280;
 		g_panel_desc.stdsicfg.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_hx8394_720x1280);
 		break;
+	case DSI_PANEL_MTD700920B:
+		g_panel_desc.panel_type = PANEL_MODE_DSI;
+		g_panel_desc.stdsicfg.dev_cfg = &dev_cfg_mtd700920b_800x1280;
+		g_panel_desc.stdsicfg.hs_timing_cfg = &hs_timing_cfg_mtd700920b_800x1280;
+		g_panel_desc.stdsicfg.dsi_init_cmds = dsi_init_cmds_mtd700920b_800x1280;
+		g_panel_desc.stdsicfg.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_mtd700920b_800x1280);
 	case DSI_PANEL_MILKV_8HD:
 		g_panel_desc.panel_type = PANEL_MODE_DSI;
 		g_panel_desc.stdsicfg.dev_cfg = &dev_cfg_milkv_8hd_800x1280;
