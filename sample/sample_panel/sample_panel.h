@@ -34,6 +34,7 @@ extern "C" {
 #include "dsi_st7701_dxq5d0019b480854.h"
 #include "dsi_st7701_dxq5d0019_V0.h"
 #include "dsi_st7701_hd228001c31.h"
+#include "dsi_st7701_hd228001c31_alt0.h"
 #include "dsi_zct2133v1.h"
 #include "dsi_hx8399_1080p.h"
 #include "dsi_gm8775c.h"

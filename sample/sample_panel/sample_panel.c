@@ -61,6 +61,7 @@ typedef enum {
 	DSI_PANEL_ST7701_D310T9362V1,
 	DSI_PANEL_ST7701_DXQ5D0019B480854,
 	DSI_PANEL_ST7701_DXQ5D0019_V0,
+	DSI_PANEL_ST7701_HD228001C31_ALT0,
 	DSI_PANEL_ST7701_HD228001C31,
 	DSI_PANEL_ZCT2133V1,
 	LVDS_PANEL_LCM185X56,
@@ -139,6 +140,7 @@ static char *s_panel_model_type_arr[] = {
 	"ST7701_D310T9362V1",
 	"ST7701_DXQ5D0019B480854",
 	"ST7701_DXQ5D0019_V0",
+	"ST7701_HD228001C31_ALT0",
 	"ST7701_HD228001C31",
 	"ZCT2133V1",
 	"LCM185X56",
@@ -537,6 +539,13 @@ void SAMPLE_SET_PANEL_DESC(void)
 		g_panel_desc.stdsicfg.hs_timing_cfg = &hs_timing_cfg_st7701_480x854dxq_V0;
 		g_panel_desc.stdsicfg.dsi_init_cmds = dsi_init_cmds_st7701_480x854dxq_V0;
 		g_panel_desc.stdsicfg.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_480x854dxq_V0);
+		break;
+	case DSI_PANEL_ST7701_HD228001C31_ALT0:
+		g_panel_desc.panel_type = PANEL_MODE_DSI;
+		g_panel_desc.stdsicfg.dev_cfg = &dev_cfg_st7701_368x552_alt0;
+		g_panel_desc.stdsicfg.hs_timing_cfg = &hs_timing_cfg_st7701_368x552_alt0;
+		g_panel_desc.stdsicfg.dsi_init_cmds = dsi_init_cmds_st7701_368x552_alt0;
+		g_panel_desc.stdsicfg.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_368x552_alt0);
 		break;
 	case DSI_PANEL_ST7701_HD228001C31:
 		g_panel_desc.panel_type = PANEL_MODE_DSI;
