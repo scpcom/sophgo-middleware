@@ -13,8 +13,6 @@
 #include <cvi_mipi.h>
 #endif
 
-#define PANEL_NAME "ST7701_D310T9362V1"
-
 #define ST7701_D310T9362V1_VACT		800
 #define ST7701_D310T9362V1_VSA		10
 #define ST7701_D310T9362V1_VBP		28
