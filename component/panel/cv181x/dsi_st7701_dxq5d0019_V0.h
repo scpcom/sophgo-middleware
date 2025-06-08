@@ -30,7 +30,7 @@
 #define ST7701_DXQ5D0019_V0_HBP		72
 #define ST7701_DXQ5D0019_V0_HFP		24
 
-#define DXQ_PIXEL_CLK(x) ((x##_VACT + x##_VSA + x##_VBP + x##_VFP) \
+#define DXQ_V0_PIXEL_CLK(x) ((x##_VACT + x##_VSA + x##_VBP + x##_VFP) \
 	* (x##_HACT + x##_HSA + x##_HBP + x##_HFP) * 60 / 1000)
 
 struct combo_dev_cfg_s dev_cfg_st7701_480x854dxq_V0 = {
@@ -52,7 +52,7 @@ struct combo_dev_cfg_s dev_cfg_st7701_480x854dxq_V0 = {
 		.vid_vsa_pos_polarity = true,
 		.vid_hsa_pos_polarity = false,
 	},
-	.pixel_clk = DXQ_PIXEL_CLK(ST7701_DXQ5D0019_V0),
+	.pixel_clk = DXQ_V0_PIXEL_CLK(ST7701_DXQ5D0019_V0),
 };
 
 const struct hs_settle_s hs_timing_cfg_st7701_480x854dxq_V0 = { .prepare = 6, .zero = 32, .trail = 1 };
