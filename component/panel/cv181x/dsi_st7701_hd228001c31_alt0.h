@@ -220,5 +220,5 @@ const struct dsc_instr dsi_init_cmds_st7701_368x552_alt0[] = {
 };
 
 #else
-#error "MIPI_TX_PARAM multi-delcaration!!"
-#endif // _MIPI_TX_PARAM_ST_7701_HD22801C31_H_
+#error "_MIPI_TX_PARAM_ST_7701_HD228001C31_ALT0_H_ multi-delcaration!!"
+#endif // _MIPI_TX_PARAM_ST_7701_HD228001C31_ALT0_H_
