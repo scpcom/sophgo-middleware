@@ -158,5 +158,5 @@ const struct dsc_instr dsi_init_cmds_st7701_480x854[] = {
 };
 
 #else
-#error "MIPI_TX_PARAM multi-delcaration!!"
+#error "_MIPI_TX_PARAM_ST_7701_D300FPC9307A_H_ multi-delcaration!!"
 #endif
