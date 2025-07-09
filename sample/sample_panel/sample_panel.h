@@ -19,6 +19,7 @@ extern "C" {
 #include "dsi_mtd70092b.h"
 #include "dsi_milkv_8hd.h"
 #include "dsi_milkv_8hd_2lane.h"
+#include "dsi_milkv_st7796s.h"
 #include "dsi_d240si31.h"
 #include "dsi_ili9881c.h"
 #include "dsi_ili9881d.h"
