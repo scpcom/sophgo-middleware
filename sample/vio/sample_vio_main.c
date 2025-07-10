@@ -54,6 +54,10 @@ void SAMPLE_VIO_Usage(char *sPrgNm)
 	printf("\t17)VI (IMX307 + PR2020) - online/offline VPSS - VO.\n");
 	printf("\t18)VI (IMX307) - onthefly online to VPSS - VO.\n");
 #endif
+	printf("\n");
+	printf("\t21)VI (Offline) - VPSS(Offline, Rotation) - VO. (480x270)\n");
+	printf("\t22)VI (Offline) - VPSS(Offline) - VO(Rotation). (480x270)\n");
+	printf("\t23)VI (Offline) - VPSS(Offline) - VO(Rotation). (480x320)\n");
 	printf("\t50)VO (OT07007) - lvds colorbar test.\n");
 }
 
@@ -162,6 +166,18 @@ int main(int argc, char *argv[])
 		s32Ret = SAMPLE_IMX307_ONTHEFLY_ONLINE_SC_TEST();
 		break;
 #endif
+
+	case 21:
+		s32Ret = SAMPLE_VIO_VpssRotation_480x270();
+		break;
+
+	case 22:
+		s32Ret = SAMPLE_VIO_VoRotation_480x270();
+		break;
+
+	case 23:
+		s32Ret = SAMPLE_VIO_VoRotation_480x320();
+		break;
 	case 50:
 		s32Ret = SAMPLE_VO_LVDS_TEST();
 		break;
