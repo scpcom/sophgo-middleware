@@ -505,6 +505,7 @@ void kvm_hw_detect()
 
 void show_string_on_oled(int olde_fb, char* name, const char *format, char *indata)
 {
+	uint8_t oled_max_chars = OLED_MAX_CHARS;
 	char outdata[OLED_MAX_CHARS*2];
 	char *predata;
 
@@ -513,11 +514,19 @@ void show_string_on_oled(int olde_fb, char* name, const char *format, char *inda
 	if (strlen(name) > OLED_MAX_CHARS)
 		return;
 
+	if (priv.kvm_hw == 2) {
+		oled_max_chars = (64 - priv.pos_x + 32) / priv.size_x;
+	} else {
+		oled_max_chars = (128 - priv.pos_x) / priv.size_x;
+	}
+
 	predata = (char*)&priv.data[priv.pos_y];
 	if (indata)
 		sprintf(outdata, format, indata ? indata : "-");
 	else
 		strcpy(outdata, predata);
+	if (strlen(outdata) > oled_max_chars)
+		outdata[oled_max_chars] = 0;
 	if (strlen(outdata) > OLED_MAX_CHARS)
 		return;
 
@@ -529,10 +538,10 @@ void show_string_on_oled(int olde_fb, char* name, const char *format, char *inda
 	if (strlen(outdata) < strlen(predata)) {
 		memset(predata, ' ', strlen(predata));
 		strcpy(predata + strlen(predata) - strlen(outdata), outdata);
-		OLED_ShowString(olde_fb, priv.pos_x + (OLED_MAX_CHARS - strlen(predata)) * priv.size_x, priv.pos_y, predata, priv.size_y);
+		OLED_ShowString(olde_fb, priv.pos_x + (oled_max_chars - strlen(predata)) * priv.size_x, priv.pos_y, predata, priv.size_y);
 		strcpy(priv.data[priv.pos_y], outdata);
 	} else if (strcmp(priv.data[priv.pos_y], outdata)) {
-		OLED_ShowString(olde_fb, priv.pos_x + (OLED_MAX_CHARS - strlen(outdata)) * priv.size_x, priv.pos_y, outdata, priv.size_y);
+		OLED_ShowString(olde_fb, priv.pos_x + (oled_max_chars - strlen(outdata)) * priv.size_x, priv.pos_y, outdata, priv.size_y);
 		strcpy(priv.data[priv.pos_y], outdata);
 	}
 
@@ -600,9 +609,9 @@ void show_info_on_oled(void)
 	else if(priv.size_y==4) priv.size_x = 4;
 	else priv.size_x = priv.size_y / 2;
 
-	priv.pos_y += 1;
+	if (priv.kvm_hw != 2) priv.pos_y += 1;
 	show_string_on_oled(olde_fb, "IP:", "%s", get_server_ip());
-	priv.pos_y += 1;
+	if (priv.kvm_hw != 2) priv.pos_y += 1;
 	if (!res && width && height) {
 		char str_res[OLED_MAX_CHARS + 1];
 		snprintf(str_res, sizeof(str_res), "%ux%u", width, height);
@@ -612,7 +621,7 @@ void show_info_on_oled(void)
 	}
 	show_string_on_oled_from_file(olde_fb, "|TYPE:", "%s", "/kvmapp/kvm/type");
 	show_string_on_oled_from_file(olde_fb, "|STREAM:", "%s FPS", "/kvmapp/kvm/now_fps");
-	show_string_on_oled_from_file(olde_fb, "|QUALITY:", (kvm_type == 2) ? "%s kbps" : "%s %%",
+	if (priv.kvm_hw != 2) show_string_on_oled_from_file(olde_fb, "|QUALITY:", (kvm_type == 2) ? "%s kbps" : "%s %%",
 						"/kvmapp/kvm/qlty");
 }
 
@@ -669,7 +678,7 @@ int main(int argc, char *argv[])
 
 	kvm_hw_detect();
 	if (priv.kvm_hw == 2) {
-		priv.pos_x += 32;
+		priv.pos_x = 32;
 		priv.size_y = 4; //8;
 	}
 
