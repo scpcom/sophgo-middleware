@@ -611,6 +611,27 @@ void show_info_on_oled(void)
 						"/kvmapp/kvm/qlty");
 }
 
+void oled_show_string(char* strA, char* strB)
+{
+	int olde_fb = priv.oled_fb;
+
+	if (olde_fb < 0)
+		return;
+
+	priv.pos_y = 0;
+	if(priv.size_y==8) priv.size_x = 6;
+	else priv.size_x = priv.size_y / 2;
+
+	if (strA) {
+		OLED_ShowString(olde_fb, priv.pos_x, priv.pos_y, strA, priv.size_y);
+	}
+
+	priv.pos_y += 1;
+	if (strB) {
+		OLED_ShowString(olde_fb, priv.pos_x, priv.pos_y, strB, priv.size_y);
+	}
+}
+
 void show_info_close_oled()
 {
 	int olde_fb = priv.oled_fb;
@@ -641,9 +662,23 @@ int main(int argc, char *argv[])
 	priv.size_y = 8; //16;
 
 	kvm_hw_detect();
+	if (priv.kvm_hw == 2) {
+		priv.pos_x += 32;
+	}
+
 	s32Ret = show_info_prepare_oled();
 	if (s32Ret != CVI_SUCCESS)
 		return s32Ret;
+
+	if (argc > 1 && !strcmp(argv[1], "--oled-show-string")) {
+		if (argc > 3) {
+			oled_show_string(argv[2], argv[3]);
+		} else if (argc > 2) {
+			oled_show_string(NULL, argv[2]);
+		}
+
+		return 0;
+	}
 
 	signal(SIGINT, sig_handle);
 	signal(SIGTERM, sig_handle);
