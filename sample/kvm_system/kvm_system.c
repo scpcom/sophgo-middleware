@@ -43,8 +43,11 @@ static void sig_handle(CVI_S32 signo)
 
 #define OLED_DISABLE 	0
 #define OLED_ENABLE		1
-#define oled_i2c_bus		5	// 4.1.0 sdk: 3
+#define oled_alpha_i2c_bus	1
+#define oled_test_i2c_bus	3	// 4.1.0 sdk
+#define oled_i2c_bus		5
 #define oled_i2c_addr		0x3D
+#define oled_pcie_i2c_addr	0x3C
 #define OLED_CMD		0x00
 #define OLED_DATA		0x40
 
@@ -52,6 +55,7 @@ static void sig_handle(CVI_S32 signo)
 #define OLED_MAX_CHARS		21
 
 typedef struct {
+	int kvm_hw;
 	int oled_fb;
 	char ip[16];
 	uint8_t pos_x;
@@ -67,20 +71,43 @@ static priv_t priv;
 // int oled_dev;
 int oled_i2c_init(uint8_t _EN, int * oled_dev)
 {
+	int ret;
+
 	// PinMux
-	system("devmem 0x030010E0 32 0x2");
-	system("devmem 0x030010E4 32 0x2");
-	int ret; 
+	if (priv.kvm_hw == 0) {
+		system("devmem 0x030010D0 32 0x2");  // I2C1_SCL
+		system("devmem 0x030010DC 32 0x2");  // I2C1_SDA
+		system("devmem 0x030010D4 32 0x3");  // GPIOE19 OLED_RST
+	} else if (priv.kvm_hw == 1 || priv.kvm_hw == 2) {
+		system("devmem 0x0300103C 32 0x3");  // GPIOA15 I2C5_SCL (bitbang)
+		system("devmem 0x03001058 32 0x3");  // GPIOA27 I2C5_SDA (bitbang)
+		system("devmem 0x03001050 32 0x3");  // GPIOA22 OLED_RST
+	} else {
+		// 4.1.0 sdk
+		system("devmem 0x030010E0 32 0x2");  // I2C3_SCL
+		system("devmem 0x030010E4 32 0x2");  // I2C3_SDA
+	}
+
 	if(_EN) {
 		char i2c_dev[12];
-		sprintf(i2c_dev, "/dev/i2c-%hhd", oled_i2c_bus);
+		if (priv.kvm_hw == 0) {
+			sprintf(i2c_dev, "/dev/i2c-%hhd", oled_alpha_i2c_bus);
+		} else if (priv.kvm_hw == 1 || priv.kvm_hw == 2) {
+			sprintf(i2c_dev, "/dev/i2c-%hhd", oled_i2c_bus);
+		} else {
+			// 4.1.0 sdk
+			sprintf(i2c_dev, "/dev/i2c-%hhd", oled_test_i2c_bus);
+		}
 		*oled_dev = open(i2c_dev, O_RDWR, 0600);
 		if (*oled_dev < 0) {
 			printf("%s: Open %s error!\n", __func__, i2c_dev);
 			return CVI_FAILURE;
 		}
 
-		ret = ioctl(*oled_dev, I2C_SLAVE_FORCE, oled_i2c_addr);
+		if (priv.kvm_hw == 2)
+			ret = ioctl(*oled_dev, I2C_SLAVE_FORCE, oled_pcie_i2c_addr);
+		else
+			ret = ioctl(*oled_dev, I2C_SLAVE_FORCE, oled_i2c_addr);
 		if (ret < 0) {
 			printf("I2C_SLAVE_FORCE error! = %d\n", ret);
 			close(*oled_dev);
@@ -445,6 +472,27 @@ static uint32_t file_to_uint(const char *file, uint32_t def)
 	return ret;
 }
 
+void kvm_hw_detect()
+{
+	char* str = file_to_string("/etc/kvm/hw", 32);
+	// set beta as default
+	priv.kvm_hw = 1;
+	if (str)
+	{
+		if (!strcmp(str, "alpha")) {
+			printf("hw = %s\n", str);
+			priv.kvm_hw = 0;
+		} else if (!strcmp(str, "beta")) {
+			printf("hw = %s\n", str);
+			priv.kvm_hw = 1;
+		} else if (!strcmp(str, "pcie")) {
+			printf("hw = %s\n", str);
+			priv.kvm_hw = 2;
+		}
+		free(str);
+	}
+}
+
 void show_string_on_oled(int olde_fb, char* name, const char *format, char *indata)
 {
 	char outdata[OLED_MAX_CHARS*2];
@@ -583,6 +631,7 @@ int main(int argc, char *argv[])
 	priv.pos_y = 0;
 	priv.size_y = 8; //16;
 
+	kvm_hw_detect();
 	s32Ret = show_info_prepare_oled();
 	if (s32Ret != CVI_SUCCESS)
 		return s32Ret;
