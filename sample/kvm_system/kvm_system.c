@@ -233,6 +233,7 @@ void OLED_ShowChar(int _fb, uint8_t x,uint8_t y,uint8_t chr,uint8_t sizey)
 	uint8_t c=0,sizex=sizey/2;
 	uint16_t i=0,size1;
 	if(sizey==8)size1=6;
+	else if(sizey==4)size1=4;
 	else size1=(sizey/8+((sizey%8)?1:0))*(sizey/2);
 	c=chr-' ';//得到偏移后的值
 	OLED_Set_Pos(_fb, x, y);
@@ -241,6 +242,7 @@ void OLED_ShowChar(int _fb, uint8_t x,uint8_t y,uint8_t chr,uint8_t sizey)
 		if(i%sizex==0&&sizey!=8) OLED_Set_Pos(_fb, x, y++);
 		if(sizey==8) oled_write_register(_fb, OLED_DATA, oled_asc2_0806[c][i]); //6X8字号
 		else if(sizey==16) oled_write_register(_fb, OLED_DATA, oled_asc2_1608[c][i]);//8x16字号
+		else if(sizey==4) oled_write_register(_fb, OLED_DATA, oled_asc2_0804[c][i]);//8x4字号
 		else return;
 	}
 }
@@ -285,6 +287,7 @@ void OLED_ShowString(int _fb, uint8_t x, uint8_t y, char *chr, uint8_t sizey)
 	{		
 		OLED_ShowChar(_fb, x, y, chr[j++], sizey);
 		if(sizey==8)x+=6;
+		else if(sizey==4)x+=4;
 		else x+=sizey/2;
 	}
 }
@@ -369,6 +372,7 @@ void OLED_ShowStringtoend(int _fb, uint8_t x, uint8_t y, uint8_t *chr, uint8_t s
 	{		
 		OLED_ShowChar(_fb, x, y, chr[j++], sizey);
 		if(sizey==8)x+=6;
+		else if(sizey==4)x+=4;
 		else x+=sizey/2;
 	}
 }
@@ -593,6 +597,7 @@ void show_info_on_oled(void)
 
 	priv.pos_y = 0;
 	if(priv.size_y==8) priv.size_x = 6;
+	else if(priv.size_y==4) priv.size_x = 4;
 	else priv.size_x = priv.size_y / 2;
 
 	priv.pos_y += 1;
@@ -620,6 +625,7 @@ void oled_show_string(char* strA, char* strB)
 
 	priv.pos_y = 0;
 	if(priv.size_y==8) priv.size_x = 6;
+	else if(priv.size_y==4) priv.size_x = 4;
 	else priv.size_x = priv.size_y / 2;
 
 	if (strA) {
@@ -664,6 +670,7 @@ int main(int argc, char *argv[])
 	kvm_hw_detect();
 	if (priv.kvm_hw == 2) {
 		priv.pos_x += 32;
+		//priv.size_y = 4; //8;
 	}
 
 	s32Ret = show_info_prepare_oled();
