@@ -218,6 +218,12 @@ void OLED_Clear(int _fb)
 	} //更新显示
 }
 
+void OLED_Revolve(int _fb)
+{
+	oled_write_register(_fb, OLED_CMD, 0xA0);
+	oled_write_register(_fb, OLED_CMD, 0xC0);
+}
+
 //在指定位置显示一个字符,包括部分字符
 //x:0~127
 //y:0~63				 
@@ -554,6 +560,9 @@ int show_info_prepare_oled(void)
 	OLED_ColorTurn(olde_fb, 0);	//0正常显示 1 反色显示
   	OLED_DisplayTurn(olde_fb, 0);	//0正常显示 1 屏幕翻转显示
 	OLED_Clear(olde_fb);
+	if (priv.kvm_hw == 2) {
+		OLED_Revolve(olde_fb);
+	}
 
 	priv.oled_fb = olde_fb;
 	return CVI_SUCCESS;
