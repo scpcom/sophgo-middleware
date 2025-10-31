@@ -670,7 +670,7 @@ int main(int argc, char *argv[])
 	kvm_hw_detect();
 	if (priv.kvm_hw == 2) {
 		priv.pos_x += 32;
-		//priv.size_y = 4; //8;
+		priv.size_y = 4; //8;
 	}
 
 	s32Ret = show_info_prepare_oled();
