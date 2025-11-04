@@ -218,6 +218,18 @@ void OLED_Clear(int _fb)
 	} //更新显示
 }
 
+void OLED_Fill(int _fb)
+{
+	uint8_t i,n;
+	for(i=0;i<8;i++)
+	{
+		oled_write_register(_fb, OLED_CMD, 0xb0+i);
+		oled_write_register(_fb, OLED_CMD, 0x00);
+		oled_write_register(_fb, OLED_CMD, 0x10);
+		for(n=0;n<128;n++)oled_write_register(_fb, OLED_DATA, 0xFF);
+	} //更新显示
+}
+
 void OLED_Revolve(int _fb)
 {
 	oled_write_register(_fb, OLED_CMD, 0xA0);
