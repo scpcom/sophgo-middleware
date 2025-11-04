@@ -258,6 +258,24 @@ void OLED_ShowChar(int _fb, uint8_t x,uint8_t y,uint8_t chr,uint8_t sizey)
 		else return;
 	}
 }
+void OLED_ShowCharTurn(int _fb, uint8_t x,uint8_t y,char chr,uint8_t sizey)
+{
+	uint8_t c=0,sizex=sizey/2;
+	uint16_t i=0,size1;
+	if(sizey==8)size1=6;
+	else if(sizey==4)size1=4;
+	else size1=(sizey/8+((sizey%8)?1:0))*(sizey/2);
+	c=chr-' ';//得到偏移后的值
+	OLED_Set_Pos(_fb, x, y);
+	for(i=0; i<size1; i++)
+	{
+		if(i%sizex==0&&sizey!=8) OLED_Set_Pos(_fb, x, y++);
+		if(sizey==8) oled_write_register(_fb, OLED_DATA, ~oled_asc2_0806[c][i]); //6X8字号
+		else if(sizey==16) oled_write_register(_fb, OLED_DATA, ~oled_asc2_1608[c][i]);//8x16字号
+		else if(sizey==4) oled_write_register(_fb, OLED_DATA, ~oled_asc2_0804[c][i]);//8x4字号
+		else return;
+	}
+}
 
 uint32_t oled_pow(uint8_t m,uint8_t n)
 {
@@ -298,6 +316,18 @@ void OLED_ShowString(int _fb, uint8_t x, uint8_t y, char *chr, uint8_t sizey)
 	while (chr[j]!='\0')
 	{		
 		OLED_ShowChar(_fb, x, y, chr[j++], sizey);
+		if(sizey==8)x+=6;
+		else if(sizey==4)x+=4;
+		else x+=sizey/2;
+	}
+}
+//反显一个字符号串
+void OLED_ShowStringTurn(int _fb, uint8_t x, uint8_t y, char *chr, uint8_t sizey)
+{
+	uint8_t j=0;
+	while (chr[j]!='\0')
+	{
+		OLED_ShowCharTurn(_fb, x, y, chr[j++], sizey);
 		if(sizey==8)x+=6;
 		else if(sizey==4)x+=4;
 		else x+=sizey/2;
