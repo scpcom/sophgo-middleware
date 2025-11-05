@@ -60,6 +60,7 @@ typedef enum
 	DSI_PANEL_ST7701,
 	DSI_PANEL_ST7701_HD228001C31,
 	DSI_PANEL_ST7701_HD228001C31_ALT0,
+	DSI_PANEL_ST7701_LHCM228TS003A,
 	DSI_PANEL_ST7789V,
 	DSI_PANEL_ST7785M,
 	DSI_PANEL_D240SI31,
@@ -128,6 +129,7 @@ static const char* s_panel_model_type_arr[] = {
 	"ST7701",
 	"ST7701_HD228001C31",
 	"ST7701_HD228001C31_ALT0",
+	"ST7701_LHCM228TS003A",
 	"ST7789V",
 	"ST7785M",
 	"D240SI31",
@@ -423,6 +425,13 @@ void SAMPLE_MIPI_SET_PANEL_DESC()
 			g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_368x552_alt0;
 			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_368x552_alt0;
 			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_368x552_alt0);
+			break;
+		case DSI_PANEL_ST7701_LHCM228TS003A:
+			g_panel_desc.panel_name = "ST7701-368x552-lhcm";
+			g_panel_desc.dev_cfg = &dev_cfg_st7701_368x552lhcm;
+			g_panel_desc.hs_timing_cfg = &hs_timing_cfg_st7701_368x552lhcm;
+			g_panel_desc.dsi_init_cmds = dsi_init_cmds_st7701_368x552lhcm;
+			g_panel_desc.dsi_init_cmds_size = ARRAY_SIZE(dsi_init_cmds_st7701_368x552lhcm);
 			break;
 		case DSI_PANEL_ST7785M:
 			g_panel_desc.panel_name = "ST77825M-240x320";
