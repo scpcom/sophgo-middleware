@@ -16,7 +16,7 @@ CFLAGS += -I$(SDIR)/../test_mmf/maixcam_lib/include \
 -I$(SDIR)/../test_mmf/media_server-1.0.x/media-server/libflv/include \
 -I$(SDIR)/../test_mmf/media_server-1.0.x/media-server/librtmp/include \
 -I$(SDIR)/../test_mmf/media_server-1.0.x/sdk/include
-CPPFLAGS += $(subst -std=gnu11,-std=gnu++11, $(CFLAGS)) $(INCS) \
+CPPFLAGS := $(subst -std=gnu11,-std=c++17, $(CFLAGS)) $(INCS) \
 -I$(SDIR)/../test_mmf/media_server-1.0.x/include \
 -I$(SDIR)/../test_mmf/media_server-1.0.x/sdk/include \
 -I$(SDIR)/../test_mmf/media_server-1.0.x/sdk/libhttp/include \
