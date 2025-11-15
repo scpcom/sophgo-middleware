@@ -29,17 +29,15 @@ endif
 #CC := $(CROSS)gcc
 #CXX := $(CROSS)g++
 CFLAGS += -Wall -fPIC
-CXXFLAGS += -Wall
+CXXFLAGS := $(subst -std=gnu11,-std=c++17, $(CFLAGS))
 DEPFLAGS = -MMD -MP -MF $(OUTPATH)/$(*F).d
 
 ifeq ($(RELEASE),1)
 	CFLAGS += -Wall -O2
-	CXXFLAGS += $(subst -std=gnu11,-std=gnu++11, $(CFLAGS))
 	DEFINES += NDEBUG
 else
 	CFLAGS += -g -Wall
 #	CFLAGS += -fsanitize=address
-	CXXFLAGS += $(subst -std=gnu11,-std=gnu++11, $(CFLAGS))
 	DEFINES += DEBUG _DEBUG
 endif
 
