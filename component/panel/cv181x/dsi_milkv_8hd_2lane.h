@@ -1,7 +1,12 @@
 #ifndef _MIPI_TX_PARAM_MILKV_8HD_2LANE_H_
 #define _MIPI_TX_PARAM_MILKV_8HD_2LANE_H_
 
+#ifndef __UBOOT__
+#include <linux/vo_mipi_tx.h>
 #include <linux/cvi_comm_mipi_tx.h>
+#else
+#include <cvi_mipi.h>
+#endif
 
 struct combo_dev_cfg_s dev_cfg_milkv_8hd_800x1280_2lane = {
 	.devno = 0,
