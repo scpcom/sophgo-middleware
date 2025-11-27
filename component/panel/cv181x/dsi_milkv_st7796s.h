@@ -1,7 +1,12 @@
 #ifndef _MIPI_TX_PARAM_MILKV_ST7796S_H_
 #define _MIPI_TX_PARAM_MILKV_ST7796S_H_
 
+#ifndef __UBOOT__
+#include <linux/vo_mipi_tx.h>
 #include <linux/cvi_comm_mipi_tx.h>
+#else
+#include <cvi_mipi.h>
+#endif
 
 #define MILKV_ST7796S_HACT	320
 #define MILKV_ST7796S_HSA		20
