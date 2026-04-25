@@ -32,7 +32,7 @@ CURL_CONF_OPTS = \
 	--with-openssl
 
 .PHONY : clean all
-all : $(TRD_BUILD_OPTIONAL_MODULE)
+all : $(TRD_BUILD_TPUSDK_MODULE)
 
 $(TRD_LIB_PATH)/libssl.so:
 	cd $(TRD_MOD_PATH)/../openssl ; make
