@@ -183,8 +183,8 @@ $(TRD_LIB_PATH)/libopencv_core.so.4.5:
 	@cd $(TRD_TMP_PATH)/opencv4.5/build ; $(OPENCV4_5_CMAKE_ENV) make install
 	@[ -e $(TRD_TMP_PATH)/opencv4.5/output/include/opencv2 -o ! -e $(TRD_TMP_PATH)/opencv4.5/output/include/opencv4/opencv2 ] || \
 		ln -s opencv4/opencv2 $(TRD_TMP_PATH)/opencv4.5/output/include/opencv2
-	@rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/include/ $(TRD_INCLUDE_PATH)/
-	@rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/lib/libopencv*.so* $(TRD_LIB_PATH)/
+	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/include/ $(TRD_INCLUDE_PATH)/
+	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/lib/libopencv*.so* $(TRD_LIB_PATH)/
 	@rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/lib/libopencv*.so.4.5* $(TRD_LIB_PATH)/
 
 $(TRD_LIB_PATH)/libopencv_core.a.4.5: $(TRD_LIB_PATH)/libopencv_core.so.4.5
@@ -194,8 +194,8 @@ $(TRD_LIB_PATH)/libopencv_core.a.4.5: $(TRD_LIB_PATH)/libopencv_core.so.4.5
 	@cd $(TRD_TMP_PATH)/opencv4.5/build_static ; $(OPENCV4_5_CMAKE_ENV) cmake $(TRD_MOD_PATH)/opencv -DCMAKE_INSTALL_PREFIX=$(TRD_TMP_PATH)/opencv4.5/output $(OPENCV4_5_CMAKE_OPTS) -DBUILD_SHARED_LIBS=OFF
 	@cd $(TRD_TMP_PATH)/opencv4.5/build_static ; $(OPENCV4_5_CMAKE_ENV) make install
 	@tar -C $(TRD_TMP_PATH)/opencv4.5/output -czf $(TRD_TAR_PATH)/opencv4.5.tar.gz include lib share
-	@rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/include/ $(TRD_INCLUDE_PATH)/
-	@rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/lib/libopencv*.a $(TRD_LIB_PATH)/
+	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/include/ $(TRD_INCLUDE_PATH)/
+	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/lib/libopencv*.a $(TRD_LIB_PATH)/
 	@for f in $(TRD_TMP_PATH)/opencv/output/lib/libopencv*.a ; do \
 		rsync -avpPxH $$f $(TRD_LIB_PATH)/$$(basename $$f).4.5 ; \
 	done
@@ -203,8 +203,8 @@ $(TRD_LIB_PATH)/libopencv_core.a.4.5: $(TRD_LIB_PATH)/libopencv_core.so.4.5
 build_3rdparty_module: $(TRD_LIB_PATH)/libopencv_core.a.4.5
 
 clean:
-	@rm -f $(TRD_LIB_PATH)/libopencv*.a
-	@rm -f $(TRD_LIB_PATH)/libopencv*.so
+	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rm -f $(TRD_LIB_PATH)/libopencv*.a
+	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rm -f $(TRD_LIB_PATH)/libopencv*.so
 	@rm -f $(TRD_LIB_PATH)/libopencv*.a.4.5*
 	@rm -f $(TRD_LIB_PATH)/libopencv*.so.4.5*
 	@rm -f $(TRD_TAR_PATH)/opencv4.5*.tar.gz

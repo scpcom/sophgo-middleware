@@ -10,3 +10,4 @@ TRD_BUILD_OPTIONAL_MODULE = build_3rdparty_module
 else ifeq ($(TPU_REL),1)
 TRD_BUILD_TPUSDK_MODULE = build_3rdparty_module
 endif
+TRD_DEFAULT_OPENCV = opencv4.5

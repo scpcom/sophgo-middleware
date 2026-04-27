@@ -181,7 +181,7 @@ $(TRD_LIB_PATH)/libssl.a: $(TRD_LIB_PATH)/libz.a
 	cd $(TRD_MOD_PATH)/../openssl ; make
 
 $(TRD_LIB_PATH)/libopencv_core.a:
-	cd $(TRD_MOD_PATH)/../opencv ; make
+	cd $(TRD_MOD_PATH)/../$(TRD_DEFAULT_OPENCV) ; make
 
 $(TRD_LIB_PATH)/libavcodec.a: $(TRD_LIB_PATH)/libssl.a $(TRD_LIB_PATH)/libopencv_core.a
 	@mkdir -p $(TRD_INCLUDE_PATH)
