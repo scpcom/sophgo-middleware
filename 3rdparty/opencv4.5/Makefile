@@ -196,7 +196,7 @@ $(TRD_LIB_PATH)/libopencv_core.a.4.5: $(TRD_LIB_PATH)/libopencv_core.so.4.5
 	@tar -C $(TRD_TMP_PATH)/opencv4.5/output -czf $(TRD_TAR_PATH)/opencv4.5.tar.gz include lib share
 	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/include/ $(TRD_INCLUDE_PATH)/
 	@[ "$(TRD_DEFAULT_OPENCV)" != "opencv4.5" ] || rsync -avpPxH $(TRD_TMP_PATH)/opencv4.5/output/lib/libopencv*.a $(TRD_LIB_PATH)/
-	@for f in $(TRD_TMP_PATH)/opencv/output/lib/libopencv*.a ; do \
+	@for f in $(TRD_TMP_PATH)/opencv4.5/output/lib/libopencv*.a ; do \
 		rsync -avpPxH $$f $(TRD_LIB_PATH)/$$(basename $$f).4.5 ; \
 	done
 
