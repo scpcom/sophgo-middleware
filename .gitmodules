@@ -74,3 +74,7 @@
 	path = 3rdparty/curl/curl
 	url = https://github.com/scpcom/curl
 	branch = 3rd
+[submodule "3rdparty/opencv4.5/opencv"]
+	path = 3rdparty/opencv4.5/opencv
+	url = https://github.com/scpcom/opencv
+	branch = 3rd-4.5
