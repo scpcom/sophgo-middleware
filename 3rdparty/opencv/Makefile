@@ -170,7 +170,7 @@ OPENCV_CMAKE_OPTS += \
 	-DBUILD_opencv_python3=OFF
 
 .PHONY : clean all
-all : $(TRD_BUILD_TPUSDK_MODULE)
+all : $(TRD_BUILD_OPTIONAL_MODULE)
 
 $(TRD_LIB_PATH)/libopencv_core.so.3.2:
 	@mkdir -p $(TRD_LIB_PATH)
