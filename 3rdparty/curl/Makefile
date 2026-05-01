@@ -29,6 +29,7 @@ CURL_CONF_OPTS = \
 	--enable-cross-compile \
 	--target=$(CURL_TARGET) \
 	--host=$(CURL_TARGET) \
+	--without-zstd \
 	--with-openssl
 
 .PHONY : clean all
