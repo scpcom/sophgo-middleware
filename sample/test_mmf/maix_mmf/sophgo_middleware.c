@@ -3246,6 +3246,7 @@ int mmf_enc_jpg_init(int ch, int w, int h, int format, int quality)
 		.intput_fps = 30,
 		.output_fps = 30,
 		.bitrate = 0,  // unused
+		.rc_mode = MMF_VENC_RCMODE_CBR, // unused
 	};
 
 	return _mmf_enc_jpg_init(ch, &cfg);
@@ -3494,6 +3495,7 @@ int mmf_enc_h265_init(int ch, int w, int h)
 		.intput_fps = 30,
 		.output_fps = 30,
 		.bitrate = 3000,
+		.rc_mode = MMF_VENC_RCMODE_CBR,
 	};
 
 	return _mmf_enc_h265_init(ch, &cfg);
@@ -3700,6 +3702,7 @@ int mmf_enc_h264_init(int ch, int w, int h)
 		.intput_fps = 30,
 		.output_fps = 30,
 		.bitrate = 3000,
+		.rc_mode = MMF_VENC_RCMODE_CBR,
 	};
 
 	return _mmf_enc_h264_init(ch, &cfg);
