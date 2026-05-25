@@ -39,6 +39,14 @@ typedef struct {
     int count;
 } mmf_h265_stream_t;
 
+typedef enum
+{
+    MMF_VENC_RCMODE_CBR = 0,
+    MMF_VENC_RCMODE_VBR,
+    MMF_VENC_RCMODE_FIXQP,
+    MMF_VENC_RCMODE_MAX,
+} mmf_venc_rc_mode_e;
+
 typedef struct {
     uint8_t type;           // 0, jpg; 1, h265; 2, h264
     int w;
@@ -49,6 +57,7 @@ typedef struct {
 	int intput_fps;			// h264/h265
 	int output_fps;			// h264/h265
 	int bitrate;			// h264/h265
+    mmf_venc_rc_mode_e rc_mode; // h264/h265
 } mmf_venc_cfg_t;
 
 typedef struct {
