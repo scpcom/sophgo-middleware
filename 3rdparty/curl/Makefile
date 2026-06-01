@@ -36,7 +36,7 @@ CURL_CONF_OPTS = \
 all : $(TRD_BUILD_TPUSDK_MODULE)
 
 $(TRD_LIB_PATH)/libssl.so:
-	cd $(TRD_MOD_PATH)/../openssl ; make
+	cd $(TRD_MOD_PATH)/../$(TRD_DEFAULT_OPENSSL) ; make
 
 $(TRD_LIB_PATH)/libcurl.so: $(TRD_LIB_PATH)/libssl.so
 	@mkdir -p $(TRD_INCLUDE_PATH)

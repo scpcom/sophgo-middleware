@@ -178,7 +178,7 @@ $(TRD_LIB_PATH)/libz.a:
 	cd $(TRD_MOD_PATH)/../zlib ; make
 
 $(TRD_LIB_PATH)/libssl.a: $(TRD_LIB_PATH)/libz.a
-	cd $(TRD_MOD_PATH)/../openssl ; make
+	cd $(TRD_MOD_PATH)/../$(TRD_DEFAULT_OPENSSL) ; make
 
 $(TRD_LIB_PATH)/libopencv_core.a:
 	cd $(TRD_MOD_PATH)/../$(TRD_DEFAULT_OPENCV) ; make

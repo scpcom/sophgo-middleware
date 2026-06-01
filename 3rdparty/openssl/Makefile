@@ -25,7 +25,7 @@ ifeq ($(SDK_VER), musl_riscv64)
 OPENSSL_CFLAGS += -DOPENSSL_NO_ASYNC
 endif
 
-OPENSSL_CFLAGS += -I$(TRD_INCLUDE_PATH) -L$(TRD_LIB_PATH)
+OPENSSL_CFLAGS += -I$(TRD_TMP_PATH)/zlib/output/usr/local/include -L$(TRD_TMP_PATH)/zlib/output/usr/local/lib
 
 OPENSSL_CMAKE_ENV = \
 	CROSS_COMPILE=$(CROSS_COMPILE)
@@ -38,7 +38,7 @@ all : $(TRD_BUILD_TPUSDK_MODULE)
 $(TRD_LIB_PATH)/libz.a:
 	cd $(TRD_MOD_PATH)/../zlib ; make
 
-$(TRD_LIB_PATH)/libssl.so: $(TRD_LIB_PATH)/libz.a
+$(TRD_LIB_PATH)/libssl.so.1.1: $(TRD_LIB_PATH)/libz.a
 	@mkdir -p $(TRD_INCLUDE_PATH)
 	@mkdir -p $(TRD_LIB_PATH)
 	@mkdir -p $(TRD_TAR_PATH)
@@ -66,18 +66,22 @@ $(TRD_LIB_PATH)/libssl.so: $(TRD_LIB_PATH)/libz.a
 	$(SED) "s# build_tests##" $(OPENSSL_BUILD_DIR)/Makefile
 	@cd $(OPENSSL_BUILD_DIR) ; $(OPENSSL_CMAKE_ENV) make DESTDIR=$(TRD_TMP_PATH)/openssl/output install
 	@tar -C $(TRD_TMP_PATH)/openssl/output/usr/local -czf $(TRD_TAR_PATH)/openssl.tar.gz bin include lib share ssl
-	@rsync -avpPxH $(TRD_TMP_PATH)/openssl/output/usr/local/include/ $(TRD_INCLUDE_PATH)/
-	@cp -p $(TRD_TMP_PATH)/openssl/output/usr/local/lib/lib*.a $(TRD_LIB_PATH)/
-	@rsync -avpPxH $(TRD_TMP_PATH)/openssl/output/usr/local/lib/lib*.so* $(TRD_LIB_PATH)/
+	@[ "$(TRD_DEFAULT_OPENSSL)" != "openssl" ] || rsync -avpPxH $(TRD_TMP_PATH)/openssl/output/usr/local/include/ $(TRD_INCLUDE_PATH)/
+	@[ "$(TRD_DEFAULT_OPENSSL)" != "openssl" ] || rsync -avpPxH $(TRD_TMP_PATH)/openssl/output/usr/local/lib/lib*.so* $(TRD_LIB_PATH)/
+	@rsync -avpPxH $(TRD_TMP_PATH)/openssl/output/usr/local/lib/lib*.so.1* $(TRD_LIB_PATH)/
+	@[ "$(TRD_DEFAULT_OPENSSL)" != "openssl" ] || cp -p $(TRD_TMP_PATH)/openssl/output/usr/local/lib/lib*.a $(TRD_LIB_PATH)/
 
-build_3rdparty_module: $(TRD_LIB_PATH)/libssl.so
+build_3rdparty_module: $(TRD_LIB_PATH)/libssl.so.1.1
 
 clean:
-	@cd $(OPENSSL_BUILD_DIR) ; $(OPENSSL_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/openssl/output make clean
-	@rm -f $(TRD_LIB_PATH)/libcrypto.a
-	@rm -f $(TRD_LIB_PATH)/libcrypto*.so*
-	@rm -f $(TRD_LIB_PATH)/libssl.a
-	@rm -f $(TRD_LIB_PATH)/libssl*.so*
+	@cd $(OPENSSL_BUILD_DIR) && $(OPENSSL_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/openssl/output make clean
+	@cd $(OPENSSL_BUILD_DIR) && rm -f */*/*.o */*/*.d */*/*/*.o */*/*/*.d */*/*/*/*.o */*/*/*/*.d */*.a
+	@[ "$(TRD_DEFAULT_OPENSSL)" != "openssl" ] || rm -f $(TRD_LIB_PATH)/libcrypto.a
+	@[ "$(TRD_DEFAULT_OPENSSL)" != "openssl" ] || rm -f $(TRD_LIB_PATH)/libcrypto*.so*
+	@rm -f $(TRD_LIB_PATH)/libcrypto*.so.1*
+	@[ "$(TRD_DEFAULT_OPENSSL)" != "openssl" ] || rm -f $(TRD_LIB_PATH)/libssl.a
+	@[ "$(TRD_DEFAULT_OPENSSL)" != "openssl" ] || rm -f $(TRD_LIB_PATH)/libssl*.so*
+	@rm -f $(TRD_LIB_PATH)/libssl*.so.1*
 	@rm -f $(TRD_TAR_PATH)/openssl.tar.gz
 	@rm -rf $(TRD_TMP_PATH)/openssl
 

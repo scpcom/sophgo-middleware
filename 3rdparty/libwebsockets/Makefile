@@ -30,7 +30,7 @@ WEBSOCKETS_CMAKE_OPTS += \
 all : $(TRD_BUILD_TPUSDK_MODULE)
 
 $(TRD_LIB_PATH)/libssl.so:
-	cd $(TRD_MOD_PATH)/../openssl ; make
+	cd $(TRD_MOD_PATH)/../$(TRD_DEFAULT_OPENSSL) ; make
 
 $(TRD_LIB_PATH)/libuv.so:
 	cd $(TRD_MOD_PATH)/../uv ; make
