@@ -7,7 +7,7 @@ include ../3rdparty.mk
 
 WEBSOCKETS_CMAKE_ENV = CMAKE_BUILD_TYPE="RELEASE" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS) -g0 -I$(TRD_INCLUDE_PATH) -Wl,-L$(TRD_LIB_PATH) -Wno-unused-parameter -Wno-implicit-fallthrough -Wno-missing-field-initializers" \
+	CC=$(CROSS_COMPILE)gcc CFLAGS="$(CFLAGS) -g0 -I$(TRD_INCLUDE_PATH) -Wl,-L$(TRD_LIB_PATH) -Wno-unused-parameter -Wno-implicit-fallthrough -Wno-missing-field-initializers -Wno-deprecated-declarations" \
 	CXX=$(CROSS_COMPILE)g++ CXXFLAGS="$(CXXFLAGS) -g0"
 
 WEBSOCKETS_CMAKE_OPTS = -DLWS_IPV6=ON
