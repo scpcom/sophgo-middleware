@@ -201,7 +201,8 @@ $(TRD_LIB_PATH)/libavcodec.a: $(TRD_LIB_PATH)/libssl.a $(TRD_LIB_PATH)/libopencv
 build_3rdparty_module: $(TRD_LIB_PATH)/libavcodec.a
 
 clean:
-	@cd $(TRD_MOD_PATH)/ffmpeg ; [ ! -e ffbuild/config.mak ] || $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output make ARCH=$(FFMPEG_ARCH) distclean
+	@cd $(TRD_MOD_PATH)/ffmpeg && [ ! -e ffbuild/config.mak ] || $(FFMPEG_CMAKE_ENV) DESTDIR=$(TRD_TMP_PATH)/ffmpeg/output make ARCH=$(FFMPEG_ARCH) distclean
+	@cd $(TRD_MOD_PATH)/ffmpeg && rm -f */*.o  */*.d */*.a */*.so* */*/*.o  */*/*.d config.h
 	@rm -f $(TRD_LIB_PATH)/libav*.a
 	@rm -f $(TRD_LIB_PATH)/libav*.so*
 	@rm -f $(TRD_LIB_PATH)/libswresample.a
