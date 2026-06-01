@@ -11,4 +11,4 @@ else ifeq ($(TPU_REL),1)
 TRD_BUILD_TPUSDK_MODULE = build_3rdparty_module
 endif
 TRD_DEFAULT_OPENCV = opencv4.5
-TRD_DEFAULT_OPENSSL = openssl
+TRD_DEFAULT_OPENSSL = openssl3.0
