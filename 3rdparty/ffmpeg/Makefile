@@ -101,7 +101,7 @@ FFMPEG_CONF_OPTS = \
 	--enable-ffprobe \
 	--disable-libxcb \
 	--disable-postproc \
-	--disable-swscale \
+	--enable-swscale \
 	--enable-indevs \
 	--disable-alsa \
 	--enable-outdevs \
