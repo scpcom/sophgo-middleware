@@ -78,3 +78,7 @@
 	path = 3rdparty/opencv4.5/opencv
 	url = https://github.com/scpcom/opencv
 	branch = 3rd-4.5
+[submodule "3rdparty/openssl3.0/openssl"]
+	path = 3rdparty/openssl3.0/openssl
+	url = https://github.com/scpcom/openssl
+	branch = 3rd-3.0
