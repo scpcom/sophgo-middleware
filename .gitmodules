@@ -82,3 +82,7 @@
 	path = 3rdparty/openssl3.0/openssl
 	url = https://github.com/scpcom/openssl
 	branch = 3rd-3.0
+[submodule "3rdparty/alsa_lib/alsa_lib"]
+	path = 3rdparty/alsa_lib/alsa_lib
+	url = https://github.com/scpcom/alsa-lib
+	branch = 3rd
