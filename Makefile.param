@@ -55,9 +55,20 @@ ifeq ($(SDK_VER), 32bit)
   OPT_LEVEL += -D__uint128_t='void*'
 else ifeq ($(SDK_VER), 64bit)
   export CROSS_COMPILE = $(CROSS_COMPILE_64)
+ifneq ($(CROSS_COMPILE_PATH),)
+ifeq ($(findstring $(CROSS_COMPILE_PATH),$(CROSS_COMPILE)),)
+  CROSS_COMPILE_WITH_PATH = $(CROSS_COMPILE_PATH)/bin/$(CROSS_COMPILE)
+else
+  CROSS_COMPILE_WITH_PATH = $(CROSS_COMPILE)
+endif
+else
+  CROSS_COMPILE_WITH_PATH = $(CROSS_COMPILE)
+endif
   SYSROOT := $(ROOT_DIR)/../ramdisk/sysroot/sysroot-glibc-linaro-2.23-2017.05-aarch64-linux-gnu/
   KERNEL_INC := $(KERNEL_DIR)/arm64/usr/include
   OPT_LEVEL := -O3
+  OPT_LEVEL += $(call cc-option,$(CROSS_COMPILE_WITH_PATH)gcc,\
+    -mcpu=cortex-a53 -mno-outline-atomics,)
 else ifeq ($(SDK_VER), uclibc)
   export CROSS_COMPILE = $(CROSS_COMPILE_UCLIBC)
   SYSROOT := $(ROOT_DIR)/../ramdisk/sysroot/sysroot-uclibc/
